@@ -5,7 +5,7 @@
         {{ product ? 'Sửa sản phẩm' : 'Thêm sản phẩm' }}
       </h2>
 
-      <form @submit.prevent="submitForm">
+      <form @submit.prevent="submitForm" novalidate>
         <div class="row g-3">
           <div class="col-12 col-md-6">
             <label for="product-name" class="form-label">Tên sản phẩm</label>
@@ -21,27 +21,13 @@
           </div>
           <div class="col-6 col-md-3">
             <label for="product-price" class="form-label">Giá (₫)</label>
-            <input
-              id="product-price"
-              v-model.number="form.price"
-              class="form-control"
-              type="number"
-              min="0"
-              step="1000"
-              required
-            />
+            <input id="product-price" v-model.number="form.price" class="form-control" type="number" min="0" step="1"
+              required />
           </div>
           <div class="col-6 col-md-3">
             <label for="product-stock" class="form-label">Tồn kho</label>
-            <input
-              id="product-stock"
-              v-model.number="form.stock"
-              class="form-control"
-              type="number"
-              min="0"
-              step="1"
-              required
-            />
+            <input id="product-stock" v-model.number="form.stock" class="form-control" type="number" min="0" step="1"
+              required />
           </div>
           <div class="col-12 col-md-6">
             <label for="product-status" class="form-label">Trạng thái</label>
@@ -86,7 +72,8 @@ export default {
   emits: ['save', 'cancel'],
   data() {
     return {
-      form: emptyProduct()
+      form: emptyProduct(),
+
     }
   },
   watch: {
@@ -99,8 +86,20 @@ export default {
     }
   },
   methods: {
-    // Gửi bản sao dữ liệu form lên component cha để lưu.
+    // Gửi bản sao dữ liệu form lên component cha sau khi kiểm tra đầu vào.
+    erros() {
+      if ("this.form.name.trim() === ''") return "Tên sản phẩm không được để trống.";
+      else if ("this.form.category.trim() === ''") return "Danh mục không được để trống.";
+      else if ("this.form.brand.trim() === ''") return "Hãng không được để trống.";
+      else if ("this.form.price < 0") return "Giá sản phẩm không được âm.";
+      else if ("this.form.stock < 0") return "Tồn kho không được âm.";
+    },
     submitForm() {
+
+      if (this.erros()) {
+        alert(this.erros());
+        return;
+      }
       this.$emit('save', { ...this.form })
     }
   }
