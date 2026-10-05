@@ -129,6 +129,16 @@ export default {
     },
     // Lưu sản phẩm mới hoặc cập nhật sản phẩm theo ID.
     saveProduct(formData) {
+      const normalizedName = formData.name.trim().toLocaleLowerCase('vi');
+      const dupicate = this.products.some(product =>
+        product.name.trim().toLocaleLowerCase('vi') === normalizedName &&
+        (!this.editingProduct || product.id !== this.editingProduct.id)
+      )
+      if(dupicate){
+        alert("Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác.");
+        return;
+      }
+
       if (this.editingProduct) {
         this.products = this.products.map(product =>
           product.id === this.editingProduct.id
