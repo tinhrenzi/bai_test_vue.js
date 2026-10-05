@@ -27,7 +27,7 @@
             </form>
         </div>
         <div class="col-12 col-lg-3 d-flex justify-content-lg-end">
-            <button type="button" @click="handleReset" class="btn btn-secondary">Làm mới</button>
+            <button type="button" @click="handleReset" class="btn btn-secondary">Xóa bộ lọc</button>
         </div>
     </nav>
 </template>

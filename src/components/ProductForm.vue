@@ -21,7 +21,7 @@
           </div>
           <div class="col-6 col-md-3">
             <label for="product-price" class="form-label">Giá (₫)</label>
-            <input id="product-price" v-model.number="form.price" class="form-control" type="number" min="0" step="1"
+            <input id="product-price" v-model.number="form.price" class="form-control" type="number" min="1" step="1"
               required />
           </div>
           <div class="col-6 col-md-3">
@@ -86,18 +86,24 @@ export default {
     }
   },
   methods: {
-    // Gửi bản sao dữ liệu form lên component cha sau khi kiểm tra đầu vào.
-    erros() {
-      if (this.form.name.trim() === '') return "Tên sản phẩm không được để trống.";
-      else if (this.form.category.trim() === '') return "Danh mục không được để trống.";
-      else if (this.form.brand.trim() === '') return "Hãng không được để trống.";
-      else if (this.form.price < 0) return "Giá sản phẩm không được âm.";
-      else if (this.form.stock < 0) return "Tồn kho không được âm.";
+    // Trả về lỗi đầu tiên để chỉ gửi dữ liệu hợp lệ lên component cha.
+    validateForm() {
+      if (!this.form.name.trim()) return 'Tên sản phẩm không được để trống.'
+      if (!this.form.category.trim()) return 'Danh mục không được để trống.'
+      if (!this.form.brand.trim()) return 'Hãng không được để trống.'
+      if (!Number.isInteger(this.form.price) || this.form.price <= 0) {
+        return 'Giá sản phẩm phải là số nguyên lớn hơn 0.'
+      }
+      if (this.form.stock === '' || !Number.isInteger(this.form.stock) || this.form.stock < 0) {
+        return 'Tồn kho phải là số nguyên không âm.'
+      }
+
+      return null
     },
     submitForm() {
-
-      if (this.erros()) {
-        alert(this.erros());
+      const error = this.validateForm()
+      if (error) {
+        alert(error)
         return;
       }
       this.$emit('save', { ...this.form })
