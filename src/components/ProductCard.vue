@@ -9,8 +9,9 @@ export default {
     },
     emits: ['edit', 'delete'],
     methods: {
+        // Hiển thị giá theo nhóm hàng nghìn, không thêm ký hiệu tiền tệ.
         formatPrice(price) {
-            return new Intl.NumberFormat('vi-VN').format(price) + '₫';
+            return new Intl.NumberFormat('vi-VN').format(price);
         }
     }
 }
@@ -27,7 +28,9 @@ export default {
                 </span>
             </div>
 
-            <p class="text-muted small mb-2">{{ product.brand }} • {{ product.category }}</p>
+            <!-- Hiển thị danh mục và hãng thành hai thông tin riêng. -->
+            <p class="text-muted small mb-1">Danh mục: {{ product.category }}</p>
+            <p class="text-muted small mb-2">Hãng: {{ product.brand }}</p>
 
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="fs-5 fw-bold text-primary">{{ formatPrice(product.price) }}</span>

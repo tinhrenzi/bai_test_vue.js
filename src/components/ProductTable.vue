@@ -9,15 +9,9 @@ export default {
     },
     emits: ['edit', 'delete'],
     methods: {
+        // Hiển thị giá theo nhóm hàng nghìn, không thêm ký hiệu tiền tệ.
         formatPrice(price) {
-            return new Intl.NumberFormat('vi-VN', {
-                style: 'currency',
-                currency: 'VND'
-            }).format(price)
-        },
-        // Đổi ngày ISO trong dữ liệu thành định dạng ngày/tháng/năm để hiển thị.
-        formatDate(date) {
-            return new Intl.DateTimeFormat('vi-VN').format(new Date(`${date}T00:00:00`))
+            return new Intl.NumberFormat('vi-VN').format(price)
         }
     }
 }
@@ -32,7 +26,6 @@ export default {
                     <th>Danh mục</th>
                     <th>Hãng</th>
                     <th>Giá</th>
-                    <th>Ngày tạo</th>
                     <th>Tồn kho</th>
                     <th>Trạng thái</th>
                     <th class="text-end">Hành động</th>
@@ -45,7 +38,6 @@ export default {
                     <td>{{ product.category }}</td>
                     <td>{{ product.brand }}</td>
                     <td class="text-primary fw-bold">{{ formatPrice(product.price) }}</td>
-                    <td>{{ formatDate(product.createdAt) }}</td>
                     <td>
                         <span v-if="product.stock === 0" class="badge bg-danger">Hết hàng</span>
                         <span v-else>{{ product.stock }}</span>

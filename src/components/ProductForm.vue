@@ -88,11 +88,11 @@ export default {
   methods: {
     // Gửi bản sao dữ liệu form lên component cha sau khi kiểm tra đầu vào.
     erros() {
-      if ("this.form.name.trim() === ''") return "Tên sản phẩm không được để trống.";
-      else if ("this.form.category.trim() === ''") return "Danh mục không được để trống.";
-      else if ("this.form.brand.trim() === ''") return "Hãng không được để trống.";
-      else if ("this.form.price < 0") return "Giá sản phẩm không được âm.";
-      else if ("this.form.stock < 0") return "Tồn kho không được âm.";
+      if (this.form.name.trim() === '') return "Tên sản phẩm không được để trống.";
+      else if (this.form.category.trim() === '') return "Danh mục không được để trống.";
+      else if (this.form.brand.trim() === '') return "Hãng không được để trống.";
+      else if (this.form.price < 0) return "Giá sản phẩm không được âm.";
+      else if (this.form.stock < 0) return "Tồn kho không được âm.";
     },
     submitForm() {
 
