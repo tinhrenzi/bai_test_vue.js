@@ -7,6 +7,7 @@ export default {
             required: true
         }
     },
+    emits: ['edit', 'delete'],
     methods: {
         formatPrice(price) {
             return new Intl.NumberFormat('vi-VN').format(price) + '₫';
@@ -37,8 +38,9 @@ export default {
             </div>
 
             <div class="d-flex gap-2">
-                <button class="btn btn-warning" type="button">Sửa</button>
-                <button class="btn btn-warning" type="button">Xóa</button>
+                <!-- Chuyển thao tác trên sản phẩm lên component cha xử lý. -->
+                <button class="btn btn-warning" type="button" @click="$emit('edit', product)">Sửa</button>
+                <button class="btn btn-danger" type="button" @click="$emit('delete', product.id)">Xóa</button>
             </div>
         </div>
     </div>
