@@ -4,8 +4,11 @@
       :categories="categories"
       :brands-list="brandsList"
       :status-list="statusList"
+      :sort-by="sortBy"
       @search="$emit('search', $event)"
       @reset="$emit('reset')"
+      @sort-price="$emit('sort-price')"
+      @sort-date="$emit('sort-date')"
     />
 
     <header class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-2 mb-4">
@@ -59,9 +62,10 @@ export default {
     categories: { type: Array, required: true },
     brandsList: { type: Array, required: true },
     statusList: { type: Array, required: true },
+    sortBy: { type: String, required: true },
     currentPage: { type: Number, required: true },
     totalPages: { type: Number, required: true }
   },
-  emits: ['search', 'reset', 'add', 'edit', 'delete', 'page-changed']
+  emits: ['search', 'reset', 'sort-price', 'sort-date', 'add', 'edit', 'delete', 'page-changed']
 }
 </script>

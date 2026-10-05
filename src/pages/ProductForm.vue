@@ -52,6 +52,7 @@
 </template>
 
 <script>
+// Trang form dùng chung cho thao tác thêm mới và chỉnh sửa sản phẩm.
 const emptyProduct = () => ({
   name: '',
   category: '',

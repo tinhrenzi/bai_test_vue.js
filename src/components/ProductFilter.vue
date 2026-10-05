@@ -29,6 +29,31 @@
         <div class="col-12 col-lg-3 d-flex justify-content-lg-end">
             <button type="button" @click="handleReset" class="btn btn-secondary">Xóa bộ lọc</button>
         </div>
+        <!-- Hai nút luân phiên giữa giảm dần, tăng dần và thứ tự mặc định. -->
+        <div class="col-12 d-flex flex-wrap gap-2">
+            <button
+                type="button"
+                class="btn"
+                :class="sortBy.startsWith('price-') ? 'btn-outline-primary' : 'btn-outline-secondary'"
+                @click="$emit('sort-price')"
+            >
+                Giá
+                <span v-if="sortBy === 'price-desc'">↓ Cao đến thấp</span>
+                <span v-else-if="sortBy === 'price-asc'">↑ Thấp đến cao</span>
+                <span v-else>↕ Mặc định</span>
+            </button>
+            <button
+                type="button"
+                class="btn"
+                :class="sortBy.startsWith('date-') ? 'btn-outline-primary' : 'btn-outline-secondary'"
+                @click="$emit('sort-date')"
+            >
+                Ngày tạo
+                <span v-if="sortBy === 'date-desc'">↓ Mới nhất</span>
+                <span v-else-if="sortBy === 'date-asc'">↑ Cũ nhất</span>
+                <span v-else>↕ Mặc định</span>
+            </button>
+        </div>
     </nav>
 </template>
 <script>
@@ -45,9 +70,13 @@ export default {
         statusList: {
             type: Array,
             required: true
+        },
+        sortBy: {
+            type: String,
+            default: ''
         }
     },
-    emits: ['search', 'reset'],
+    emits: ['search', 'reset', 'sort-price', 'sort-date'],
     data() {
         return {
             category: '',

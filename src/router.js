@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import ProductsPage from './pages/ProductsPage.vue'
-import ProductForm from './components/ProductForm.vue'
+import ProductForm from './pages/ProductForm.vue'
 
 // Dùng route riêng cho danh sách, thêm mới và sửa sản phẩm.
 const router = createRouter({

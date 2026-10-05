@@ -10,10 +10,13 @@
         :categories="categories"
         :brands-list="brandsList"
         :status-list="statusList"
+        :sort-by="sortBy"
         :current-page="currentPage"
         :total-pages="totalPages"
         @search="searchProducts"
         @reset="resetFilters"
+        @sort-price="togglePriceSort"
+        @sort-date="toggleDateSort"
         @add="openAddForm"
         @edit="openEditForm"
         @delete="deleteProduct"
@@ -42,6 +45,7 @@ export default {
       selectedCategory: '',
       selectedBrands: '',
       selectedStatus: '',
+      sortBy: '',
       currentPage: 1,
       itemsPerPage: 10
     }
@@ -84,9 +88,20 @@ export default {
     totalPages() {
       return Math.ceil(this.filteredProducts.length / this.itemsPerPage)
     },
+    // Sắp xếp bản sao danh sách đã lọc trước khi cắt theo trang.
+    sortedProducts() {
+      const result = [...this.filteredProducts]
+
+      if (this.sortBy === 'price-desc') return result.sort((a, b) => b.price - a.price)
+      if (this.sortBy === 'price-asc') return result.sort((a, b) => a.price - b.price)
+      if (this.sortBy === 'date-desc') return result.sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      if (this.sortBy === 'date-asc') return result.sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+
+      return result
+    },
     paginatedProducts() {
       const start = (this.currentPage - 1) * this.itemsPerPage
-      return this.filteredProducts.slice(start, start + this.itemsPerPage)
+      return this.sortedProducts.slice(start, start + this.itemsPerPage)
     },
     // Tìm sản phẩm theo ID trên URL để form hỗ trợ cả reload trực tiếp trang sửa.
     editingProduct() {
@@ -107,6 +122,24 @@ export default {
       this.selectedBrands = ''
       this.selectedStatus = ''
       this.searchKeyword = ''
+      this.currentPage = 1
+    },
+    // Chu kỳ sắp xếp giá: cao-thấp, thấp-cao, rồi trở về thứ tự gốc.
+    togglePriceSort() {
+      this.sortBy = this.sortBy === 'price-desc'
+        ? 'price-asc'
+        : this.sortBy === 'price-asc'
+          ? ''
+          : 'price-desc'
+      this.currentPage = 1
+    },
+    // Chu kỳ sắp xếp ngày tạo: mới-cũ, cũ-mới, rồi trở về thứ tự gốc.
+    toggleDateSort() {
+      this.sortBy = this.sortBy === 'date-desc'
+        ? 'date-asc'
+        : this.sortBy === 'date-asc'
+          ? ''
+          : 'date-desc'
       this.currentPage = 1
     },
     // Mở route form riêng cho thao tác thêm sản phẩm.
