@@ -1,5 +1,11 @@
 # Vue 3 + Vite
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Kính gửi mentor. Đây là file Readme tổng quát về cách cài và chạy dự án.
 
-Learn more about IDE Support for Vue in the [Vue Docs Scaling up Guide](https://vuejs.org/guide/scaling-up/tooling.html#ide-support).
+========================================================================
+========================================================================
+
+# Để cài dự án hãy chạy câu lệnh: git clone https://github.com/tinhrenzi/bai_test_vue.js.git
+
+# Để chạy dự án hãy chạy câu lệnh: npm run dev
+# Nếu sử dụng PowerShell hãy sử dụng câu lệnh: npm.cmd run dev

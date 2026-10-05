@@ -19,3 +19,7 @@ body {
 .product-card .card-title {
   overflow-wrap: anywhere;
 }
+
+.form-select {
+  max-width: 800px;
+}
