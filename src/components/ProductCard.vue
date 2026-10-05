@@ -1,0 +1,45 @@
+<script>
+export default {
+    name: 'ProductCard',
+    props: {
+        product: {
+            type: Object,
+            required: true
+        }
+    },
+    methods: {
+        formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN').format(price) + '₫';
+        }
+    }
+}
+</script>
+
+<template>
+    <div class="card shadow-sm border mb-3">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <h6 class="card-title fw-bold mb-0">{{ product.name }}</h6>
+                <span
+                    :class="product.status === 'active' ? 'badge bg-success-subtle text-success' : 'badge bg-secondary-subtle text-secondary'">
+                    {{ product.status === 'active' ? 'Đang bán' : 'Ngừng bán' }}
+                </span>
+            </div>
+
+            <p class="text-muted small mb-2">{{ product.brand }} • {{ product.category }}</p>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="fs-5 fw-bold text-primary">{{ formatPrice(product.price) }}</span>
+                <div>
+                    <span v-if="product.stock === 0" class="badge bg-danger">Hết hàng</span>
+                    <span v-else class="small text-secondary">Kho: <strong>{{ product.stock }}</strong></span>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button class="btn btn-warning" type="button">Sửa</button>
+                <button class="btn btn-warning" type="button">Xóa</button>
+            </div>
+        </div>
+    </div>
+</template>
