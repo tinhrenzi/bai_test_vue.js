@@ -3,12 +3,14 @@
     <h1>Quản lý sản phẩm</h1>
     <p>{{ productsCount }} sản phẩm</p>
     <button type="button" @click="$router.push({ name: 'product-create' })">Them san pham</button>
+
     <div v-if="products.length" class="d-none d-lg-block">
-      <ProductTable :products="products" />
+      <ProductTable :products="products" @edit="editProduct" @delete="deleteProduct" />
     </div>
 
     <div v-if="products.length" class="d-block d-lg-none">
-      <ProductCard v-for="product in products" :key="product.id" :product="product" />
+      <ProductCard v-for="product in products" :key="product.id" :product="product" @edit="editProduct"
+        @delete="deleteProduct" />
     </div>
 
     <p v-else>Chưa có sản phẩm.</p>
@@ -40,6 +42,17 @@ export default {
         createdAt: new Date().toISOString().slice(0, 10)
       });
       this.$router.push({ name: 'products' });
+    },
+    editProduct(product) {
+      this.$router.push({
+        name: 'product-edit',
+        params: { id: product.id }
+      })
+    },
+
+    deleteProduct(productId) {
+      if (!window.confirm('Ban co chac chan muon xoa?')) return
+      this.$store.commit('removeProduct', productId);
     }
   }
 }

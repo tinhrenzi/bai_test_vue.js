@@ -42,7 +42,7 @@
           <button class="btn btn-primary" type="submit">
             {{ product ? 'Lưu thay đổi' : 'Thêm sản phẩm' }}
           </button>
-          <button class="btn btn-outline-secondary" type="button" @click="$emit('cancel')">
+          <button class="btn btn-outline-secondary" type="button" @click="cancelForm">
             Hủy
           </button>
         </div>
@@ -53,6 +53,9 @@
 
 <script>
 // Trang form dùng chung cho thao tác thêm mới và chỉnh sửa sản phẩm.
+
+import { mapState } from 'vuex'
+
 const emptyProduct = () => ({
   name: '',
   category: '',
@@ -63,22 +66,35 @@ const emptyProduct = () => ({
 })
 
 export default {
+
   name: 'ProductForm',
-  props: {
-    product: {
-      type: Object,
-      default: null
-    }
-  },
-  emits: ['save', 'cancel'],
+
+  // Nạp dữ liệu vào form khi sửa, hoặc để form trống khi thêm mới.
+
   data() {
     return {
-      form: emptyProduct(),
-
+      form: emptyProduct()
     }
   },
+
+  computed: {
+    ...mapState(['products']),
+    isEdit() {
+      return this.$route.name === 'product-edit'
+    },
+
+    product() {
+      if (!this.isEdit) {
+        return null;
+      }
+
+      return this.products.find(
+        item => item.id === Number(this.$route.params.id)
+      ) || null
+    },
+  },
+
   watch: {
-    // Nạp dữ liệu vào form khi sửa, hoặc để form trống khi thêm mới.
     product: {
       immediate: true,
       handler(product) {
@@ -86,29 +102,66 @@ export default {
       }
     }
   },
+
   methods: {
     // Trả về lỗi đầu tiên để chỉ gửi dữ liệu hợp lệ lên component cha.
     validateForm() {
-      if (!this.form.name.trim()) return 'Tên sản phẩm không được để trống.'
-      if (!this.form.category.trim()) return 'Danh mục không được để trống.'
-      if (!this.form.brand.trim()) return 'Hãng không được để trống.'
-      if (!Number.isInteger(this.form.price) || this.form.price <= 0) {
-        return 'Giá sản phẩm phải là số nguyên lớn hơn 0.'
-      }
-      if (this.form.stock === '' || !Number.isInteger(this.form.stock) || this.form.stock < 0) {
-        return 'Tồn kho phải là số nguyên không âm.'
-      }
+      if (!this.form.name.trim()) return 'Tên sản phẩm không được để trống.';
 
-      return null
+      if (!this.form.category.trim()) return 'Danh mục không được để trống.';
+
+      if (!this.form.brand.trim()) return 'Hãng không được để trống.';
+
+      if (!Number.isInteger(this.form.price) || this.form.price <= 0) {
+        return 'Giá sản phẩm phải là số nguyên lớn hơn 0.';
+      };
+
+      if (!Number.isInteger(this.form.stock) || this.form.stock < 0) {
+        return 'Số lượng sản phẩm phải là số nguyên lớn hơn 0.';
+      };
+
+      if (this.form.stock === '' || !Number.isInteger(this.form.stock) || this.form.stock < 0) {
+        return 'Tồn kho phải là số nguyên không âm.';
+      };
+
+      return null;
     },
+
     submitForm() {
-      const error = this.validateForm()
+      const error = this.validateForm();
       if (error) {
-        alert(error)
+        alert(error);
         return;
-      }
-      this.$emit('save', { ...this.form })
+      };
+
+      if (this.isEdit) {
+        if (!this.product) {
+          alert('Khong tim thay san pham');
+          this.$router.push({ name: 'products' });
+          return;
+        };
+        this.$store.commit('updateProduct', {
+          ...this.form,
+          id: this.product.id,
+          createdAt: this.product.createdAt
+        });
+      } else {
+        const nextId = Math.max(0, ...this.products.map(item => item.id)) + 1
+
+        this.$store.commit('addProduct', {
+          ...this.form,
+          id: nextId,
+          createdAt: new Date().toISOString().slice(0, 10)
+        });
+      };
+      this.$router.push({ name: 'products' })
+    },
+
+    cancelForm() {
+      this.$router.push({ name: 'products' })
     }
+
   }
+
 }
 </script>
