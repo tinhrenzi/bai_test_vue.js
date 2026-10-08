@@ -1,6 +1,8 @@
 <script setup>
-import products from '../../data/products.json'
+import products from '../data/products.json'
 import ProductCard from './ProductCard.vue'
+
+
 </script>
 
 <template>
