@@ -123,7 +123,7 @@ export default {
         return 'Số lượng sản phẩm phải là số nguyên lớn hơn 0.';
       };
 
-      if (this.form.stock === '' || !Number.isInteger(this.form.stock) || this.form.stock < 0) {
+      if (this.form.stock === '' || !Number.isInteger(this.form.stock) || this.form.stock <= 0) {
         return 'Tồn kho phải là số nguyên không âm.';
       };
 
@@ -163,7 +163,6 @@ export default {
     cancelForm() {
       this.$router.push({ name: 'products' })
     }
-
   }
 
 }
