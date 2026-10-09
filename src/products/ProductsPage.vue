@@ -18,9 +18,10 @@
     </div>
 
     <p v-if="!products.length">Chưa có sản phẩm.</p>
+    <Pagination v-if="totalPage > 1" :current-page="currentPage" :total-pages="totalPage"
+      @page-changed="currentPage = $event" />
   </section>
-  <Pagination v-if="totalPage > 1" :current-page="currentPage" :total-pages="totalPage"
-    @page-changed="currentPage = $event" />
+
 </template>
 
 <script>
