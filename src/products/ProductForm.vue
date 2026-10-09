@@ -47,6 +47,9 @@
           </button>
         </div>
       </form>
+
+      <Pagination v-if="totalPages > 1" :current-page="currentPage" :total-pages="currentPage"
+        @page-changed="currentPage = $event" />
     </div>
   </section>
 </template>
@@ -55,15 +58,7 @@
 // Trang form dùng chung cho thao tác thêm mới và chỉnh sửa sản phẩm.
 
 import { mapState } from 'vuex'
-
-const emptyProduct = () => ({
-  name: '',
-  category: '',
-  brand: '',
-  price: 0,
-  stock: 0,
-  status: 'active'
-})
+import Pagination from './components/common/Pagination.vue';
 
 export default {
 
@@ -73,12 +68,12 @@ export default {
 
   data() {
     return {
-      form: emptyProduct()
+      form: { ...this.$store.state.newProductDraft }
     }
   },
 
   computed: {
-    ...mapState(['products']),
+    ...mapState(['products', 'newProductDraft']),
     isEdit() {
       return this.$route.name === 'product-edit'
     },
@@ -98,7 +93,15 @@ export default {
     product: {
       immediate: true,
       handler(product) {
-        this.form = product ? { ...product } : emptyProduct()
+        this.form = product ? { ...product } : { ...this.newProductDraft }
+      }
+    },
+    form: {
+      deep: true,
+      handler(form) {
+        if (!this.isEdit) {
+          this.$store.commit('setNewProductDraft', form);
+        }
       }
     }
   },

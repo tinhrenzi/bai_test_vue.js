@@ -1,13 +1,29 @@
 import { createStore } from 'vuex'
 import productsData from '../products/data/products.json'
+const emptyProduct = () => ({
+  name: '',
+  category: '',
+  brand: '',
+  price: 0,
+  stock: 0,
+  status: 'active'
+})
+
 const store = createStore({
   state: {
-    products: productsData
+    products: productsData, newProductDraft: emptyProduct()
   },
   getters: {
     productsCount: state => state.products.length
   },
   mutations: {
+    setNewProductDraft(state, draft) {
+      state.newProductDraft = { ...draft }
+    },
+
+    resetNewProductDraft(state) {
+      state.newProductDraft = emptyProduct();
+    },
     // 
     addProduct(state, product) {
       state.products.push(product);
