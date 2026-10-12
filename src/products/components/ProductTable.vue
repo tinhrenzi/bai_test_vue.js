@@ -1,6 +1,6 @@
 <script>
 export default {
-    
+
     name: 'ProductTable',
     props: {
         products: {
@@ -8,7 +8,7 @@ export default {
             required: true
         }
     },
-    emits: ['edit', 'delete'],
+    emits: ['edit', 'delete', 'history'],
     methods: {
         // Hiển thị giá theo nhóm hàng nghìn, không thêm ký hiệu tiền tệ.
         formatPrice(price) {
@@ -31,6 +31,7 @@ export default {
                     <th>Tồn kho</th>
                     <th>Trạng thái</th>
                     <th class="text-end">Hành động</th>
+                    <th class="text-end">Lịch sử chỉnh sửa</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,6 +58,12 @@ export default {
                         </button>
                         <button class="btn btn-danger" type="button" @click="$emit('delete', product.id)">
                             Xóa
+                        </button>
+                    </td>
+                    <td class="text-end text-nowrap">
+                        <!-- Chuyển thao tác trên sản phẩm lên component cha xử lý. -->
+                        <button class="btn btn-secondary me-2" type="button" @click="$emit('history', product.id)">
+                            Lịch sử
                         </button>
                     </td>
                 </tr>

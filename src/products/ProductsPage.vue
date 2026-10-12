@@ -2,7 +2,7 @@
   <!-- Product Page -->
   <section>
     <h1>Quản lý sản phẩm</h1>
-    <p>{{ productsCount }} sản phẩm</p>
+    <p>{{ productsCount }} Sản phẩm</p>
     <button type="button" @click="$router.push({ name: 'product-create' })">Them san pham</button>
 
     <ProductFilter :categories="categories" :brands-list="brandsList" :status-list="statusList" :sort-by="sortBy"
@@ -10,7 +10,7 @@
 
     <p v-if="products.length && !filteredProducts.length">Không tìm thấy sản phẩm phù hợp.</p>
     <div v-else-if="filteredProducts.length" class="d-none d-lg-block">
-      <ProductTable :products="paginationProduct" @edit="editProduct" @delete="deleteProduct" />
+      <ProductTable :products="paginationProduct" @edit="editProduct" @delete="deleteProduct" @history="historyEdit" />
     </div>
 
     <div v-if="filteredProducts.length" class="d-block d-lg-none">
@@ -59,18 +59,22 @@ export default {
     product() {
       return this.$store.state.SanPhams.product
     },
+
     categories() {
       return [...new Set(this.products.map(product => product.category))].sort()
     },
+
     brandsList() {
       return [...new Set(this.products.map(product => product.brand))].sort()
     },
+
     statusList() {
       return [
         { value: 'active', label: 'Đang bán' },
         { value: 'inactive', label: 'Ngừng bán' }
       ]
     },
+
     filteredProducts() {
       const keyword = this.filters.keyword.trim().toLocaleLowerCase()
       const result = this.products.filter(product => {
@@ -101,9 +105,11 @@ export default {
 
       return result
     },
+
     totalPage() {
       return Math.ceil(this.filteredProducts.length / this.pageSize)
     },
+    
     paginationProduct() {
       const start = (this.currentPage - 1) * this.pageSize
       return this.filteredProducts.slice(start, start + this.pageSize)
@@ -155,6 +161,13 @@ export default {
         alert('Da xoa!')
         console.log("🚀 ~ alert('Da xoa!'):", alert('Da xoa!'))
       }
+    },
+
+    historyEdit(productId) {
+      this.$router.push({
+        name: 'product-history',
+        query: { productId }
+      })
     }
   }
 }

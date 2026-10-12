@@ -79,15 +79,36 @@ export default {
           item => String(item.id) === String(product.id)
         )
 
-
         if (index === -1) {
           return false
+        }
+
+        const editHistory = tmpProducts[index]
+        const newProduct = product
+
+        const changes = {}
+        Object.keys(newProduct).forEach(key => {
+          changes[key] = {
+            oldVal: editHistory[key],
+            newVal: newProduct[key]
+          }
+        })
+
+        if (Object.keys(changes).length > 0) {
+          store.dispatch('LichSu/addHistory', {
+            productId: newProduct.id,
+            productName: newProduct.name || editHistory.name,
+            action: 'UPDATE',
+            time: new Date().toLocaleString('vi-VN'),
+            changes
+          }, { root: true })
         }
 
         tmpProducts[index] = product
         localStorage.setItem("xuantinh_products", JSON.stringify(tmpProducts))
         store.commit('Set', { key: '_version', value: store.state._version + 1 })
         return true
+
       } catch (error) {
         return false
       }

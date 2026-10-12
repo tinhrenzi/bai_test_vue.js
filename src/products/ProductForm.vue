@@ -57,7 +57,6 @@
 // Trang form dùng chung cho thao tác thêm mới và chỉnh sửa sản phẩm.
 
 import { mapGetters } from 'vuex'
-import Pagination from './components/common/Pagination.vue';
 
 export default {
 
@@ -146,11 +145,10 @@ export default {
           new Promise(resolve => setTimeout(resolve, 1000))
         ])
 
-        console.log("🚀 ~ saved:", saved)
         if (!saved) {
           alert('Không lưu được sản phẩm.')
           return
-        }else{
+        } else {
           alert('Luu thanh cong!')
         }
 
