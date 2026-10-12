@@ -1,4 +1,5 @@
 <template>
+    <!-- Product Filter -->
     <nav class="row g-2 align-items-center px-3 px-md-4 mb-4">
         <!-- Chia bố cục 3:1 trên desktop; xếp dọc trên màn hình nhỏ. -->
         <div class="col-12 col-lg-9">

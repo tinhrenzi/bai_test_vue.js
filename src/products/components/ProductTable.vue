@@ -18,6 +18,7 @@ export default {
 }
 </script>
 <template>
+    <!-- Product Table -->>
     <div class="table-responsive bg-white rounded shadow-sm border">
         <table class="table table-hover align-middle mb-0">
             <!-- Goi bang -->

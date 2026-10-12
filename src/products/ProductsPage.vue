@@ -1,4 +1,5 @@
 <template>
+  <!-- Product Page -->
   <section>
     <h1>Quản lý sản phẩm</h1>
     <p>{{ productsCount }} sản phẩm</p>
@@ -54,8 +55,10 @@ export default {
   },
 
   computed: {
-    ...mapState(['products']),
-    ...mapGetters(['productsCount']),
+    ...mapGetters('SanPhams', ['productsCount', 'products']),
+    product() {
+      return this.$store.state.SanPhams.product
+    },
     categories() {
       return [...new Set(this.products.map(product => product.category))].sort()
     },
@@ -134,15 +137,6 @@ export default {
         : this.sortBy === 'date-asc' ? '' : 'date-desc'
     },
 
-    addProducts() {
-      this.$store.commit('addProduct', {
-        ...this.form,
-        id: Math.max(0, ...this.$store.state.product.map(item => item.id)) + 1,
-        createdAt: new Date().toISOString().slice(0, 10)
-      });
-      this.$router.push({ name: 'products' });
-    },
-
     editProduct(product) {
       this.$router.push({
         name: 'product-edit',
@@ -150,9 +144,17 @@ export default {
       })
     },
 
-    deleteProduct(productId) {
-      if (!window.confirm('Ban co chac chan muon xoa?')) return
-      this.$store.commit('removeProduct', productId);
+    async deleteProduct(productId) {
+      if (!confirm("Ban co muon xoa san pham nay khong?")) return
+      const deleted = await this.$store.dispatch('SanPhams/deleteProduct', productId)
+
+      console.log("🚀 ~ deleted:", deleted)
+      if (!deleted) {
+        alert("Khong xoa duoc!")
+      } else {
+        alert('Da xoa!')
+        console.log("🚀 ~ alert('Da xoa!'):", alert('Da xoa!'))
+      }
     }
   }
 }

@@ -18,6 +18,7 @@ export default {
 </script>
 
 <template>
+    <!-- Product Card -->
     <div class="card shadow-sm border mb-3">
         <div class="card-body">
             <div class="d-flex justify-content-between align-items-start mb-2">
