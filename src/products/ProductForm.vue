@@ -129,7 +129,7 @@ export default {
         ...this.product,
         id: this.isEdit
           ? this.product.id
-          : Math.max(0, ...this.products.map(item => Number(item.id))) + 1,
+          : Date.now(),
         createdAt: this.isEdit
           ? this.product.createdAt
           : new Date().toISOString().slice(0, 10)
