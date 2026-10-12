@@ -9,7 +9,9 @@
         </div>
         <!-- Tạm thời in ra xem đã lấy được lịch sử chưa -->
         <div v-if="productHistories.length">
-            <LichSu :record="productHistories[0]" />
+            <div v-for="(item, index) in productHistories" :key="index">
+                <LichSu :record="item" />
+            </div>
         </div>
         <div v-else class="alert alert-warning">
             Chưa có lịch sử chỉnh sửa nào cho sản phẩm này.
