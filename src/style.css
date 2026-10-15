@@ -23,3 +23,19 @@ body {
 .form-select {
   max-width: 800px;
 }
+
+/* Căn giữa thanh phân trang của DevExtreme DataGrid */
+.dx-datagrid-pager,
+.dx-pager {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 16px;
+}
+
+.dx-pager .dx-pages,
+.dx-pager .dx-page-sizes {
+  float: none !important;
+  margin: 0 !important;
+}

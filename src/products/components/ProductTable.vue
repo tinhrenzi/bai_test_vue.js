@@ -1,7 +1,21 @@
 <script>
+import {
+    DxDataGrid,
+    DxColumn,
+    DxPaging,
+    DxPager,
+    DxSorting
+} from 'devextreme-vue/data-grid'
 export default {
 
     name: 'ProductTable',
+    components: {
+        DxDataGrid,
+        DxColumn,
+        DxPaging,
+        DxPager,
+        DxSorting
+    },
     props: {
         products: {
             type: Array,
@@ -18,56 +32,63 @@ export default {
 }
 </script>
 <template>
-    <!-- Product Table -->>
+    <!-- Product Table -->
     <div class="table-responsive bg-white rounded shadow-sm border">
-        <table class="table table-hover align-middle mb-0">
-            <!-- Goi bang -->
-            <thead class="table-light">
-                <tr>
-                    <th>Tên sản phẩm</th>
-                    <th>Danh mục</th>
-                    <th>Hãng</th>
-                    <th>Giá</th>
-                    <th>Tồn kho</th>
-                    <th>Trạng thái</th>
-                    <th class="text-end">Hành động</th>
-                    <th class="text-end">Lịch sử chỉnh sửa</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Hiển thị danh sách: lặp qua products và tạo một hàng cho mỗi sản phẩm -->
-                <tr v-for="product in products" :key="product.id">
-                    <td class="fw-semibold">{{ product.name }}</td>
-                    <td>{{ product.category }}</td>
-                    <td>{{ product.brand }}</td>
-                    <td class="text-primary fw-bold">{{ formatPrice(product.price) }}</td>
-                    <td>
-                        <span v-if="product.stock === 0" class="badge bg-danger">Hết hàng</span>
-                        <span v-else>{{ product.stock }}</span>
-                    </td>
-                    <td>
-                        <span
-                            :class="product.status === 'active' ? 'badge bg-success-subtle text-success' : 'badge bg-secondary-subtle text-secondary'">
-                            {{ product.status === 'active' ? 'Đang bán' : 'Ngừng bán' }}
-                        </span>
-                    </td>
-                    <td class="text-end text-nowrap">
-                        <!-- Chuyển thao tác trên sản phẩm lên component cha xử lý. -->
-                        <button class="btn btn-warning me-2" type="button" @click="$emit('edit', product)">
-                            Sửa
-                        </button>
-                        <button class="btn btn-danger" type="button" @click="$emit('delete', product.id)">
-                            Xóa
-                        </button>
-                    </td>
-                    <td class="text-end text-nowrap">
-                        <!-- Chuyển thao tác trên sản phẩm lên component cha xử lý. -->
-                        <button class="btn btn-secondary me-2" type="button" @click="$emit('history', product.id)">
-                            Lịch sử
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <DxDataGrid :data-source="products" :show-borders="true" :row-alternation-enabled="true"
+            :hover-state-enabled="true" key-expr="id">
+
+            <DxPaging page-size="10" />
+
+            <DxPager :show-page-size-selector="true" :allowed-page-sizes="[5, 10, 20]" :show-info="true"
+                :show-navigation-buttons="true" />
+
+            <DxSorting mode="single" />
+
+            <DxColumn data-field="name" caption="Tên sản phẩm" />
+
+            <DxColumn data-field="category" caption="Danh mục" />
+
+            <DxColumn data-field="brand" caption="Hãng" />
+
+            <DxColumn data-field="price" caption="Giá" data-type="number" cell-template="priceTemplate" />
+
+            <DxColumn data-field="stock" caption="Tồn kho" data-type="number" cell-template="stockTemplate" />
+
+            <DxColumn data-field="status" caption="Trạng thái" cell-template="statusTemplate" />
+
+            <DxColumn caption="Hành động" :allow-sorting="false" alignment="center" cell-template="actionTemplate" />
+
+            <DxColumn caption="Lịch sử" :allow-sorting="false" alignment="center" cell-template="historyTemplate" />
+
+            <template #priceTemplate="{ data }">
+                <span class="text-primary fw-bold">
+                    {{ formatPrice(data.value) }}
+                </span>
+            </template>
+
+            <template #stockTemplate="{ data }">
+                <span v-if="data.value === 0" class="badge bg-danger">Hết hàng</span>
+                <span v-else>{{ data.value }}</span>
+            </template>
+
+            <template #statusTemplate="{ data }">
+                <span
+                    :class="data.value === 'active' ? 'badge bg-success-subtle text-success' : 'badge bg-secondary-subtle text-secondary'">
+                    {{ data.value === 'active' ? 'Đang bán' : 'Ngừng bán' }}
+                </span>
+            </template>
+
+            <template #actionTemplate="{ data }">
+                <button type="button" class="btn btn-sm btn-warning me-2" @click="$emit('edit', data.data)">Sửa</button>
+                <button type="button" class="btn btn-sm btn-warning me-2"
+                    @click="$emit('delete', data.data.id)">Xóa</button>
+            </template>
+
+            <template #historyTemplate="{ data }">
+                <button type="button" class="btn btn-sm btn-warning me-2" @click="$emit('history', data.data.id)">Lịch
+                    sử</button>
+            </template>
+
+        </DxDataGrid>
     </div>
 </template>

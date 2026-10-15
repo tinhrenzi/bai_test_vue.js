@@ -8,44 +8,72 @@
 
       <form @submit.prevent="submitForm" novalidate>
         <div class="row g-3">
+          <!--  -->
           <div class="col-12 col-md-6">
             <label for="product-name" class="form-label">Tên sản phẩm</label>
-            <input id="product-name" v-model.trim="product.name" class="form-control" required />
+            <DxTextBox v-model:value="product.name" placeholder="Nhập tên sản phẩm">
+              <DxValidator>
+                <DxRequiredRule message="Tên sản phẩm không được để trống!" />
+              </DxValidator>
+            </DxTextBox>
           </div>
           <div class="col-12 col-md-6">
             <label for="product-category" class="form-label">Danh mục</label>
-            <input id="product-category" v-model.trim="product.category" class="form-control" required />
+            <DxTextBox v-model:value="product.category" placeholder="Nhập danh mục sản phẩm!">
+              <DxValidator>
+                <DxRequiredRule message="Danh mục sản phẩm không được để trống!" />
+              </DxValidator>
+            </DxTextBox>
           </div>
           <div class="col-12 col-md-6">
             <label for="product-brand" class="form-label">Hãng</label>
-            <input id="product-brand" v-model.trim="product.brand" class="form-control" required />
+            <DxTextBox v-model:value="product.brand" placeholder="Nhập hãng!">
+              <DxValidator>
+                <DxRequiredRule message="Hãng không được để trống!" />
+              </DxValidator>
+            </DxTextBox>
           </div>
+          <!--  -->
           <div class="col-6 col-md-3">
             <label for="product-price" class="form-label">Giá (₫)</label>
-            <input id="product-price" v-model.number="product.price" class="form-control" type="number" min="1" step="1"
-              required />
+            <DxNumberBox v-model:value="product.price" :min="1" :show-spin-buttons="true" placeholder="Nhập giá!">
+              <DxValidator>
+                <DxRequiredRule message="Giá sản phẩm không được để trống!" />
+                <DxRangeRule :min="1" message="Giá sản phẩm phải lớn hơn 0!" />
+              </DxValidator>
+            </DxNumberBox>
           </div>
           <div class="col-6 col-md-3">
             <label for="product-stock" class="form-label">Tồn kho</label>
-            <input id="product-stock" v-model.number="product.stock" class="form-control" type="number" min="0" step="1"
-              required />
+            <DxNumberBox v-model:value="product.stock" :min="1" :show-spin-buttons="true" placeholder="Nhập số lượng!">
+              <DxValidator>
+                <DxRequiredRule message="Số lượng sản phẩm không được để trống!" />
+                <DxRangeRule :min="1" message="Số lượng sản phẩm phải lớn hơn 0!" />
+              </DxValidator>
+            </DxNumberBox>
           </div>
+
+
           <div class="col-12 col-md-6">
             <label for="product-status" class="form-label">Trạng thái</label>
-            <select id="product-status" v-model="product.status" class="form-select">
-              <option value="active">Đang bán</option>
-              <option value="inactive">Ngừng bán</option>
-            </select>
+            <DxSelectBox v-model:value="product.status" :items="statusOptions" display-expr="label" value-expr="value"
+              placeholder="Chọn trạng thái!" />
           </div>
+          <div class="col-12 col-md-6">
+            <label class="form-label fw-semibold">Ngày tạo</label>
+            <DxDateBox v-model:value="product.createdAt" type="date" display-format="yyyy-MM-dd"
+              placeholder="Chọn ngày tạo!" />
+          </div>
+          <div class="col-12 mt-3">
+            <DxCheckBox v-model:value="isConfirmed" text="Xác nhận các thông tin trên là chính xác?" />
+          </div>
+
         </div>
 
         <div class="d-flex flex-column flex-sm-row gap-2 mt-4">
-          <button class="btn btn-primary" type="submit" :disabled="isLoading">
-            {{ isLoading ? 'Đang lưu ...' : (isEdit ? 'Lưu thay đổi' : 'Thêm sản phẩm') }}
-          </button>
-          <button class="btn btn-outline-secondary" type="button" @click="cancelForm">
-            Hủy
-          </button>
+          <DxButton :text="isLoading ? 'Đang lưu' : (isEdit ? 'Lưu thay đổi' : 'Thêm sản phẩm')" type="default"
+            styling-mode="contained" :use-submit-behavior="true" :disabled="isLoading || !isConfirmed" />
+          <DxButton text="Hủy" type="nomal" styling-mode="outlined" @click="cancelForm" />
         </div>
       </form>
 
@@ -57,16 +85,37 @@
 // Trang form dùng chung cho thao tác thêm mới và chỉnh sửa sản phẩm.
 
 import { mapGetters } from 'vuex'
+import notify from 'devextreme/ui/notify'
+
+import { DxTextBox } from 'devextreme-vue/text-box'
+import { DxNumberBox } from 'devextreme-vue/number-box'
+import { DxSelectBox } from 'devextreme-vue/select-box'
+import { DxDateBox } from 'devextreme-vue/date-box'
+import { DxCheckBox } from 'devextreme-vue/check-box'
+import { DxButton } from 'devextreme-vue/button'
+import { DxValidator, DxRequiredRule, DxRangeRule } from 'devextreme-vue/validator'
 
 export default {
-
   name: 'ProductForm',
-
-  // Nạp dữ liệu vào form khi sửa, hoặc để form trống khi thêm mới.
-
+  components: {
+    DxTextBox,
+    DxNumberBox,
+    DxSelectBox,
+    DxDateBox,
+    DxCheckBox,
+    DxButton,
+    DxValidator,
+    DxRequiredRule,
+    DxRangeRule
+  },
   data() {
     return {
-      isLoading: false
+      isLoading: false,
+      isConfirmed: false,
+      statusOptions: [
+        { value: 'active', label: 'Đang bán' },
+        { value: 'inactive', label: 'Ngừng bán' }
+      ]
     }
   },
 
@@ -121,7 +170,7 @@ export default {
     async submitForm() {
       const error = this.validateForm();
       if (error) {
-        alert(error);
+        notify(error, 'warning', 2500)
         return;
       };
 
@@ -146,16 +195,16 @@ export default {
         ])
 
         if (!saved) {
-          alert('Không lưu được sản phẩm.')
+          notify('Không lưu được sản phẩm.', 'error', 2500)
           return
         } else {
-          alert('Luu thanh cong!')
+          notify('Lưu sản phẩm thành công!', 'success', 2000)
         }
 
         await this.$router.push({ name: 'products' })
       } catch (error) {
         console.error('Lỗi khi lưu sản phẩm:', error)
-        alert('Có lỗi khi lưu sản phẩm.')
+        notify('Có lỗi khi lưu sản phẩm.', 'error', 2500)
       }
     },
 
@@ -172,7 +221,7 @@ export default {
     )
 
     if (!found) {
-      alert('Không tìm thấy sản phẩm')
+      notify('Không tìm thấy sản phẩm', 'error', 2000)
       this.$router.push({ name: 'products' })
     }
   },
