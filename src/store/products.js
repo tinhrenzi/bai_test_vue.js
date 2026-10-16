@@ -1,4 +1,4 @@
-import productsData from '../products/data/products.json'
+import productsData from '../view/products/data/products.json'
 const emptyProduct = () => ({
   id: '',
   name: '',

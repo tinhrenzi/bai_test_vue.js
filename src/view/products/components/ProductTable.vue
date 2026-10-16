@@ -1,5 +1,5 @@
 <script>
-import { DxButton } from 'devextreme-vue';
+import { DxButton } from 'devextreme-vue/button';
 import {
     DxDataGrid,
     DxColumn,

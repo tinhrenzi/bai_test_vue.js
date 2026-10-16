@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import ProductsPage from '../products/ProductsPage.vue'
-import ProductForm from '../products/ProductForm.vue'
-import HistoryForm from '../history/FormLichSu.vue'
+import ProductsPage from '../view/products/ProductsPage.vue'
+import ProductForm from '../view/products/ProductForm.vue'
+import HistoryForm from '../view/history/FormLichSu.vue'
 
 // Dùng route riêng cho danh sách, thêm mới và sửa sản phẩm.
 const router = createRouter({
@@ -31,3 +31,4 @@ const router = createRouter({
 })
 
 export default router
+
