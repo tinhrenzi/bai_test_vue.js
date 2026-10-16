@@ -1,10 +1,12 @@
 <template>
   <!-- Product Page -->
   <section>
-    <h1>Quản lý sản phẩm</h1>
-    <p>{{ productsCount }} Sản phẩm</p>
-    <DxButton text="Thêm sản phẩm" icon="plus" type="default" styling-mode="contained" class="mb-3"
-      @click="$router.push({ name: 'product-create' })" />
+    <div class="m-4">
+      <h1>Quản lý sản phẩm</h1>
+      <p>{{ productsCount }} Sản phẩm</p>
+      <DxButton text="Thêm sản phẩm" icon="plus" type="default" styling-mode="contained" class="mb-3"
+        @click="$router.push({ name: 'product-create' })" />
+    </div>
     <ProductFilter :categories="categories" :brands-list="brandsList" :status-list="statusList" :sort-by="sortBy"
       @search="applyFilters" @reset="resetFilters" @sort-price="togglePriceSort" @sort-date="toggleDateSort" />
 
