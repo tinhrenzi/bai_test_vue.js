@@ -7,6 +7,7 @@ import router from './router/router.js'
 import vuex from "./vuex";
 import { createStore } from "vuex";
 const store = createStore(vuex);
+import 'devextreme/dist/css/dx.light.css'
 
 // Gắn Vue Router để điều hướng giữa danh sách và trang form riêng.
 createApp(App).use(router).use(store).mount('#app')
