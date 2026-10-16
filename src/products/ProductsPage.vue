@@ -176,18 +176,19 @@ export default {
       }
 
       this.currentProductHistories.forEach(item => {
-        Object.keys(item.change || {}).forEach(field => {
+        Object.keys(item.changes || {}).forEach(field => {
           const change = item.changes[field]
-        })
 
-        if (change && change.oldVal !== change.newVal) {
-          list.push({
-            time: item.time,
-            field: fieldNames[field] || field,
-            oldVal: change.oldVal,
-            newVal: change.newVal
-          })
-        }
+
+          if (change && change.oldVal !== change.newVal) {
+            list.push({
+              time: item.time,
+              field: fieldNames[field] || field,
+              oldVal: change.oldVal,
+              newVal: change.newVal
+            })
+          }
+        })
       })
       return list
     }

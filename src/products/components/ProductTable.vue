@@ -1,4 +1,5 @@
 <script>
+import { DxButton } from 'devextreme-vue';
 import {
     DxDataGrid,
     DxColumn,
@@ -14,7 +15,8 @@ export default {
         DxColumn,
         DxPaging,
         DxPager,
-        DxSorting
+        DxSorting,
+        DxButton
     },
     props: {
         products: {
@@ -79,14 +81,15 @@ export default {
             </template>
 
             <template #actionTemplate="{ data }">
-                <button type="button" class="btn btn-sm btn-warning me-2" @click="$emit('edit', data.data)">Sửa</button>
-                <button type="button" class="btn btn-sm btn-warning me-2"
-                    @click="$emit('delete', data.data.id)">Xóa</button>
+                <DxButton text="Sửa" icon="edit" type="default" styling-mode="outlined" class="me-2"
+                    @click="$emit('edit', data.data)" />
+                <DxButton text="Xóa" icon="trash" type="danger" styling-mode="contained"
+                    @click="$emit('delete', data.data.id)" />
             </template>
 
             <template #historyTemplate="{ data }">
-                <button type="button" class="btn btn-sm btn-warning me-2" @click="$emit('history', data.data.id)">Lịch
-                    sử</button>
+                <DxButton text="Lịch sử" icon="clock" type="normal" styling-mode="outlined"
+                    @click="$emit('history', data.data.id)" />
             </template>
 
         </DxDataGrid>

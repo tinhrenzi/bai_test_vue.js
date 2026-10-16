@@ -20,25 +20,17 @@
             </form>
         </div>
         <div class="col-12 col-lg-3 d-flex justify-content-lg-end">
-            <DxButton text="Xóa bộ lọc" type="normal" styling-mode="outlined" @click="handleResets" />
+            <DxButton text="Xóa bộ lọc" type="normal" styling-mode="outlined" @click="handleReset" />
         </div>
         <div class="col-12 d-flex flex-wrap gap-2">
-            <button type="button" class="btn"
-                :class="sortBy.startsWith('price-') ? 'btn-outline-primary' : 'btn-outline-secondary'"
-                @click="$emit('sort-price')">
-                Giá
-                <span v-if="sortBy === 'price-desc'">↓ Cao đến thấp</span>
-                <span v-else-if="sortBy === 'price-asc'">↑ Thấp đến cao</span>
-                <span v-else>↕ Mặc định</span>
-            </button>
-            <button type="button" class="btn"
-                :class="sortBy.startsWith('date-') ? 'btn-outline-primary' : 'btn-outline-secondary'"
-                @click="$emit('sort-date')">
-                Ngày tạo
-                <span v-if="sortBy === 'date-desc'">↓ Mới nhất</span>
-                <span v-else-if="sortBy === 'date-asc'">↑ Cũ nhất</span>
-                <span v-else>↕ Mặc định</span>
-            </button>
+            <DxButton
+                :text="sortBy === 'price-desc' ? 'Giá: ↓ Cao đến thấp' : (sortBy === 'price-asc' ? 'Giá: ↑ Thấp đến cao' : 'Giá: ↕ Mặc định')"
+                :type="sortBy.startsWith('price-') ? 'default' : 'normal'" styling-mode="outlined"
+                @click="$emit('sort-price')" />
+            <DxButton
+                :text="sortBy === 'date-desc' ? 'Ngày tạo: ↓ Mới nhất' : (sortBy === 'date-asc' ? 'Ngày tạo: ↑ Cũ nhất' : 'Ngày tạo: ↕ Mặc định')"
+                :type="sortBy.startsWith('date-') ? 'default' : 'normal'" styling-mode="outlined"
+                @click="$emit('sort-date')" />
         </div>
     </nav>
 </template>
