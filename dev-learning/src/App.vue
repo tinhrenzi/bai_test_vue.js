@@ -1,7 +1,10 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <HelloWorld />
+  <div>
+    <ChatView />
+  </div>
 </template>
+
+<script setup>
+import ChatView from './view/ChatView.vue';
+
+</script>
