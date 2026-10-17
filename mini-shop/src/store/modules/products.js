@@ -1,4 +1,4 @@
-import { getProducts } from '../../api/productApi'
+import { layDanhSachSanPham } from '../../api/apiProduct'
 export default {
     namespaced: true,
     state: () => ({
@@ -14,7 +14,7 @@ export default {
         },
 
         SET_Products(state, data) {
-            state.items = data.SET_Products
+            state.items = data.products
             state.total = data.total
         },
         SET_Error(state, message) {
@@ -24,16 +24,16 @@ export default {
 
     actions: {
         async fetchProducts({ commit }, { skip = 0, limit = 12 }) {
-            commit(SET_Loading, true),
-                commit(SET_Error, null)
+            commit('SET_Loading', true),
+                commit('SET_Error', null)
 
             try {
-                const resp = await getProducts(skip, limit)
+                const resp = await layDanhSachSanPham({ boQua: skip, soLuong: limit })
                 commit('SET_Products', resp.data)
             } catch (error) {
                 console.log("🚀 ~ error:", error)
-                'SET_Error',
-                    error.message || 'Không thể tải danh sách sản phẩm.'
+                commit('SET_Error',
+                    error.message || 'Không thể tải danh sách sản phẩm.')
             }
             finally {
                 commit('SET_Loading', false)

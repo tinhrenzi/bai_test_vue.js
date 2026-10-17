@@ -10,11 +10,11 @@ const api = axios.create({
 let lamMoiToken = false
 let choTokenMoi = []
 
-function dangKyTokenMoi(callback) {
+export function dangKyTokenMoi(callback) {
     choTokenMoi.push(callback);
 }
 
-function thongBaoTokenMoi(tokenMoi) {
+export function thongBaoTokenMoi(tokenMoi) {
     choTokenMoi.forEach((callback) => callback(tokenMoi));
     choTokenMoi = []
 }
