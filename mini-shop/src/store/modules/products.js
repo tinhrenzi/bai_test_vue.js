@@ -1,9 +1,10 @@
-import { layDanhSachSanPham } from '../../api/apiProduct'
+import { layDanhSachSanPham, layChiTietSanPham } from '../../api/apiProduct'
 export default {
     namespaced: true,
     state: () => ({
         items: [],
         total: 0,
+        chiTiet: null,
         loading: false,
         error: null
     }),
@@ -19,6 +20,9 @@ export default {
         },
         SET_Error(state, message) {
             state.error = message
+        },
+        SET_ChiTiet(state, data) {
+            state.chiTiet = data
         }
     },
 
@@ -31,13 +35,30 @@ export default {
                 const resp = await layDanhSachSanPham({ boQua: skip, soLuong: limit })
                 commit('SET_Products', resp.data)
             } catch (error) {
-                console.log("🚀 ~ error:", error)
                 commit('SET_Error',
                     error.message || 'Không thể tải danh sách sản phẩm.')
             }
             finally {
                 commit('SET_Loading', false)
             }
+        },
+        async fetchProductById({ commit }, id) {
+            commit('SET_Loading', true)
+            commit('SET_Error', null)
+            try {
+                const resp = await layChiTietSanPham(id);
+                commit('SET_ChiTiet', resp.data)
+
+                return data
+            } catch (error) {
+                console.log("🚀 ~ error:", error)
+                commit('SET_Error', error.message || 'Không tải được danh sách sản phẩm')
+                throw error
+            }
+            finally {
+                commit('SET_Loading', false)
+            }
         }
+
     }
 }
