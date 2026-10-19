@@ -1,38 +1,41 @@
 <template>
-  <div id="app" style="padding: 24px; font-family: sans-serif;">
-    <h2>Kiểm tra Module Vuex Auth</h2>
+  <div id="app" style="padding: 24px; font-family: sans-serif; max-width: 600px;">
+    <h2>Kiểm tra Module Vuex Cart (Giỏ hàng)</h2>
 
-    <!-- TRƯỜNG HỢP 1: CHƯA ĐĂNG NHẬP -->
-    <div v-if="!daDangNhap" style="border: 1px solid #ccc; padding: 16px; max-width: 350px;">
-      <h3>Đăng nhập thử nghiệm</h3>
-      <div style="margin-bottom: 12px;">
-        <label>Tài khoản:</label><br />
-        <input v-model="taiKhoan" type="text" style="width: 100%; padding: 6px;" />
-      </div>
-      <div style="margin-bottom: 12px;">
-        <label>Mật khẩu:</label><br />
-        <input v-model="matKhau" type="password" style="width: 100%; padding: 6px;" />
-      </div>
-
-      <button :disabled="dangTai" @click="xuLyDangNhap" style="padding: 8px 16px; cursor: pointer;">
-        {{ dangTai ? 'Đang kiểm tra...' : 'Bấm Đăng Nhập' }}
+    <!-- KHỐI SẢN PHẨM MẪU ĐỂ TEST THÊM VÀO GIỎ -->
+    <div style="border: 1px solid #aaa; padding: 12px; margin-bottom: 20px; background: #fafafa;">
+      <h3>Sản phẩm mẫu để bấm thử:</h3>
+      <p>Tên: <strong>Áo Thun Mini Shop</strong> - Giá: <strong>$19.99</strong></p>
+      <p style="color: blue;">Tồn kho trong kho chỉ còn: <strong>3 cái</strong></p>
+      <button @click="themSanPhamMau" style="padding: 8px 16px; background: #28a745; color: white; border: none; cursor: pointer;">
+        + Bấm Thêm Vào Giỏ
       </button>
-
-      <!-- Hiển thị lỗi nếu gõ sai mật khẩu -->
-      <p v-if="loi" style="color: red; margin-top: 8px;">{{ loi }}</p>
     </div>
 
-    <!-- TRƯỜNG HỢP 2: ĐÃ ĐĂNG NHẬP THÀNH CÔNG -->
-    <div v-else style="border: 1px solid green; padding: 16px; max-width: 400px; background: #f0fff0;">
-      <h3 style="color: green;">Đăng nhập thành công vào Vuex!</h3>
-      <img :src="user?.image" width="70" style="border-radius: 50%;" />
-      <p>Xin chào: <strong>{{ user?.firstName }} {{ user?.lastName }}</strong> ({{ user?.username }})</p>
-      <p>Email: {{ user?.email }}</p>
-      <p style="font-size: 12px; word-break: break-all;"><strong>Token:</strong> {{ token }}</p>
+    <!-- KHỐI HIỂN THỊ THÔNG TIN GIỎ HÀNG -->
+    <div style="border: 2px solid #007bff; padding: 16px; border-radius: 6px;">
+      <h3>Giỏ Hàng Của Bạn</h3>
+      <p>Tổng số lượng món (getters.count): <strong style="font-size: 18px; color: red;">{{ tongSoLuong }}</strong></p>
+      <p>Tổng tiền hóa đơn (getters.total): <strong style="font-size: 18px; color: red;">${{ tongTien }}</strong></p>
 
-      <button @click="xuLyDangXuat"
-        style="background: red; color: white; padding: 6px 12px; border: none; cursor: pointer;">
-        Đăng Xuất
+      <div v-if="gioHang.length === 0" style="color: gray;">Giỏ hàng đang trống.</div>
+
+      <!-- DANH SÁCH CÁC MÓN TRONG GIỎ -->
+      <ul v-else style="padding-left: 20px;">
+        <li v-for="item in gioHang" :key="item.id" style="margin-bottom: 10px;">
+          <strong>{{ item.title }}</strong> - ${{ item.price }} / cái 
+          <br />
+          Số lượng: 
+          <button @click="giamSoLuong(item)">-</button>
+          <strong> {{ item.quantity }} </strong>
+          <button @click="tangSoLuong(item)">+</button>
+          (Tối đa: {{ item.stock }})
+          <button @click="xoaMon(item.id)" style="margin-left: 10px; color: red;">Xóa</button>
+        </li>
+      </ul>
+
+      <button v-if="gioHang.length > 0" @click="xoaHet" style="margin-top: 10px; background: #dc3545; color: white; border: none; padding: 6px 12px; cursor: pointer;">
+        Xóa Sạch Giỏ Hàng
       </button>
     </div>
   </div>
@@ -41,48 +44,56 @@
 <script>
 export default {
   name: 'App',
-  data() {
-    return {
-      // Tài khoản mẫu của DummyJSON
-      taiKhoan: 'emilys',
-      matKhau: 'emilyspass',
-    };
-  },
   computed: {
-    // Lấy dữ liệu từ Vuex module auth
-    daDangNhap() {
-      return this.$store.getters['auth/daDangNhap'];
+    gioHang() {
+      return this.$store.getters['cart/danhSachSanPham'];
     },
-    user() {
-      return this.$store.getters['auth/thongTinUser'];
+    tongSoLuong() {
+      return this.$store.getters['cart/count'];
     },
-    token() {
-      return this.$store.state.auth.token;
+    tongTien() {
+      return this.$store.getters['cart/total'];
     },
-    dangTai() {
-      return this.$store.state.auth.dangTai;
-    },
-    loi() {
-      return this.$store.state.auth.loi;
-    },
-  },
-  async mounted() {
-    // Khi vừa mở trang hoặc F5 tải lại trang, tự động gọi khôi phục phiên
-    await this.$store.dispatch('auth/khoiPhucPhienLamViec');
   },
   methods: {
-    async xuLyDangNhap() {
-      try {
-        await this.$store.dispatch('auth/dangNhap', {
-          username: this.taiKhoan,
-          password: this.matKhau,
-        });
-      } catch (err) {
-        // Lỗi đã được lưu vào Vuex state loi
-      }
+    // 1. Test thêm sản phẩm có stock = 3
+    themSanPhamMau() {
+      this.$store.dispatch('cart/themVaoGio', {
+        sanPham: {
+          id: 101,
+          title: 'Áo Thun Mini Shop',
+          price: 19.99,
+          thumbnail: 'https://via.placeholder.com/150',
+          stock: 3, // Giả lập trong kho chỉ còn đúng 3 cái
+        },
+        soLuong: 1,
+      });
     },
-    xuLyDangXuat() {
-      this.$store.dispatch('auth/dangXuat');
+
+    // 2. Test tăng số lượng
+    tangSoLuong(item) {
+      this.$store.dispatch('cart/capNhatSoLuong', {
+        id: item.id,
+        soLuong: item.quantity + 1,
+      });
+    },
+
+    // 3. Test giảm số lượng (nếu giảm về 0 sẽ tự xóa)
+    giamSoLuong(item) {
+      this.$store.dispatch('cart/capNhatSoLuong', {
+        id: item.id,
+        soLuong: item.quantity - 1,
+      });
+    },
+
+    // 4. Test xóa 1 món
+    xoaMon(id) {
+      this.$store.dispatch('cart/xoaSanPham', id);
+    },
+
+    // 5. Test xóa sạch giỏ
+    xoaHet() {
+      this.$store.dispatch('cart/xoaTatCa');
     },
   },
 };
