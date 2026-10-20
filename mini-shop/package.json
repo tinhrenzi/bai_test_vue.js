@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "axios": "^1.20.0",
+    "bootstrap": "^5.3.8",
     "devextreme": "24.1",
     "devextreme-vue": "24.1",
     "exceljs": "^4.4.0",
