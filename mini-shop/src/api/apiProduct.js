@@ -1,43 +1,57 @@
-import api from './axios'
+import api from "./axios";
 
 export function layDanhSachSanPham(thamSo = {}) {
     const {
         soLuong = 12,
         boQua = 0,
-        truongLay = 'title,price,thubnail,category,stock,rating',
+        truongLay = "title,price,thumbnail,category,stock,rating",
         sapXepTheo,
         thuTu,
-        doTre
+        doTre,
     } = thamSo;
 
-    return api.get('/products', {
+    return api.get("/products", {
         params: {
             limit: soLuong,
             skip: boQua,
             select: truongLay,
-            ...(sapXepTheo ? { sortBy: sapXepTheo, order: thuTu || 'asc' } : {}),
-            ...(doTre ? { delay: doTre } : {})
+            ...(sapXepTheo
+                ? { sortBy: sapXepTheo, order: thuTu || "asc" }
+                : {}),
+            ...(doTre ? { delay: doTre } : {}),
         },
-    })
+    });
 }
 
 export function timKiemSanPham(tuKhoa, thamSoThem = {}) {
-    return api.get('/products/search', {
+    return api.get("/products/search", {
         params: {
             q: tuKhoa,
-            ...thamSoThem
-        }
-    })
+            ...thamSoThem,
+        },
+    });
 }
 
 export function layDanhSachDanhMuc() {
-    return api.get('/products/categories');
+    return api.get("/products/categories");
 }
 
 export function laySanPhamTheoDanhMuc(tenDanhMuc, thamSoThem = {}) {
-    return api.get(`/products/category/${tenDanhMuc}`, { params: thamSoThem })
+    return api.get(`/products/category/${tenDanhMuc}`, { params: thamSoThem });
 }
 
 export function layChiTietSanPham(idSanPham) {
     return api.get(`/products/${idSanPham}`);
+}
+
+export function themSanPham(duLieu) {
+    return api.post("/products/add", duLieu);
+}
+
+export function suaSanPham(id, duLieu) {
+    return api.put(`/products/${id}`, duLieu);
+}
+
+export function xoaSanPham(id) {
+    return api.delete(`/products/${id}`);
 }
