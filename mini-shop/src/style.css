@@ -92,3 +92,19 @@ body {
 .m3-btn-pill:hover {
   transform: translateY(-1px);
 }
+
+.m3-table-btn {
+  height: 32px !important;
+  padding: 0 12px !important;
+  font-size: 13px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+}
+
+.m3-action-wrapper {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+}

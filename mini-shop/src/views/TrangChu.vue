@@ -105,13 +105,13 @@
                 <DxColumn
                     caption="Hành động"
                     alignment="center"
-                    :width="160"
+                    :width="220"
                     cell-template="actionTemplate">
                 </DxColumn>
                 <template #actionTemplate="{ data }">
-                    <div style="display: flex; gap: 6px; justify-content: center">
+                    <div class="m3-action-wrapper">
                         <DxButton
-                            class="m3-btn-pill"
+                            class="m3-btn-pill m3-table-btn"
                             text="Sửa"
                             icon="edit"
                             type="default"
@@ -119,7 +119,7 @@
                             @click="xuLySua(data.data.id, data.data)" />
 
                         <DxButton
-                            class="m3-btn-pill"
+                            class="m3-btn-pill m3-table-btn"
                             text="Xóa"
                             icon="trash"
                             type="danger"
