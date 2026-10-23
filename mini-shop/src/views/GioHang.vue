@@ -1,5 +1,6 @@
 <template>
     <div class="m3-page-container">
+        <ThemeToggle />
         <div class="m3-cart-header mb-4">
             <div
                 class="d-flex flex-wrap justify-content-between align-items-center gap-3">
@@ -192,9 +193,11 @@
 
 <script>
 import notify from "devextreme/ui/notify";
+import ThemeToggle from "../components/ThemeToggle.vue";
 
 export default {
     name: "GioHang",
+    components: { ThemeToggle },
     computed: {
         danhSachSanPham() {
             return this.$store.getters["cart/danhSachSanPham"] || [];

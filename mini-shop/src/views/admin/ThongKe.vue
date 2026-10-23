@@ -1,5 +1,6 @@
 <template>
     <div class="m3-page-container">
+        <ThemeToggle />
         <div class="m3-admin-header mb-4">
             <div
                 class="d-flex flex-wrap justify-content-between align-items-center gap-3">
@@ -138,12 +139,14 @@ import {
 } from "devextreme-vue/pie-chart";
 import { DxButton } from "devextreme-vue/button";
 import notify from "devextreme/ui/notify";
+import ThemeToggle from "../../components/ThemeToggle.vue";
 
 import { layDanhSachSanPham } from "../../api/apiProduct";
 
 export default {
     name: "ThongKe",
     components: {
+        ThemeToggle,
         DxChart,
         DxSeries,
         DxLegend,

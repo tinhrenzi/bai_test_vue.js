@@ -1,5 +1,6 @@
 <template>
     <div class="m3-page-container">
+        <ThemeToggle />
         <div class="m3-admin-header mb-4">
             <div
                 class="d-flex flex-wrap justify-content-between align-items-center gap-3">
@@ -182,6 +183,7 @@ import notify from "devextreme/ui/notify";
 import { exportDataGrid } from "devextreme/excel_exporter";
 import { Workbook } from "exceljs";
 import saveAs from "file-saver";
+import ThemeToggle from "../../components/ThemeToggle.vue";
 
 import {
     layDanhSachSanPham,
@@ -194,6 +196,7 @@ import {
 export default {
     name: "QuanLySanPham",
     components: {
+        ThemeToggle,
         DxDataGrid,
         DxColumn,
         DxPaging,

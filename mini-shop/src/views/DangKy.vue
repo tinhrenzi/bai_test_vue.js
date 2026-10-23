@@ -1,5 +1,6 @@
 <template>
     <div class="m3-login-wrapper">
+        <ThemeToggle />
         <div class="m3-login-card">
             <div class="m3-login-header">
                 <h2 class="m3-login-title">Đăng ký tài khoản</h2>
@@ -99,12 +100,14 @@
 import { DxTextBox } from "devextreme-vue/text-box";
 import { DxButton } from "devextreme-vue/button";
 import notify from "devextreme/ui/notify";
+import ThemeToggle from "../components/ThemeToggle.vue";
 
 export default {
     name: "DangKy",
     components: {
         DxTextBox,
         DxButton,
+        ThemeToggle,
     },
     data() {
         return {
@@ -153,9 +156,9 @@ export default {
 .m3-login-card {
     width: 100%;
     max-width: 460px;
-    background: #ffffff;
+    background: var(--md-sys-color-surface);
     border-radius: 24px;
-    border: 1px solid #e0e2ec;
+    border: 1px solid var(--md-sys-color-outline-variant);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     padding: 32px 28px;
 }
@@ -168,13 +171,13 @@ export default {
 .m3-login-title {
     font-size: 24px;
     font-weight: 700;
-    color: #1f1f1f;
+    color: var(--md-sys-color-text-main);
     margin: 0 0 6px 0;
 }
 
 .m3-login-subtitle {
     font-size: 14px;
-    color: #74777f;
+    color: var(--md-sys-color-text-muted);
     margin: 0;
 }
 
@@ -193,7 +196,7 @@ export default {
 .form-label {
     font-size: 13px;
     font-weight: 600;
-    color: #444746;
+    color: var(--md-sys-color-text-muted);
     margin: 0;
 }
 

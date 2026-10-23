@@ -1,77 +1,114 @@
-# Vue 3 + Vite
+# Mini Shop - Vue 3 + Vite
 
-Kính gửi mentor. Đây là file Readme tổng quát về cách cài và chạy dự án.
-
----
-
-## Các yêu cầu đã làm:
-
-1. **Khởi tạo và chất lượng code**
-   -- Dự án Vite cài sẵn Vue Router, Vuex, axios, DevExtreme.
-   -- ESLint, Prettier; không còn lỗi lint khi nộp bài.
-
-2. **Tầng API**
-   -- Một axios instance dùng chung, baseURL lấy từ .env, timeout 8 giây.
-   -- Request interceptor tự gắn Authorization: Bearer khi đã đăng nhập.
-   -- Response interceptor chuẩn hóa mọi lỗi thành ApiError (class tự viết, có status, message), hiển thị thông báo lỗi chung bằng notify của DevExtreme.
-   -- Khi gặp lỗi 401: gọi /auth/refresh lấy token mới rồi tự gửi lại request ban đầu. Nếu nhiều request cùng bị 401, chỉ gọi refresh một lần (dùng chung một Promise). Refresh thất bại thì đăng xuất và chuyển về trang đăng nhập.
-   -- Request GET bị lỗi mạng hoặc status ≥ 500 tự thử lại tối đa 2 lần.
-
-3. **Routing và phân quyền**
-   -- Các route: trang chủ, chi tiết sản phẩm /products/:id, giỏ hàng, đăng nhập, /admin/products, /admin/dashboard, trang 404.
-   -- Lazy load toàn bộ route trang admin.
-   -- Navigation guard chặn route admin khi chưa đăng nhập; đăng nhập xong quay lại đúng trang đang muốn vào (?redirect=).
-   -- Khi tải lại trang mà còn token, gọi /auth/me khôi phục phiên đăng nhập trước khi guard chạy.
-
-4. **Trang khách hàng**
-   -- Lưới sản phẩm 12 sản phẩm/trang, có skeleton khi tải, thông báo lỗi kèm nút "Thử lại", trạng thái không có kết quả.
-   -- Lọc theo danh mục, sắp xếp theo giá và rating.
-   -- Trang, từ khóa, danh mục, sắp xếp đồng bộ lên URL query: tải lại trang giữ nguyên trạng thái, nút Back/Forward hoạt động đúng.
-   -- Trang chi tiết sản phẩm: ảnh, mô tả, chọn số lượng, thêm vào giỏ (có cache).
-   -- Giao diện responsive bằng CSS Grid/Flexbox, hiển thị tốt ở 375px, 768px, 1280px
-
-5. **Vuex**
-   -- Ba module namespaced: auth, products, cart
-   -- Mọi thay đổi state chỉ đi qua mutation; gọi API đặt trong action.
-   -- Module cart: getters count, total; số lượng không vượt quá stock; lưu vào localStorage và khôi phục khi tải lại (dữ liệu hỏng thì bỏ qua).
-   -- Thêm, sửa, xóa sản phẩm ở trang admin cập nhật lại dữ liệu sau khi API thành công.
-
-6. **Trang quản trị**
-   -- /admin/products: DxDataGrid dùng CustomStore với remoteOperations phân trang, chuyển skip/take của grid sang skip/limit của API.
-   -- Chỉnh sửa dạng popup: validation rules cho tên (bắt buộc), giá và tồn kho (số ≥ 0), danh mục (DxSelectBox lấy từ API).
-   -- Xóa có xác nhận
-   -- Export danh sách ra Excel.
-   -- /admin/dashboard: tải toàn bộ sản phẩm, vẽ DxChart tổng tồn kho theo danh mục và DxPieChart tỷ lệ số sản phẩm theo danh mục. Phần tính toán dữ liệu cho biểu đồ dùng reduce, không gọi -- API riêng cho từng danh mục.
+Kính gửi Mentor, đây là file README tổng quát về các yêu cầu kỹ thuật đã hoàn thành cùng hướng dẫn cài đặt và chạy thử dự án.
 
 ---
 
-## Hướng dẫn cài đặt và khởi chạy
+## 📋 Danh sách yêu cầu đã hoàn thành
+
+### 1. Khởi tạo & Chất lượng mã nguồn
+
+- Cài đặt dự án với **Vite**, **Vue 3**, **Vue Router 4**, **Vuex 4**, **Axios** và **DevExtreme 24.1**.
+- Tích hợp **ESLint** & **Prettier**; đảm bảo không còn lỗi lint khi bàn giao.
+
+### 2. Tầng API (Axios Instance)
+
+- Cấu hình instance dùng chung: `baseURL` lấy từ `.env`, timeout mặc định **8 giây**.
+- **Request Interceptor:** Tự động gắn token `Authorization: Bearer <token>` khi người dùng đã đăng nhập.
+- **Response Interceptor:**
+    - Chuẩn hóa lỗi thông qua class `ApiError` (`status`, `message`).
+    - Hiển thị thông báo lỗi tự động bằng DevExtreme Notify.
+    - **Xử lý 401 & Refresh Token:** Tự động gọi API `/auth/refresh` và gửi lại request ban đầu. Dùng chung một Promise để tránh gọi refresh nhiều lần khi nhiều request cùng bị 401. Đăng xuất và điều hướng về trang đăng nhập nếu refresh thất bại.
+    - **Cơ chế Retry:** Tự động thử lại tối đa 2 lần đối với các request `GET` bị lỗi mạng hoặc lỗi server (status ≥ 500).
+
+### 3. Routing & Phân quyền
+
+- Các tuyến đường: Trang chủ, Chi tiết sản phẩm (`/products/:id`), Giỏ hàng, Đăng nhập, Đăng ký, `/admin/products`, `/admin/dashboard`, Trang 404.
+- **Lazy Loading:** Áp dụng cho toàn bộ các route trang Admin để tối ưu bundle.
+- **Navigation Guards:**
+    - Chặn truy cập route Admin nếu chưa đăng nhập; hỗ trợ query param `?redirect=` để quay lại đúng trang sau khi đăng nhập thành công.
+    - Tự động gọi API phục hồi phiên đăng nhập khi tải lại trang (nếu còn token hợp lệ).
+
+### 4. Trang Khách hàng
+
+- Lưới sản phẩm (12 sản phẩm/trang), có hiệu ứng Skeleton loading, nút "Thử lại" khi lỗi và hiển thị trạng thái khi không tìm thấy kết quả.
+- Bộ lọc danh mục, sắp xếp theo giá và rating.
+- Đồng bộ bộ lọc, từ khóa, phân trang lên URL query params (hỗ trợ nút Back/Forward và F5 giữ nguyên trạng thái).
+- Trang chi tiết sản phẩm: Xem ảnh, thông tin, chọn số lượng, thêm vào giỏ hàng (kèm cache).
+- Giao diện Responsive hoàn chỉnh (CSS Grid & Flexbox) tương thích tốt ở các kích thước `375px`, `768px`, `1280px`.
+
+### 5. Quản lý trạng thái (Vuex)
+
+- Tổ chức thành 3 module namespaced: `auth`, `products`, `cart`.
+- Tuân thủ kiến trúc: Chỉ thay đổi state qua Mutations; các tác vụ bất đồng bộ/gọi API thực hiện trong Actions.
+- **Module Giỏ hàng:** Có Getters `count`, `total`; giới hạn số lượng theo số lượng tồn kho (`stock`); đồng bộ lưu và khôi phục từ `localStorage` (tự động xử lý nếu dữ liệu cache lỗi).
+
+### 6. Trang Quản trị (Admin)
+
+- **/admin/products:**
+    - Sử dụng **DxDataGrid** kết hợp **CustomStore** phân trang từ xa (map `skip`/`take` sang `skip`/`limit` của API).
+    - Popup thêm/sửa sản phẩm với Validation rules đầy đủ (Tên bắt buộc, Giá/Tồn kho ≥ 0, Danh mục chọn qua DxSelectBox).
+    - Xóa sản phẩm có popup xác nhận.
+    - Hỗ trợ Export dữ liệu ra file Excel.
+- **/admin/dashboard:**
+    - Tải toàn bộ sản phẩm và trực quan hóa qua **DxChart** (Tổng tồn kho theo danh mục) và **DxPieChart** (Tỷ lệ số lượng sản phẩm).
+    - Tính toán thống kê dữ liệu trực tiếp bằng `reduce` trên client, không gọi lặp API theo từng danh mục.
+
+---
+
+## 🚀 Hướng dẫn cài đặt và khởi chạy
+
+### Yêu cầu môi trường
+
+- Node.js >= 18.x
+- Quản lý gói: npm hoặc yarn
+
+### Các bước thực hiện
 
 ```bash
-# 1. Clone repository về máy
-git clone git clone -b mini-shop https://github.com/tinhrenzi bai_test_vue.js.git
+# 1. Clone repository về máy (chọn branch mini-shop)
+git clone -b mini-shop https://github.com/tinhrenzi/bai_test_vue.js.git
 
-# 2. Di chuyển vào thư mục dự án
-cd bai_test_vue.js
+# 2. Di chuyển vào đúng thư mục dự án
+cd bai_test_vue.js/mini-shop
 
-# 3. Cài đặt các thư viện phụ thuộc (Bắt buộc)
+# 3. Cài đặt các phụ thuộc
 npm install
 
-# 4. Chạy dự án
+# 4. Khởi chạy dự án ở môi trường dev
 npm run dev
-
-# 5. Đăng nhập
-account đã được cung cấp sẵn, có thể lựa chọn điền nhanh khách hoặc admin để đăng nhập.
-
-# 6. Giả lập mạng delay
-delay 1s-2s-3s-5s bằng dropdown, có thể thực hiện xóa bộ lọc để reset.
-
-# 7. Đăng ký
-Hiện có thể đăng ký được cả hai tài khoản admin và khách (nhằm mục đích giả lập)
-
-# 8. Token hết hạn
-Có thể thực hiện bật/tắt trong thanh đăng nhập, sau đó xóa sạch dữ liệu hiển thị của chrome dev tools. Sau khi hết thời gian một phút, tiến hành reload trang sẽ thấy console có báo lỗi 401 (hoặc 500 nếu dommyjson trả về)
-
-
-Bài làm có sử dụng AI (khoảng 30-40%) đối với các chức năng thống kê, tạo data đăng nhập tự động, chỉnh sửa lại các chi tiết nhỏ trong các khối, giao diện và css lại. Còn lại một số khác nhằm mục đích tham khảo và chỉnh sửa đối với trang chủ và call API sản phẩm và hiển thị lên trang.
 ```
+
+---
+
+## 🔑 Tài khoản kiểm thử (Demo Accounts)
+
+Trên giao diện trang Đăng nhập đã có sẵn các nút **"Điền"** tự động, hoặc bạn có thể nhập thủ công:
+
+| Vai trò            | Tên đăng nhập | Mật khẩu                  | Ghi chú                           |
+| :----------------- | :------------ | :------------------------ | :-------------------------------- |
+| **Admin**          | `emilys`      | `emilyspass`              | Tài khoản Admin qua API DummyJSON |
+| **Admin (Nội bộ)** | `admin`       | `admin` (hoặc `admin123`) | Tài khoản Admin giả lập nội bộ    |
+| **Khách hàng**     | `michaelw`    | `michaelwpass`            | Tài khoản User thông thường       |
+
+---
+
+## 🧪 Hướng dẫn kiểm thử các tính năng nâng cao
+
+1. **Giả lập mạng chập chờn / Delay:**
+    - Chọn mức delay `1s - 2s - 3s - 5s` tại thanh dropdown bộ lọc trên thanh công cụ để kiểm tra trạng thái Skeleton Loading và nút "Thử lại".
+2. **Kiểm thử Token hết hạn & Tự động Refresh (401 Handling):**
+    - Tại màn hình Đăng nhập, tích chọn vào nút: **"Hết hạn sau 1 phút"**.
+    - Sau khi đăng nhập, đợi 1 phút rồi thực hiện reload trang hoặc điều hướng. Quan sát tab Network / Console sẽ thấy hệ thống tự động bắt lỗi 401, gọi `/auth/refresh` lấy token mới và tiếp tục request bình thường.
+3. **Đăng ký tài khoản mới:**
+    - Hỗ trợ đăng ký cả tài khoản quyền Khách và quyền Admin phục vụ mục đích kiểm thử.
+
+---
+
+## 📌 Ghi chú về việc sử dụng AI
+
+- Bài làm có sử dụng hỗ trợ từ AI (khoảng 30 - 40%) tập trung vào:
+    - Trợ giúp thuật toán xử lý dữ liệu biểu đồ thống kê.
+    - Hỗ trợ generate bộ dữ liệu đăng nhập mẫu và mock data.
+    - Tinh chỉnh các chi tiết nhỏ về giao diện, căn chỉnh CSS và Responsive.
+- Toàn bộ phần kiến trúc chính (Axios Interceptors, Vuex Store, Vue Router Guards, CustomStore DevExtreme Grid) được chủ động xây dựng và đối chiếu theo tài liệu kỹ thuật.

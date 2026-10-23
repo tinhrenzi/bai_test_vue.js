@@ -1,5 +1,6 @@
 <template>
     <div>
+        <ThemeToggle />
         <DxToolbar class="m3-app-bar">
             <DxItem location="before">
                 <DxMenu @item-click="xuLyChonMenu">
@@ -108,6 +109,7 @@ import { DxTextBox } from "devextreme-vue/text-box";
 import { DxButton } from "devextreme-vue/button";
 import notify from "devextreme/ui/notify";
 import { debounce } from "../utils/debounce";
+import ThemeToggle from "./ThemeToggle.vue";
 
 export default {
     name: "AppNavbar",
@@ -117,6 +119,7 @@ export default {
         DxMenu,
         DxTextBox,
         DxButton,
+        ThemeToggle,
     },
     props: {
         keyword: {

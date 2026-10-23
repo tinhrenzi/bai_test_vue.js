@@ -1,5 +1,6 @@
 <template>
     <div class="m3-page-container">
+        <ThemeToggle />
         <div class="mb-3 d-flex align-items-center gap-2">
             <router-link
                 to="/"
@@ -11,8 +12,8 @@
                 sanPham?.category || "Sản phẩm"
             }}</span>
             <span class="text-muted small">/</span>
-            <span
-                class="text-dark small fw-semibold text-truncate"
+                <span
+                    class="text-dark small fw-semibold text-truncate"
                 style="max-width: 250px">
                 {{ sanPham?.title }}
             </span>
@@ -168,9 +169,11 @@
 
 <script>
 import notify from "devextreme/ui/notify";
+import ThemeToggle from "../components/ThemeToggle.vue";
 
 export default {
     name: "SanPhamChiTiet",
+    components: { ThemeToggle },
     data() {
         return {
             anhHienThi: null,
@@ -264,7 +267,7 @@ export default {
     width: 64px;
     height: 64px;
     min-width: 64px;
-    background: #f0f4f9;
+    background: var(--md-sys-color-surface-container, #f0f4f9);
     border-radius: 10px;
     padding: 4px;
     border: 2px solid transparent;
@@ -293,7 +296,7 @@ export default {
 .m3-detail-rating {
     font-size: 14px;
     font-weight: 600;
-    color: #e37400;
+    color: var(--md-sys-color-warning, #e37400);
 }
 
 .m3-detail-price-box {
@@ -315,7 +318,7 @@ export default {
     align-items: center;
     border: 1px solid var(--md-sys-color-outline-variant, #e0e2ec);
     border-radius: var(--md-sys-shape-corner-full, 9999px);
-    background: #ffffff;
+    background: var(--md-sys-color-surface, #ffffff);
     overflow: hidden;
 }
 

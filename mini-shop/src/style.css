@@ -10,11 +10,35 @@
   --md-sys-color-outline-variant: #e0e2ec;
   --md-sys-color-text-main: #1f1f1f;
   --md-sys-color-text-muted: #444746;
+  --md-sys-color-danger: #b3261e;
+  --md-sys-color-success: #146c43;
+  --md-sys-color-warning: #e37400;
+  --md-sys-color-shadow: rgba(0, 0, 0, 0.08);
+  color-scheme: light;
   --md-sys-shape-corner-small: 8px;
   --md-sys-shape-corner-medium: 12px;
   --md-sys-shape-corner-large: 16px;
   --md-sys-shape-corner-full: 9999px;
   --md-sys-elevation-1: 0 1px 3px 1px rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="dark"] {
+  --md-sys-color-primary: #a8c7fa;
+  --md-sys-color-primary-hover: #d3e3fd;
+  --md-sys-color-on-primary: #062e6f;
+  --md-sys-color-surface: #1e1f20;
+  --md-sys-color-surface-container: #282a2c;
+  --md-sys-color-surface-container-high: #333537;
+  --md-sys-color-background: #131314;
+  --md-sys-color-outline: #8e918f;
+  --md-sys-color-outline-variant: #444746;
+  --md-sys-color-text-main: #e3e3e3;
+  --md-sys-color-text-muted: #c4c7c5;
+  --md-sys-color-danger: #f2b8b5;
+  --md-sys-color-success: #8bd5b0;
+  --md-sys-color-warning: #ffb86b;
+  --md-sys-color-shadow: rgba(0, 0, 0, 0.28);
+  color-scheme: dark;
 }
 
 * {
@@ -32,6 +56,66 @@ body {
   color: var(--md-sys-color-text-main);
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+body,
+.m3-page-container,
+.m3-login-wrapper {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Customer-facing surfaces and Bootstrap utilities follow the active palette. */
+.bg-white,
+.m3-login-card,
+.m3-detail-card,
+.m3-qty-control,
+.m3-filter-bar,
+.m3-empty-state {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main);
+  border-color: var(--md-sys-color-outline-variant) !important;
+}
+
+.text-dark { color: var(--md-sys-color-text-main) !important; }
+.text-muted { color: var(--md-sys-color-text-muted) !important; }
+.text-primary { color: var(--md-sys-color-primary) !important; }
+.form-control, .form-select {
+  color: var(--md-sys-color-text-main);
+  background-color: var(--md-sys-color-surface);
+  border-color: var(--md-sys-color-outline);
+}
+.form-control:focus, .form-select:focus {
+  color: var(--md-sys-color-text-main);
+  background-color: var(--md-sys-color-surface);
+  border-color: var(--md-sys-color-primary);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent);
+}
+.theme-toggle {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 1200;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid var(--md-sys-color-outline);
+  border-radius: var(--md-sys-shape-corner-full);
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-text-main);
+  box-shadow: var(--md-sys-elevation-1);
+  cursor: pointer;
+}
+.btn-primary,
+.dx-button-mode-contained.dx-button-default {
+  background-color: var(--md-sys-color-primary) !important;
+  border-color: var(--md-sys-color-primary) !important;
+  color: var(--md-sys-color-on-primary) !important;
+}
+.btn-outline-primary,
+.dx-button-mode-outlined.dx-button-default {
+  border-color: var(--md-sys-color-primary) !important;
+  color: var(--md-sys-color-primary) !important;
 }
 
 #app {
@@ -96,6 +180,15 @@ body {
 
 .m3-btn-pill:hover {
   transform: translateY(-1px);
+}
+
+.m3-card-rating,
+.m3-detail-rating {
+  color: var(--md-sys-color-warning);
+}
+
+.m3-thumb-item {
+  background: var(--md-sys-color-surface-container);
 }
 
 .m3-table-btn {
@@ -284,4 +377,77 @@ body {
 .dx-popup-wrapper .dx-overlay-content {
   max-width: 92vw !important;
   border-radius: var(--md-sys-shape-corner-large) !important;
+}
+
+/* DevExtreme widgets use the same design tokens as the customer pages. */
+.dx-widget,
+.dx-widget input,
+.dx-widget textarea,
+.dx-widget select {
+  color: var(--md-sys-color-text-main);
+  font-family: inherit;
+}
+.dx-button,
+.dx-button .dx-button-content,
+.dx-toolbar-label,
+.dx-popup-title,
+.dx-datagrid-content,
+.dx-list-item,
+.dx-menu-item {
+  color: var(--md-sys-color-text-main);
+}
+.dx-toolbar,
+.dx-popup-content,
+.dx-overlay-content,
+.dx-datagrid,
+.dx-datagrid-headers,
+.dx-datagrid-rowsview,
+.dx-list,
+.dx-dropdowneditor-overlay .dx-list,
+.dx-texteditor,
+.dx-texteditor-input,
+.dx-field-item-label-text {
+  background-color: var(--md-sys-color-surface);
+  color: var(--md-sys-color-text-main);
+}
+.dx-datagrid-headers,
+.dx-datagrid-rowsview,
+.dx-datagrid-borders > .dx-datagrid-headers,
+.dx-datagrid-borders > .dx-datagrid-rowsview,
+.dx-datagrid .dx-row > td,
+.dx-datagrid .dx-row > tr > td,
+.dx-toolbar,
+.dx-popup-title,
+.dx-texteditor,
+.dx-state-focused.dx-texteditor,
+.dx-pager,
+.dx-page,
+.dx-page-sizes,
+.dx-dropdowneditor-button {
+  border-color: var(--md-sys-color-outline-variant) !important;
+}
+.dx-datagrid-headers,
+.dx-datagrid .dx-row-alt > td,
+.dx-menu-item:hover,
+.dx-list-item:hover,
+.dx-state-hover {
+  background-color: var(--md-sys-color-surface-container) !important;
+}
+.dx-overlay-wrapper .dx-overlay-content,
+.dx-popup-wrapper .dx-overlay-content,
+.dx-dropdowneditor-overlay .dx-overlay-content,
+.dx-context-menu .dx-submenu {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+}
+:root[data-theme="dark"] .dx-icon,
+:root[data-theme="dark"] .dx-menu-item-text,
+:root[data-theme="dark"] .dx-placeholder,
+:root[data-theme="dark"] .dx-texteditor-input,
+:root[data-theme="dark"] .dx-datagrid-text-content {
+  color: var(--md-sys-color-text-main) !important;
+}
+:root[data-theme="dark"] .dx-state-focused.dx-texteditor,
+:root[data-theme="dark"] .dx-texteditor.dx-editor-outlined {
+  background-color: var(--md-sys-color-surface-container) !important;
 }

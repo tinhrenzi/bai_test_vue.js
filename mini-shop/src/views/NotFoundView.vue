@@ -2,6 +2,7 @@
     <div
         class="m3-page-container d-flex flex-column align-items-center justify-content-center text-center py-5"
         style="min-height: 70vh">
+        <ThemeToggle />
         <h1 class="display-1 fw-bold text-primary mb-2">404</h1>
         <h3 class="fw-semibold text-dark mb-3">Trang không tồn tại</h3>
         <p class="text-muted mb-4" style="max-width: 450px">
@@ -15,8 +16,11 @@
 </template>
 
 <script>
+import ThemeToggle from "../components/ThemeToggle.vue";
+
 export default {
     name: "NotFoundView",
+    components: { ThemeToggle },
 };
 </script>
 
