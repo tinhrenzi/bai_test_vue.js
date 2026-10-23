@@ -54,6 +54,31 @@ export default {
             commit("SET_DANG_TAI", true);
             commit("SET_LOI", null);
 
+            const userLocal = dangNhapLocal(
+                thongTinDangNhap.username,
+                thongTinDangNhap.password,
+            );
+            if (userLocal) {
+                const token = userLocal.token || `mock_token_${Date.now()}`;
+                const refreshToken = `mock_refresh_${Date.now()}`;
+                const user = {
+                    id: userLocal.id,
+                    username: userLocal.username,
+                    email: userLocal.email,
+                    firstName: userLocal.firstName || "",
+                    lastName: userLocal.lastName || "",
+                    image: userLocal.image || "",
+                    role: userLocal.role || "customer",
+                };
+                commit("DANG_NHAP_THANH_CONG", {
+                    token,
+                    refreshToken,
+                    user,
+                });
+                commit("SET_DANG_TAI", false);
+                return user;
+            }
+
             try {
                 const phanHoi = await dangNhap({
                     username: thongTinDangNhap.username,
@@ -79,30 +104,6 @@ export default {
                 commit("DANG_NHAP_THANH_CONG", { token, refreshToken, user });
                 return user;
             } catch (error) {
-                const userLocal = dangNhapLocal(
-                    thongTinDangNhap.username,
-                    thongTinDangNhap.password,
-                );
-                if (userLocal) {
-                    const token = userLocal.token || `mock_token_${Date.now()}`;
-                    const refreshToken = `mock_refresh_${Date.now()}`;
-                    const user = {
-                        id: userLocal.id,
-                        username: userLocal.username,
-                        email: userLocal.email,
-                        firstName: userLocal.firstName || "",
-                        lastName: userLocal.lastName || "",
-                        image: userLocal.image || "",
-                        role: userLocal.role || "customer",
-                    };
-                    commit("DANG_NHAP_THANH_CONG", {
-                        token,
-                        refreshToken,
-                        user,
-                    });
-                    return user;
-                }
-
                 const thongBaoLoi =
                     error.message || "Đăng nhập không thành công.";
                 commit("SET_LOI", thongBaoLoi);

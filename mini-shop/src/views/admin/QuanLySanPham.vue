@@ -67,7 +67,7 @@
                         :show-title="true"
                         :width="'min(680px, 92vw)'"
                         :height="'auto'" />
-                    <DxForm>
+                    <DxForm :col-count="2">
                         <DxItem data-field="title" :col-span="2" />
                         <DxItem data-field="category" />
                         <DxItem data-field="price" />
@@ -268,7 +268,11 @@ export default {
         async taiDanhMuc() {
             try {
                 const resp = await layDanhSachDanhMuc();
-                this.danhMucList = resp.data;
+                this.danhMucList = (resp.data || []).map((dm) =>
+                    typeof dm === "string"
+                        ? { slug: dm, name: dm }
+                        : { slug: dm.slug || dm.name, name: dm.name || dm.slug },
+                );
             } catch (err) {
                 console.error("Lỗi tải danh mục:", err);
             }

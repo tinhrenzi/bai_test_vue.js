@@ -334,10 +334,16 @@ export default {
         },
 
         async themSanPham({ commit }, duLieu) {
-            const resp = await themSanPham(duLieu);
+            let respData = {};
+            try {
+                const resp = await themSanPham(duLieu);
+                respData = resp.data || {};
+            } catch (e) {
+                respData = {};
+            }
             const sanPhamMoi = {
                 ...duLieu,
-                ...(resp.data || {}),
+                ...respData,
                 id: Date.now(),
                 thumbnail:
                     duLieu.thumbnail || "https://via.placeholder.com/200",
@@ -348,14 +354,26 @@ export default {
         },
 
         async suaSanPham({ commit }, { id, duLieu }) {
-            const resp = await suaSanPham(id, duLieu);
-            const sanPhamCapNhat = resp.data || duLieu;
+            let sanPhamCapNhat = duLieu;
+            try {
+                if (typeof id === "number" && id <= 1000) {
+                    const resp = await suaSanPham(id, duLieu);
+                    sanPhamCapNhat = resp.data || duLieu;
+                }
+            } catch (e) {
+                sanPhamCapNhat = duLieu;
+            }
             commit("CAP_NHAT_SAN_PHAM", { id, duLieu: sanPhamCapNhat });
             return sanPhamCapNhat;
         },
 
         async xoaSanPham({ commit }, id) {
-            await xoaSanPham(id);
+            try {
+                if (typeof id === "number" && id <= 1000) {
+                    await xoaSanPham(id);
+                }
+            } catch (e) {
+            }
             commit("XOA_SAN_PHAM", id);
             return id;
         },

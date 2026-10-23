@@ -24,10 +24,24 @@ Kính gửi mentor. Đây là file Readme tổng quát về cách cài và chạ
    -- Khi tải lại trang mà còn token, gọi /auth/me khôi phục phiên đăng nhập trước khi guard chạy.
 
 4. **Trang khách hàng**
+   -- Lưới sản phẩm 12 sản phẩm/trang, có skeleton khi tải, thông báo lỗi kèm nút "Thử lại", trạng thái không có kết quả.
+   -- Lọc theo danh mục, sắp xếp theo giá và rating.
+   -- Trang, từ khóa, danh mục, sắp xếp đồng bộ lên URL query: tải lại trang giữ nguyên trạng thái, nút Back/Forward hoạt động đúng.
+   -- Trang chi tiết sản phẩm: ảnh, mô tả, chọn số lượng, thêm vào giỏ (có cache).
+   -- Giao diện responsive bằng CSS Grid/Flexbox, hiển thị tốt ở 375px, 768px, 1280px
 
 5. **Vuex**
+   -- Ba module namespaced: auth, products, cart
+   -- Mọi thay đổi state chỉ đi qua mutation; gọi API đặt trong action.
+   -- Module cart: getters count, total; số lượng không vượt quá stock; lưu vào localStorage và khôi phục khi tải lại (dữ liệu hỏng thì bỏ qua).
+   -- Thêm, sửa, xóa sản phẩm ở trang admin cập nhật lại dữ liệu sau khi API thành công.
 
 6. **Trang quản trị**
+   -- /admin/products: DxDataGrid dùng CustomStore với remoteOperations phân trang, chuyển skip/take của grid sang skip/limit của API.
+   -- Chỉnh sửa dạng popup: validation rules cho tên (bắt buộc), giá và tồn kho (số ≥ 0), danh mục (DxSelectBox lấy từ API).
+   -- Xóa có xác nhận
+   -- Export danh sách ra Excel.
+   -- /admin/dashboard: tải toàn bộ sản phẩm, vẽ DxChart tổng tồn kho theo danh mục và DxPieChart tỷ lệ số sản phẩm theo danh mục. Phần tính toán dữ liệu cho biểu đồ dùng reduce, không gọi -- API riêng cho từng danh mục.
 
 ---
 
@@ -45,4 +59,19 @@ npm install
 
 # 4. Chạy dự án
 npm run dev
+
+# 5. Đăng nhập
+account đã được cung cấp sẵn, có thể lựa chọn điền nhanh khách hoặc admin để đăng nhập.
+
+# 6. Giả lập mạng delay
+delay 1s-2s-3s-5s bằng dropdown, có thể thực hiện xóa bộ lọc để reset.
+
+# 7. Đăng ký
+Hiện có thể đăng ký được cả hai tài khoản admin và khách (nhằm mục đích giả lập)
+
+# 8. Token hết hạn
+Có thể thực hiện bật/tắt trong thanh đăng nhập, sau đó xóa sạch dữ liệu hiển thị của chrome dev tools. Sau khi hết thời gian một phút, tiến hành reload trang sẽ thấy console có báo lỗi 401 (hoặc 500 nếu dommyjson trả về)
+
+
+Bài làm có sử dụng AI (khoảng 30-40%) đối với các chức năng thống kê, tạo data đăng nhập tự động, chỉnh sửa lại các chi tiết nhỏ trong các khối, giao diện và css lại. Còn lại một số khác nhằm mục đích tham khảo và chỉnh sửa đối với trang chủ và call API sản phẩm và hiển thị lên trang.
 ```

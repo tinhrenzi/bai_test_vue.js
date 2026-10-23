@@ -1,8 +1,8 @@
 function khoiPhucGioHang() {
     try {
         const truyXuatDuLieu = localStorage.getItem("mini_shop_cart");
-
-        return truyXuatDuLieu ? JSON.parse(truyXuatDuLieu) : [];
+        const parsed = truyXuatDuLieu ? JSON.parse(truyXuatDuLieu) : [];
+        return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
         console.warn("Dữ liệu giỏ hàng bị hỏng, tự động đặt lại:", error);
         localStorage.removeItem("mini_shop_cart");

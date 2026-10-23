@@ -56,7 +56,7 @@
                         :data-source="duLieuThongKe"
                         id="chart-ton-kho"
                         :palette="'Material'"
-                        :size="{ height: 844 }">
+                        :size="{ height: 460 }">
                         <DxSeries
                             argument-field="category"
                             value-field="stock"
@@ -179,7 +179,31 @@ export default {
                 });
                 const sanPhams = resp.data.products || [];
 
-                const thongKeMap = sanPhams.reduce((acc, item) => {
+                const thayDoi = this.$store.state.products.thayDoiCucBo || {};
+                const added = thayDoi.added || [];
+                const updated = thayDoi.updated || {};
+                const deleted = thayDoi.deleted || [];
+
+                const sanPhamLoc = sanPhams
+                    .filter(
+                        (p) =>
+                            !deleted.includes(p.id) &&
+                            !deleted.includes(String(p.id)),
+                    )
+                    .map((p) => ({
+                        ...p,
+                        ...(updated[p.id] || updated[String(p.id)] || {}),
+                    }));
+
+                const sanPhamMoiLoc = added.filter(
+                    (p) =>
+                        !deleted.includes(p.id) &&
+                        !deleted.includes(String(p.id)),
+                );
+
+                const tatCaSanPhams = [...sanPhamMoiLoc, ...sanPhamLoc];
+
+                const thongKeMap = tatCaSanPhams.reduce((acc, item) => {
                     const danhMuc = item.category || "Khác";
                     if (!acc[danhMuc]) {
                         acc[danhMuc] = {

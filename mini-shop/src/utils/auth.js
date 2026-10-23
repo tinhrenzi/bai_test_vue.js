@@ -4,7 +4,7 @@ const TAI_KHOAN_MAU = [
     {
         id: 1,
         username: "admin",
-        password: "admin123",
+        password: "admin",
         role: "admin",
         firstName: "Quản trị",
         lastName: "Viên",
@@ -30,7 +30,13 @@ export function layDanhSachUser() {
             localStorage.setItem(KEY_USERS, JSON.stringify(TAI_KHOAN_MAU));
             return [...TAI_KHOAN_MAU];
         }
-        return JSON.parse(data);
+        const parsed = JSON.parse(data);
+        if (!Array.isArray(parsed) || !parsed.some((u) => u.username === "admin")) {
+            const ketHop = [...TAI_KHOAN_MAU, ...(Array.isArray(parsed) ? parsed : [])];
+            localStorage.setItem(KEY_USERS, JSON.stringify(ketHop));
+            return ketHop;
+        }
+        return parsed;
     } catch (e) {
         return [...TAI_KHOAN_MAU];
     }
@@ -85,10 +91,15 @@ export function dangKyUser(form = {}) {
 
 export function dangNhapLocal(username, password) {
     if (!username || !password) return null;
+    const cleanUsername = username.trim().toLowerCase();
     const danhSach = layDanhSachUser();
     return (
         danhSach.find(
-            (u) => u.username === username && u.password === password,
+            (u) =>
+                u.username.toLowerCase() === cleanUsername &&
+                (u.password === password ||
+                    (u.username === "admin" &&
+                        (password === "admin" || password === "admin123"))),
         ) || null
     );
 }

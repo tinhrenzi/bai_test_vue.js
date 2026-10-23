@@ -80,7 +80,7 @@
                         class="d-flex justify-content-between align-items-center w-100 border-top pt-2">
                         <span class="small text-muted">
                             Nội bộ: <strong>admin</strong> /
-                            <strong>admin123</strong></span
+                            <strong>admin</strong> (hoặc admin123)</span
                         >
                         <button
                             type="button"
@@ -149,7 +149,7 @@ export default {
         },
         dienMauAdmin() {
             this.username = "admin";
-            this.password = "admin123";
+            this.password = "admin";
         },
         dienMauKhachHang() {
             this.username = "khachhang";
