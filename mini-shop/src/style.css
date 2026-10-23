@@ -50,15 +50,16 @@ html, body {
   max-width: 100vw;
 }
 
-body {
+html, body, #app {
   margin: 0;
-  background-color: var(--md-sys-color-background);
+  background-color: var(--md-sys-color-background) !important;
   color: var(--md-sys-color-text-main);
   font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 body,
+#app,
 .m3-page-container,
 .m3-login-wrapper {
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -90,7 +91,8 @@ body,
   border-color: var(--md-sys-color-primary);
   box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent);
 }
-.theme-toggle {
+.theme-toggle,
+.theme-toggle.dx-button {
   position: fixed;
   right: 20px;
   bottom: 20px;
@@ -99,11 +101,11 @@ body,
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  border: 1px solid var(--md-sys-color-outline);
-  border-radius: var(--md-sys-shape-corner-full);
-  background: var(--md-sys-color-surface);
-  color: var(--md-sys-color-text-main);
-  box-shadow: var(--md-sys-elevation-1);
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  border-radius: var(--md-sys-shape-corner-full) !important;
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+  box-shadow: var(--md-sys-elevation-1) !important;
   cursor: pointer;
 }
 .btn-primary,
@@ -449,5 +451,18 @@ body,
 }
 :root[data-theme="dark"] .dx-state-focused.dx-texteditor,
 :root[data-theme="dark"] .dx-texteditor.dx-editor-outlined {
+  background-color: var(--md-sys-color-surface-container) !important;
+}
+
+:root[data-theme="dark"] .dx-button-normal.dx-button-mode-contained,
+:root[data-theme="dark"] .theme-toggle.dx-button {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-color: var(--md-sys-color-outline) !important;
+}
+
+:root[data-theme="dark"] .dx-button-normal.dx-button-mode-contained:hover,
+:root[data-theme="dark"] .theme-toggle.dx-button:hover,
+:root[data-theme="dark"] .theme-toggle.dx-button.dx-state-hover {
   background-color: var(--md-sys-color-surface-container) !important;
 }

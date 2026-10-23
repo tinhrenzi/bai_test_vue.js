@@ -44,18 +44,38 @@ export default {
 
 <style scoped>
 .theme-toggle.dx-button {
-    padding: 0;
-    height: auto;
+    padding: 0 !important;
+    height: auto !important;
+    background-color: var(--md-sys-color-surface) !important;
+    color: var(--md-sys-color-text-main) !important;
+    border: 1px solid var(--md-sys-color-outline-variant) !important;
+    box-shadow: var(--md-sys-elevation-1) !important;
+    border-radius: var(--md-sys-shape-corner-full) !important;
 }
+
+.theme-toggle.dx-button:hover,
+.theme-toggle.dx-button.dx-state-hover {
+    background-color: var(--md-sys-color-surface-container) !important;
+    border-color: var(--md-sys-color-outline) !important;
+}
+
 .theme-toggle.dx-button :deep(.dx-button-content) {
-    padding: 8px 14px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: inherit;
+    padding: 8px 16px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    color: var(--md-sys-color-text-main) !important;
 }
+
+.theme-toggle.dx-button :deep(.dx-button-text) {
+    color: var(--md-sys-color-text-main) !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+}
+
 .theme-toggle.dx-button :deep(.dx-icon) {
-    font-size: 18px;
-    line-height: 1;
+    color: var(--md-sys-color-text-main) !important;
+    font-size: 18px !important;
+    line-height: 1 !important;
 }
 </style>
