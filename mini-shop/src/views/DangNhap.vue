@@ -27,6 +27,22 @@
                         :showClearButton="true" />
                 </div>
 
+                <div class="m3-form-group">
+                    <div class="form-check form-switch mt-1">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            id="checkExpires1"
+                            v-model="hetHan1Phut" />
+                        <label
+                            class="form-check-label small text-muted"
+                            for="checkExpires1">
+                            Hết hạn sau <strong>1 phút</strong> (kiểm thử 401 &
+                            refresh token)
+                        </label>
+                    </div>
+                </div>
+
                 <div
                     v-if="loiDangNhap"
                     class="alert alert-danger py-2 px-3 small">
@@ -36,27 +52,40 @@
                 <div class="m3-demo-box flex-column gap-2">
                     <div
                         class="d-flex justify-content-between align-items-center w-100">
-                        <span class="small text-muted"
-                            >Admin: <strong>admin</strong> /
-                            <strong>admin123</strong></span
+                        <span class="small text-muted">
+                            Admin (API): <strong>emilys</strong> /
+                            <strong>emilyspass</strong></span
                         >
                         <button
                             type="button"
-                            class="btn btn-link btn-sm p-0"
-                            @click="dienMauAdmin">
+                            class="btn btn-link btn-sm p-0 text-decoration-none"
+                            @click="dienMauEmilys">
                             Điền
                         </button>
                     </div>
                     <div
                         class="d-flex justify-content-between align-items-center w-100 border-top pt-2">
-                        <span class="small text-muted"
-                            >🛍️ Khách: <strong>khachhang</strong> /
-                            <strong>123456</strong></span
+                        <span class="small text-muted">
+                            Khách (API): <strong>michaelw</strong> /
+                            <strong>michaelwpass</strong></span
                         >
                         <button
                             type="button"
-                            class="btn btn-link btn-sm p-0"
-                            @click="dienMauKhachHang">
+                            class="btn btn-link btn-sm p-0 text-decoration-none"
+                            @click="dienMauMichael">
+                            Điền
+                        </button>
+                    </div>
+                    <div
+                        class="d-flex justify-content-between align-items-center w-100 border-top pt-2">
+                        <span class="small text-muted">
+                            Nội bộ: <strong>admin</strong> /
+                            <strong>admin123</strong></span
+                        >
+                        <button
+                            type="button"
+                            class="btn btn-link btn-sm p-0 text-decoration-none"
+                            @click="dienMauAdmin">
                             Điền
                         </button>
                     </div>
@@ -98,6 +127,7 @@ export default {
         return {
             username: "",
             password: "",
+            hetHan1Phut: false,
         };
     },
     computed: {
@@ -109,6 +139,14 @@ export default {
         },
     },
     methods: {
+        dienMauEmilys() {
+            this.username = "emilys";
+            this.password = "emilyspass";
+        },
+        dienMauMichael() {
+            this.username = "michaelw";
+            this.password = "michaelwpass";
+        },
         dienMauAdmin() {
             this.username = "admin";
             this.password = "admin123";
@@ -131,7 +169,7 @@ export default {
                 const user = await this.$store.dispatch("auth/dangNhap", {
                     username: this.username,
                     password: this.password,
-                    expiresInMins: 30,
+                    expiresInMins: this.hetHan1Phut ? 1 : 30,
                 });
 
                 notify("Đăng nhập thành công!", "success", 1500);

@@ -1,5 +1,5 @@
 import { dangNhap, layThongTinNguoiDung, dangKy } from "../../api/apiAuth";
-import { dangKyUser, dangNhapLocal } from "../../ultils/auth";
+import { dangKyUser, dangNhapLocal } from "../../utils/auth";
 
 export default {
     namespaced: true,
@@ -32,7 +32,7 @@ export default {
             localStorage.setItem("user", JSON.stringify(user));
         },
 
-        SET_USER(state, user) {
+        SET_NGUOI_DUNG(state, user) {
             state.user = user;
             localStorage.setItem("user", JSON.stringify(user));
         },
@@ -54,29 +54,12 @@ export default {
             commit("SET_DANG_TAI", true);
             commit("SET_LOI", null);
 
-            const userLocal = dangNhapLocal(
-                thongTinDangNhap.username,
-                thongTinDangNhap.password,
-            );
-            if (userLocal) {
-                const token = userLocal.token || `mock_token_${Date.now()}`;
-                const refreshToken = `mock_refresh_${Date.now()}`;
-                const user = {
-                    id: userLocal.id,
-                    username: userLocal.username,
-                    email: userLocal.email,
-                    firstName: userLocal.firstName || "",
-                    lastName: userLocal.lastName || "",
-                    image: userLocal.image || "",
-                    role: userLocal.role || "customer",
-                };
-                commit("DANG_NHAP_THANH_CONG", { token, refreshToken, user });
-                commit("SET_DANG_TAI", false);
-                return user;
-            }
-
             try {
-                const phanHoi = await dangNhap(thongTinDangNhap);
+                const phanHoi = await dangNhap({
+                    username: thongTinDangNhap.username,
+                    password: thongTinDangNhap.password,
+                    expiresInMins: thongTinDangNhap.expiresInMins || 30,
+                });
                 const data = phanHoi.data;
 
                 const token = data.token || data.accessToken;
@@ -86,6 +69,7 @@ export default {
                     username: data.username,
                     email: data.email,
                     firstName: data.firstName,
+                    lastName: data.lastName,
                     image: data.image,
                     role:
                         data.username === "emilys" || data.role === "admin"
@@ -95,6 +79,30 @@ export default {
                 commit("DANG_NHAP_THANH_CONG", { token, refreshToken, user });
                 return user;
             } catch (error) {
+                const userLocal = dangNhapLocal(
+                    thongTinDangNhap.username,
+                    thongTinDangNhap.password,
+                );
+                if (userLocal) {
+                    const token = userLocal.token || `mock_token_${Date.now()}`;
+                    const refreshToken = `mock_refresh_${Date.now()}`;
+                    const user = {
+                        id: userLocal.id,
+                        username: userLocal.username,
+                        email: userLocal.email,
+                        firstName: userLocal.firstName || "",
+                        lastName: userLocal.lastName || "",
+                        image: userLocal.image || "",
+                        role: userLocal.role || "customer",
+                    };
+                    commit("DANG_NHAP_THANH_CONG", {
+                        token,
+                        refreshToken,
+                        user,
+                    });
+                    return user;
+                }
+
                 const thongBaoLoi =
                     error.message || "Đăng nhập không thành công.";
                 commit("SET_LOI", thongBaoLoi);
@@ -142,7 +150,7 @@ export default {
                             ? "admin"
                             : state.user?.role || "customer",
                 };
-                commit("SET_USER", user);
+                commit("SET_NGUOI_DUNG", user);
                 return user;
             } catch (error) {
                 commit("DANG_XUAT");
@@ -155,6 +163,7 @@ export default {
     },
     getters: {
         daDangNhap: (state) => !!state.token,
+        thongTinNguoiDung: (state) => state.user,
         thongTinUser: (state) => state.user,
         laAdmin: (state) => state.user?.role === "admin",
         laKhachHang: (state) => state.user?.role === "customer",

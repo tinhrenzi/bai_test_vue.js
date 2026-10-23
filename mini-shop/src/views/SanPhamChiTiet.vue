@@ -129,7 +129,9 @@
                                     type="button"
                                     class="m3-qty-btn"
                                     :disabled="soLuong <= 1"
-                                    @click="soLuong--"></button>
+                                    @click="soLuong--">
+                                    −
+                                </button>
                                 <span class="m3-qty-val">{{ soLuong }}</span>
                                 <button
                                     type="button"
@@ -180,10 +182,10 @@ export default {
             return this.$store.state.products.chiTiet;
         },
         dangTai() {
-            return this.$store.state.products.loading;
+            return this.$store.state.products.dangTai;
         },
         loi() {
-            return this.$store.state.products.error;
+            return this.$store.state.products.loi;
         },
     },
     created() {
@@ -195,7 +197,7 @@ export default {
             if (!id) return;
             try {
                 const data = await this.$store.dispatch(
-                    "products/fetchProductById",
+                    "products/taiChiTietSanPham",
                     id,
                 );
                 if (data && data.thumbnail) {

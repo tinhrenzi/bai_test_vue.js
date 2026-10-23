@@ -1,6 +1,5 @@
 <template>
     <div class="m3-page-container">
-        <!-- Header Quản trị -->
         <div class="m3-admin-header mb-4">
             <div
                 class="d-flex flex-wrap justify-content-between align-items-center gap-3">
@@ -38,7 +37,6 @@
             </div>
         </div>
 
-        <!-- Trạng thái tải dữ liệu -->
         <div v-if="dangTai" class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Đang tải...</span>
@@ -49,8 +47,7 @@
         </div>
 
         <div v-else class="row g-4">
-            <!-- 1. Biểu đồ cột: Tổng tồn kho theo danh mục (DxChart) -->
-            <div class="col-12 col-xl-7">
+            <div class="col-12">
                 <div class="m3-chart-card">
                     <h3 class="m3-chart-title mb-3">
                         Tổng tồn kho theo danh mục
@@ -58,7 +55,8 @@
                     <DxChart
                         :data-source="duLieuThongKe"
                         id="chart-ton-kho"
-                        :palette="'Material'">
+                        :palette="'Material'"
+                        :size="{ height: 844 }">
                         <DxSeries
                             argument-field="category"
                             value-field="stock"
@@ -80,8 +78,7 @@
                 </div>
             </div>
 
-            <!-- 2. Biểu đồ tròn: Tỷ lệ số sản phẩm theo danh mục (DxPieChart) -->
-            <div class="col-12 col-xl-5">
+            <div class="col-12">
                 <div class="m3-chart-card">
                     <h3 class="m3-chart-title mb-3">
                         Tỷ lệ số lượng sản phẩm theo danh mục
@@ -90,14 +87,19 @@
                         :data-source="duLieuThongKe"
                         id="pie-danh-muc"
                         type="doughnut"
-                        :palette="'Material'">
+                        :palette="'Material'"
+                        :size="{ height: 480 }">
                         <DxPieSeries
                             argument-field="category"
                             value-field="count">
+                            <DxSmallValuesGrouping
+                                mode="topN"
+                                :top-count="7"
+                                group-name="Các danh mục khác" />
                             <DxPieLabel
                                 :visible="true"
-                                position="columns"
-                                :customize-text="customizePieLabel">
+                                resolve-label-overlapping="shift"
+                                :customize-text="dinhDangNhanPie">
                                 <DxConnector :visible="true" />
                             </DxPieLabel>
                         </DxPieSeries>
@@ -132,6 +134,7 @@ import {
     DxConnector,
     DxLegend as DxPieLegend,
     DxTooltip as DxPieTooltip,
+    DxSmallValuesGrouping,
 } from "devextreme-vue/pie-chart";
 import { DxButton } from "devextreme-vue/button";
 import notify from "devextreme/ui/notify";
@@ -154,6 +157,7 @@ export default {
         DxConnector,
         DxPieLegend,
         DxPieTooltip,
+        DxSmallValuesGrouping,
         DxButton,
     },
     data() {
@@ -169,14 +173,12 @@ export default {
         async taiDuLieuThongKe() {
             this.dangTai = true;
             try {
-                // Tải toàn bộ sản phẩm bằng limit=0
                 const resp = await layDanhSachSanPham({
-                    soLuong: 0,
-                    truongLay: "category,stock",
+                    limit: 0,
+                    select: "category,stock",
                 });
                 const sanPhams = resp.data.products || [];
 
-                // Tính toán dữ liệu gom nhóm bằng reduce, không gọi API riêng cho từng danh mục
                 const thongKeMap = sanPhams.reduce((acc, item) => {
                     const danhMuc = item.category || "Khác";
                     if (!acc[danhMuc]) {
@@ -191,7 +193,9 @@ export default {
                     return acc;
                 }, {});
 
-                this.duLieuThongKe = Object.values(thongKeMap);
+                this.duLieuThongKe = Object.values(thongKeMap).sort(
+                    (a, b) => b.stock - a.stock,
+                );
             } catch (err) {
                 notify(
                     err.message || "Không thể tải dữ liệu thống kê!",
@@ -212,7 +216,7 @@ export default {
                 text: `<b>${arg.argumentText}</b><br/>Số sản phẩm: ${arg.valueText} (${(arg.percent * 100).toFixed(1)}%)`,
             };
         },
-        customizePieLabel(arg) {
+        dinhDangNhanPie(arg) {
             return `${arg.argumentText}: ${(arg.percent * 100).toFixed(0)}%`;
         },
         dangXuat() {

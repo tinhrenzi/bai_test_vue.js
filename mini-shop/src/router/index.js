@@ -57,8 +57,11 @@ const router = createRouter({
     routes,
 });
 
+let daKhoiPhucPhien = false;
+
 router.beforeEach(async (to, from, next) => {
-    if (store.state.auth.token && !store.state.auth.user) {
+    if (!daKhoiPhucPhien && store.state.auth.token) {
+        daKhoiPhucPhien = true;
         await store.dispatch("auth/khoiPhucPhienLamViec");
     }
 
@@ -72,7 +75,6 @@ router.beforeEach(async (to, from, next) => {
         });
     }
 
-    // Phân quyền riêng biệt: Khách hàng thường không có quyền vào trang Admin
     if (to.meta.yeuCauAdmin && !laAdmin) {
         return next("/");
     }

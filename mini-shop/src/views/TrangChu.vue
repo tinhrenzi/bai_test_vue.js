@@ -1,211 +1,140 @@
 <template>
     <div class="m3-page-container">
-        <DxToolbar class="m3-app-bar">
-            <DxItem location="before">
-                <DxMenu @item-click="onMenuItemClick">
-                    <DxItem icon="home"> </DxItem>
-                    <DxItem text="About" css-class="d-none d-md-inline-block">
-                    </DxItem>
-                    <DxItem
-                        text="Products"
-                        css-class="d-none d-md-inline-block">
-                    </DxItem>
-                    <DxItem icon="cart"> </DxItem>
-                </DxMenu>
-            </DxItem>
-            <DxItem location="after">
-                <div class="d-flex align-items-center gap-2">
-                    <DxTextBox
-                        class="m3-search-box d-none d-md-block"
-                        v-model:value="tuKhoa"
-                        placeholder="Tìm kiếm sản phẩm..."
-                        :showClearButton="true"
-                        mode="text"
-                        :width="240"
-                        styling-mode="outlined"
-                        validationMessageMode="always"
-                        @enterKey="xuLyTimKiem" />
-                    <router-link
-                        to="/cart"
-                        class="btn btn-outline-primary m3-btn-pill position-relative d-inline-flex align-items-center px-3"
-                        style="height: 36px"
-                        title="Xem giỏ hàng">
-                        <i class="dx-icon-cart me-1"></i>
-                        <span class="d-none d-sm-inline">Giỏ</span>
-                        <span
-                            v-if="soLuongTrongGio > 0"
-                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                            style="font-size: 11px">
-                            {{ soLuongTrongGio }}
-                        </span>
-                    </router-link>
-                    <DxButton
-                        v-if="laAdmin"
-                        class="m3-btn-pill"
-                        text="Thêm mới"
-                        icon="plus"
-                        type="default"
-                        styling-mode="contained"
-                        @click="moPopupThem" />
-                    <DxButton
-                        v-if="!daDangNhap"
-                        class="m3-btn-pill"
-                        text="Đăng nhập"
-                        icon="user"
-                        styling-mode="outlined"
-                        @click="$router.push('/login')" />
-                    <div v-else class="d-flex align-items-center gap-2">
-                        <router-link
-                            v-if="laAdmin"
-                            to="/admin/products"
-                            class="btn btn-sm btn-outline-primary m3-btn-pill"
-                            title="Vào trang quản trị">
-                            <i class="dx-icon-preferences me-1"></i> Quản trị
-                        </router-link>
-                        <span
-                            v-if="laAdmin"
-                            class="badge bg-danger-subtle text-danger border border-danger-subtle"
-                            >Admin</span
-                        >
-                        <span
-                            v-else
-                            class="badge bg-primary-subtle text-primary border border-primary-subtle"
-                            >Khách hàng</span
-                        >
-                        <span
-                            class="small fw-semibold text-dark d-none d-sm-inline"
-                            >{{ user?.username }}</span
-                        >
-                        <DxButton
-                            class="m3-btn-pill"
-                            icon="runner"
-                            hint="Đăng xuất"
-                            styling-mode="text"
-                            @click="dangXuat" />
-                    </div>
-                </div>
-            </DxItem>
-        </DxToolbar>
+        <AppNavbar
+            :keyword="tuKhoa"
+            @update:keyword="xuLyDoiTuKhoa"
+            @search="xuLyTimKiem"
+            @open-add-modal="moPopupThem" />
 
-        <div class="d-block d-md-none mb-3">
-            <DxTextBox
-                class="m3-search-box w-100"
-                v-model:value="tuKhoa"
-                placeholder="Tìm kiếm sản phẩm..."
-                :showClearButton="true"
-                mode="text"
-                styling-mode="outlined"
-                validationMessageMode="always"
-                @enterKey="xuLyTimKiem" />
+        <div class="m3-filter-bar mb-4 p-3 bg-white border rounded-4 shadow-sm">
+            <div class="row g-2 align-items-center">
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <label class="form-label small fw-semibold text-muted mb-1"
+                        >Danh mục:</label
+                    >
+                    <select
+                        class="form-select form-select-sm m3-select"
+                        v-model="danhMuc"
+                        @change="xuLyDoiDanhMuc">
+                        <option value="">-- Tất cả danh mục --</option>
+                        <option
+                            v-for="dm in danhSachDanhMuc"
+                            :key="dm.slug || dm"
+                            :value="dm.slug || dm">
+                            {{ dm.name || dm }}
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <label class="form-label small fw-semibold text-muted mb-1"
+                        >Sắp xếp theo:</label
+                    >
+                    <select
+                        class="form-select form-select-sm m3-select"
+                        v-model="kieuSapXep"
+                        @change="xuLyDoiSapXep">
+                        <option value="">Mặc định</option>
+                        <option value="price_asc">Giá: Thấp đến cao</option>
+                        <option value="price_desc">Giá: Cao đến thấp</option>
+                        <option value="rating_desc">
+                            Đánh giá: Cao đến thấp
+                        </option>
+                        <option value="rating_asc">
+                            Đánh giá: Thấp đến cao
+                        </option>
+                    </select>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <label class="form-label small fw-semibold text-muted mb-1"
+                        >Giả lập mạng (delay):</label
+                    >
+                    <select
+                        class="form-select form-select-sm m3-select"
+                        v-model="doTre"
+                        @change="xuLyDoiDoTre">
+                        <option :value="0">Bình thường (0ms)</option>
+                        <option :value="1000">Chậm 1 giây (1000ms)</option>
+                        <option :value="2000">Chậm 2 giây (2000ms)</option>
+                        <option :value="3000">Chậm 3 giây (3000ms)</option>
+                        <option :value="5000">Chậm 5 giây (5000ms)</option>
+                    </select>
+                </div>
+
+                <div
+                    class="col-12 col-sm-6 col-md-12 col-lg-3 text-lg-end mt-sm-auto pt-2">
+                    <button
+                        v-if="coBoLocDangChon"
+                        type="button"
+                        class="btn btn-outline-secondary m3-btn-pill btn-sm w-100 w-lg-auto"
+                        @click="xoaBoLoc">
+                        <i class="dx-icon-clear me-1"></i> Xóa bộ lọc
+                    </button>
+                    <span v-else class="text-muted small">
+                        Hiển thị {{ danhSachSanPham.length }} /
+                        {{ tongSoLuong }} sản phẩm
+                    </span>
+                </div>
+            </div>
         </div>
 
         <div class="m3-products-container">
-            <div v-if="dangTai" class="text-center py-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Đang tải...</span>
-                </div>
-                <p class="mt-2 text-muted small">
-                    Đang tải danh sách sản phẩm...
-                </p>
+            <ProductSkeleton v-if="dangTai" :count="12" />
+
+            <div
+                v-else-if="loi"
+                class="alert alert-danger py-4 text-center my-3 border-0 shadow-sm rounded-4">
+                <i class="dx-icon-warning fs-2 text-danger mb-2 d-block"></i>
+                <h5 class="fw-semibold">Không thể tải danh sách sản phẩm</h5>
+                <p class="mb-3 text-muted small">{{ loi }}</p>
+                <button
+                    type="button"
+                    class="btn btn-outline-danger m3-btn-pill btn-sm px-4"
+                    @click="taiDuLieu">
+                    <i class="dx-icon-refresh me-1"></i> Thử lại
+                </button>
             </div>
 
             <div
                 v-else-if="!danhSachSanPham.length"
-                class="text-center py-5 text-muted">
-                Không có dữ liệu sản phẩm!
+                class="text-center py-5 bg-white border rounded-4 my-3 shadow-sm">
+                <div class="mb-3">
+                    <i
+                        class="dx-icon-find"
+                        style="font-size: 54px; color: #a8c7fa"></i>
+                </div>
+                <h5 class="fw-semibold text-dark mb-1">
+                    Không tìm thấy sản phẩm phù hợp!
+                </h5>
+                <p class="text-muted small mb-3">
+                    Không có sản phẩm nào khớp với điều kiện tìm kiếm hoặc bộ
+                    lọc hiện tại.
+                </p>
+                <button
+                    type="button"
+                    class="btn btn-primary m3-btn-pill btn-sm px-4"
+                    @click="xoaBoLoc">
+                    Đặt lại bộ lọc
+                </button>
             </div>
 
             <div v-else>
                 <div class="m3-card-grid">
-                    <div
-                        v-for="item in danhSachPhanTrang"
+                    <ProductCard
+                        v-for="item in danhSachSanPham"
                         :key="item.id"
-                        class="m3-product-card">
-                        <div class="m3-card-img-wrap">
-                            <img
-                                :src="
-                                    item.thumbnail ||
-                                    'https://via.placeholder.com/200'
-                                "
-                                :alt="item.title"
-                                class="m3-card-img" />
-                        </div>
-                        <div class="m3-card-body">
-                            <div>
-                                <span class="m3-card-badge">{{
-                                    item.category
-                                }}</span>
-                                <h3 class="m3-card-title">{{ item.title }}</h3>
-                                <div class="m3-card-meta">
-                                    <span class="m3-card-price"
-                                        >${{ item.price }}</span
-                                    >
-                                    <span class="m3-card-rating"
-                                        >★ {{ item.rating }}</span
-                                    >
-                                </div>
-                                <div class="m3-card-stock">
-                                    Tồn kho: <strong>{{ item.stock }}</strong>
-                                </div>
-                            </div>
-                            <div v-if="laAdmin" class="m3-card-actions">
-                                <DxButton
-                                    class="m3-btn-pill m3-table-btn"
-                                    text="Sửa"
-                                    icon="edit"
-                                    type="default"
-                                    styling-mode="outlined"
-                                    @click="xuLySua(item.id, item)" />
-                                <DxButton
-                                    class="m3-btn-pill m3-table-btn"
-                                    text="Xóa"
-                                    icon="trash"
-                                    type="danger"
-                                    styling-mode="contained"
-                                    @click="xuLyXoa(item.id)" />
-                            </div>
-                            <div v-else class="m3-card-actions">
-                                <router-link
-                                    :to="'/products/' + item.id"
-                                    class="btn btn-outline-secondary m3-btn-pill btn-sm flex-grow-1 py-1">
-                                    Chi tiết
-                                </router-link>
-                                <button
-                                    type="button"
-                                    class="btn btn-primary m3-btn-pill btn-sm flex-grow-1 py-1 d-inline-flex align-items-center justify-content-center gap-1"
-                                    :disabled="item.stock <= 0"
-                                    @click="themVaoGio(item)">
-                                    <i class="dx-icon-cart"></i>
-                                    <span>{{
-                                        item.stock > 0 ? "Thêm giỏ" : "Hết hàng"
-                                    }}</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                        :product="item"
+                        :is-admin="laAdmin"
+                        @add-to-cart="themVaoGio"
+                        @edit="xuLySua(item.id, $event)"
+                        @delete="xuLyXoa(item.id)" />
                 </div>
 
-                <div
-                    v-if="tongSoTrang > 1"
-                    class="d-flex justify-content-center align-items-center gap-3 mt-4 mb-3">
-                    <DxButton
-                        class="m3-btn-pill"
-                        text="Trước"
-                        icon="chevronleft"
-                        styling-mode="outlined"
-                        :disabled="trangHienTai === 1"
-                        @click="trangHienTai--" />
-                    <span class="small fw-semibold text-muted">
-                        Trang {{ trangHienTai }} / {{ tongSoTrang }}
-                    </span>
-                    <DxButton
-                        class="m3-btn-pill"
-                        text="Sau"
-                        icon="chevronright"
-                        styling-mode="outlined"
-                        :disabled="trangHienTai >= tongSoTrang"
-                        @click="trangHienTai++" />
-                </div>
+                <AppPagination
+                    :current-page="trangHienTai"
+                    :total-pages="tongSoTrang"
+                    @page-change="xuLyDoiTrang" />
             </div>
         </div>
 
@@ -230,9 +159,17 @@
                 </div>
                 <div>
                     <label class="form-label">Danh mục:</label>
-                    <DxTextBox
-                        v-model:value="sanPhamMoi.category"
-                        placeholder="Nhập danh mục..." />
+                    <select
+                        class="form-select m3-select"
+                        v-model="sanPhamMoi.category">
+                        <option value="">-- Chọn danh mục --</option>
+                        <option
+                            v-for="dm in danhSachDanhMuc"
+                            :key="dm.slug || dm"
+                            :value="dm.slug || dm">
+                            {{ dm.name || dm }}
+                        </option>
+                    </select>
                 </div>
                 <div>
                     <label class="form-label">Giá ($):</label>
@@ -273,24 +210,35 @@ import { DxTextBox } from "devextreme-vue/text-box";
 import { DxPopup } from "devextreme-vue/popup";
 import { DxNumberBox } from "devextreme-vue/number-box";
 import notify from "devextreme/ui/notify";
-import DxToolbar, { DxItem } from "devextreme-vue/toolbar";
-import DxMenu from "devextreme-vue/menu";
 
-import { Them, Sua, Xoa, TimKiem } from "../ultils/CRUD";
+import AppNavbar from "../components/AppNavbar.vue";
+import ProductCard from "../components/ProductCard.vue";
+import ProductSkeleton from "../components/ProductSkeleton.vue";
+import AppPagination from "../components/AppPagination.vue";
+
+import { layDanhSachDanhMuc } from "../api/apiProduct";
 
 export default {
+    name: "TrangChu",
     components: {
         DxButton,
         DxTextBox,
-        DxMenu,
-        DxToolbar,
-        DxItem,
         DxPopup,
         DxNumberBox,
+        AppNavbar,
+        ProductCard,
+        ProductSkeleton,
+        AppPagination,
     },
     data() {
         return {
             tuKhoa: "",
+            danhMuc: "",
+            kieuSapXep: "",
+            doTre: 0,
+            trangHienTai: 1,
+            soLuongMoiTrang: 12,
+            danhSachDanhMuc: [],
             hienPopupThem: false,
             sanPhamMoi: {
                 title: "",
@@ -298,100 +246,204 @@ export default {
                 category: "",
                 stock: 0,
             },
-            trangHienTai: 1,
-            soLuongMoiTrang: 12,
         };
     },
     computed: {
         danhSachSanPham() {
-            return this.$store.state.products.items;
+            return this.$store.state.products.danhSach || [];
         },
-        danhSachPhanTrang() {
-            const batDau = (this.trangHienTai - 1) * this.soLuongMoiTrang;
-            return this.danhSachSanPham.slice(
-                batDau,
-                batDau + this.soLuongMoiTrang,
-            );
+        tongSoLuong() {
+            return this.$store.state.products.tongSo || 0;
         },
         tongSoTrang() {
-            return (
-                Math.ceil(this.danhSachSanPham.length / this.soLuongMoiTrang) ||
-                1
-            );
+            return Math.ceil(this.tongSoLuong / this.soLuongMoiTrang) || 1;
         },
         dangTai() {
-            return this.$store.state.products.loading;
+            return this.$store.state.products.dangTai;
         },
-        daDangNhap() {
-            return this.$store.getters["auth/daDangNhap"];
-        },
-        user() {
-            return this.$store.getters["auth/thongTinUser"];
+        loi() {
+            return this.$store.state.products.loi;
         },
         laAdmin() {
             return this.$store.getters["auth/laAdmin"];
         },
-        laKhachHang() {
-            return this.$store.getters["auth/laKhachHang"];
+        coBoLocDangChon() {
+            return !!(
+                this.tuKhoa ||
+                this.danhMuc ||
+                this.kieuSapXep ||
+                this.doTre > 0 ||
+                this.trangHienTai > 1
+            );
         },
-        soLuongTrongGio() {
-            return this.$store.getters["cart/count"] || 0;
+    },
+    watch: {
+        "$route.query": {
+            immediate: true,
+            handler() {
+                this.dongBoTuURLVaTai();
+            },
         },
     },
     mounted() {
-        this.taiDuLieu();
+        this.taiDanhMuc();
     },
     methods: {
+        async taiDanhMuc() {
+            try {
+                const resp = await layDanhSachDanhMuc();
+                this.danhSachDanhMuc = resp.data || [];
+            } catch (err) {
+                console.warn("Lỗi tải danh sách danh mục:", err);
+            }
+        },
+
+        dongBoTuURLVaTai() {
+            const query = this.$route.query;
+
+            this.tuKhoa = query.q || "";
+            this.danhMuc = query.category || "";
+            this.kieuSapXep = query.sort || "";
+            this.trangHienTai = parseInt(query.page) || 1;
+            this.doTre = parseInt(query.delay) || 0;
+
+            this.taiDuLieu();
+        },
+
+        taiDuLieu() {
+            let sortBy = "";
+            let order = "asc";
+
+            if (this.kieuSapXep === "price_asc") {
+                sortBy = "price";
+                order = "asc";
+            } else if (this.kieuSapXep === "price_desc") {
+                sortBy = "price";
+                order = "desc";
+            } else if (this.kieuSapXep === "rating_desc") {
+                sortBy = "rating";
+                order = "desc";
+            } else if (this.kieuSapXep === "rating_asc") {
+                sortBy = "rating";
+                order = "asc";
+            }
+
+            const skip = (this.trangHienTai - 1) * this.soLuongMoiTrang;
+
+            this.$store.dispatch("products/taiDanhSachSanPham", {
+                limit: this.soLuongMoiTrang,
+                skip,
+                q: this.tuKhoa,
+                category: this.danhMuc,
+                sortBy,
+                order,
+                delay: this.doTre,
+            });
+        },
+
+        capNhatURL(thayDoi = {}) {
+            const queryHienTai = { ...this.$route.query, ...thayDoi };
+
+            Object.keys(queryHienTai).forEach((k) => {
+                if (
+                    queryHienTai[k] === "" ||
+                    queryHienTai[k] === null ||
+                    queryHienTai[k] === undefined ||
+                    (k === "page" && queryHienTai[k] === 1) ||
+                    (k === "delay" && queryHienTai[k] === 0)
+                ) {
+                    delete queryHienTai[k];
+                }
+            });
+
+            if (
+                JSON.stringify(queryHienTai) !==
+                JSON.stringify(this.$route.query)
+            ) {
+                this.$router.push({ query: queryHienTai });
+            }
+        },
+
+        xuLyDoiTrang(newPage) {
+            this.capNhatURL({ page: newPage });
+        },
+
+        xuLyDoiDanhMuc() {
+            this.capNhatURL({ category: this.danhMuc || undefined, page: 1 });
+        },
+
+        xuLyDoiSapXep() {
+            this.capNhatURL({ sort: this.kieuSapXep || undefined, page: 1 });
+        },
+
+        xuLyDoiDoTre() {
+            this.capNhatURL({ delay: this.doTre || undefined });
+        },
+
+        xuLyDoiTuKhoa(tuKhoaMoi) {
+            this.tuKhoa = tuKhoaMoi;
+        },
+
+        xuLyTimKiem(tuKhoaMoi) {
+            this.capNhatURL({ q: tuKhoaMoi || undefined, page: 1 });
+        },
+
+        xoaBoLoc() {
+            this.tuKhoa = "";
+            this.danhMuc = "";
+            this.kieuSapXep = "";
+            this.doTre = 0;
+            this.trangHienTai = 1;
+            this.$router.push({ path: "/" });
+        },
+
         moPopupThem() {
             this.sanPhamMoi = { title: "", price: 0, category: "", stock: 0 };
             this.hienPopupThem = true;
         },
-        xacNhanThem() {
+
+        async xacNhanThem() {
             if (!this.sanPhamMoi.title.trim()) {
                 notify("Vui lòng nhập tên sản phẩm!", "error", 1500);
                 return;
             }
-            this.xuLyThem({ ...this.sanPhamMoi });
-            this.hienPopupThem = false;
-            notify("Thêm sản phẩm thành công!", "success", 1500);
-        },
-        xuLyXoa(id) {
-            this.$store.commit("products/SET_Products", {
-                products: Xoa(this.danhSachSanPham, id),
-            });
-        },
-
-        xuLySua(id, duLieuMoi) {
-            this.$store.commit("products/SET_Products", {
-                products: Sua(this.danhSachSanPham, id, duLieuMoi),
-            });
+            try {
+                await this.$store.dispatch("products/themSanPham", {
+                    ...this.sanPhamMoi,
+                });
+                this.hienPopupThem = false;
+                notify("Thêm sản phẩm thành công!", "success", 1500);
+                this.taiDuLieu();
+            } catch (e) {
+                notify(e.message || "Thêm sản phẩm thất bại!", "error", 2000);
+            }
         },
 
-        xuLyThem(sanPhamMoi) {
-            this.$store.commit("products/SET_Products", {
-                products: Them(this.danhSachSanPham, sanPhamMoi),
-            });
+        async xuLyXoa(id) {
+            if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
+                try {
+                    await this.$store.dispatch("products/xoaSanPham", id);
+                    notify("Đã xóa sản phẩm thành công!", "success", 1500);
+                    this.taiDuLieu();
+                } catch (e) {
+                    notify(e.message || "Xóa thất bại!", "error", 2000);
+                }
+            }
         },
-        dangXuat() {
-            this.$store.dispatch("auth/dangXuat");
-            notify("Đã đăng xuất!", "info", 1500);
+
+        async xuLySua(id, duLieuMoi) {
+            try {
+                await this.$store.dispatch("products/suaSanPham", {
+                    id,
+                    duLieu: duLieuMoi,
+                });
+                notify("Cập nhật sản phẩm thành công!", "success", 1500);
+                this.taiDuLieu();
+            } catch (e) {
+                notify(e.message || "Cập nhật thất bại!", "error", 2000);
+            }
         },
-        taiDuLieu() {
-            this.$store.dispatch("products/fetchProducts", {
-                skip: 0,
-                limit: 0,
-            });
-        },
-        xuLyTimKiem() {
-            this.trangHienTai = 1;
-            if (!this.tuKhoa.trim()) return this.taiDuLieu();
-            this.$store.commit("products/SET_Products", {
-                products: TimKiem(this.danhSachSanPham, this.tuKhoa, [
-                    "title",
-                    "category",
-                ]),
-            });
-        },
+
         themVaoGio(item) {
             if (item.stock <= 0) {
                 notify("Sản phẩm đã hết hàng!", "warning", 1500);
@@ -403,14 +455,19 @@ export default {
             });
             notify(`Đã thêm "${item.title}" vào giỏ hàng!`, "success", 1500);
         },
-        onMenuItemClick(e) {
-            if (e.itemData && e.itemData.icon === "home")
-                this.$router.push("/");
-            if (e.itemData && e.itemData.icon === "cart")
-                this.$router.push("/cart");
-        },
     },
 };
 </script>
 
-<style></style>
+<style scoped>
+.m3-select {
+    border-radius: 12px;
+    border-color: var(--md-sys-color-outline-variant, #e0e2ec);
+    font-size: 13px;
+    padding: 6px 12px;
+}
+.m3-select:focus {
+    border-color: var(--md-sys-color-primary, #0b57d0);
+    box-shadow: 0 0 0 2px rgba(11, 87, 208, 0.15);
+}
+</style>

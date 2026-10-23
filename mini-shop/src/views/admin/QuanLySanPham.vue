@@ -1,6 +1,5 @@
 <template>
     <div class="m3-page-container">
-        <!-- Header Quản trị -->
         <div class="m3-admin-header mb-4">
             <div
                 class="d-flex flex-wrap justify-content-between align-items-center gap-3">
@@ -37,19 +36,18 @@
             </div>
         </div>
 
-        <!-- Bảng DxDataGrid quản trị -->
         <div class="m3-table-card">
             <DxDataGrid
                 class="table-page"
                 :data-source="dataSource"
+                :remote-operations="{ paging: true }"
                 :show-borders="false"
                 :allow-column-resizing="true"
                 :column-auto-width="true"
-                :remote-operations="{ paging: true }"
                 key-expr="id"
                 height="calc(100vh - 180px)"
                 no-data-text="Không có sản phẩm nào!"
-                @exporting="onExporting">
+                @exporting="xuLyXuatExcel">
                 <DxPaging :page-size="10" />
                 <DxPager
                     :visible="true"
@@ -88,13 +86,11 @@
                 <DxHeaderFilter :visible="true" />
                 <DxFilterRow :visible="true" />
 
-                <!-- Các cột dữ liệu -->
                 <DxColumn
                     data-field="id"
                     caption="ID"
                     :width="70"
                     :allow-editing="false" />
-
                 <DxColumn
                     data-field="thumbnail"
                     caption="Hình ảnh"
@@ -233,70 +229,39 @@ export default {
                     const skip = loadOptions.skip || 0;
                     const limit = loadOptions.take || 10;
                     try {
-                        const resp = await layDanhSachSanPham({
-                            boQua: skip,
-                            soLuong: limit,
-                            truongLay:
-                                "id,title,price,thumbnail,category,stock,rating",
-                        });
-                        return {
-                            data: resp.data.products,
-                            totalCount: resp.data.total,
-                        };
-                    } catch (error) {
-                        notify(
-                            error.message ||
-                                "Không thể tải danh sách sản phẩm!",
-                            "error",
-                            2000,
+                        return await this.$store.dispatch(
+                            "products/taiDanhSachQuanLy",
+                            {
+                                skip,
+                                limit,
+                            },
                         );
+                    } catch (error) {
                         return { data: [], totalCount: 0 };
                     }
                 },
                 insert: async (values) => {
-                    try {
-                        const resp = await themSanPham(values);
-                        notify("Thêm sản phẩm thành công!", "success", 1500);
-                        return resp.data;
-                    } catch (error) {
-                        notify(
-                            error.message || "Thêm sản phẩm thất bại!",
-                            "error",
-                            2000,
-                        );
-                        throw error;
-                    }
+                    const data = await this.$store.dispatch(
+                        "products/themSanPham",
+                        values,
+                    );
+                    notify("Thêm sản phẩm thành công!", "success", 1500);
+                    return data;
                 },
                 update: async (key, values) => {
-                    try {
-                        const resp = await suaSanPham(key, values);
-                        notify(
-                            "Cập nhật sản phẩm thành công!",
-                            "success",
-                            1500,
-                        );
-                        return resp.data;
-                    } catch (error) {
-                        notify(
-                            error.message || "Cập nhật thất bại!",
-                            "error",
-                            2000,
-                        );
-                        throw error;
-                    }
+                    const data = await this.$store.dispatch(
+                        "products/suaSanPham",
+                        {
+                            id: key,
+                            duLieu: values,
+                        },
+                    );
+                    notify("Cập nhật sản phẩm thành công!", "success", 1500);
+                    return data;
                 },
                 remove: async (key) => {
-                    try {
-                        await xoaSanPham(key);
-                        notify("Đã xóa sản phẩm thành công!", "success", 1500);
-                    } catch (error) {
-                        notify(
-                            error.message || "Xóa sản phẩm thất bại!",
-                            "error",
-                            2000,
-                        );
-                        throw error;
-                    }
+                    await this.$store.dispatch("products/xoaSanPham", key);
+                    notify("Đã xóa sản phẩm thành công!", "success", 1500);
                 },
             });
         },
@@ -308,7 +273,7 @@ export default {
                 console.error("Lỗi tải danh mục:", err);
             }
         },
-        onExporting(e) {
+        xuLyXuatExcel(e) {
             const workbook = new Workbook();
             const worksheet = workbook.addWorksheet("Products");
 
