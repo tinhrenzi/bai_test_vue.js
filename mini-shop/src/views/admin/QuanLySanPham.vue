@@ -49,7 +49,8 @@
                 height="calc(100vh - 180px)"
                 no-data-text="Không có sản phẩm nào!"
                 @exporting="xuLyXuatExcel">
-                <DxPaging :page-size="10" />
+                <DxScrolling mode="infinite" />
+                <DxPaging :page-size="20" />
                 <DxPager
                     :visible="true"
                     :show-page-size-selector="true"
@@ -165,6 +166,7 @@ import {
     DxColumn,
     DxPaging,
     DxPager,
+    DxScrolling,
     DxEditing,
     DxPopup,
     DxForm,
@@ -198,6 +200,7 @@ export default {
     components: {
         ThemeToggle,
         DxDataGrid,
+        DxScrolling,
         DxColumn,
         DxPaging,
         DxPager,
@@ -218,6 +221,7 @@ export default {
         return {
             danhMucList: [],
             dataSource: null,
+            cheDoCuon: "infinite",
         };
     },
     created() {
@@ -274,7 +278,10 @@ export default {
                 this.danhMucList = (resp.data || []).map((dm) =>
                     typeof dm === "string"
                         ? { slug: dm, name: dm }
-                        : { slug: dm.slug || dm.name, name: dm.name || dm.slug },
+                        : {
+                              slug: dm.slug || dm.name,
+                              name: dm.name || dm.slug,
+                          },
                 );
             } catch (err) {
                 console.error("Lỗi tải danh mục:", err);
