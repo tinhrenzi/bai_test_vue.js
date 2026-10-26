@@ -17,6 +17,7 @@
                     </p>
                 </div>
                 <div class="d-flex align-items-center gap-2">
+                    <DxSwitch v-model:value="cheDoCuon" />
                     <router-link
                         to="/admin/dashboard"
                         class="btn btn-outline-primary m3-btn-pill btn-sm">
@@ -36,7 +37,6 @@
                 </div>
             </div>
         </div>
-
         <div class="m3-table-card">
             <DxDataGrid
                 class="table-page"
@@ -49,10 +49,12 @@
                 height="calc(100vh - 180px)"
                 no-data-text="Không có sản phẩm nào!"
                 @exporting="xuLyXuatExcel">
-                <DxScrolling mode="infinite" />
-                <DxPaging :page-size="20" />
+                <DxScrolling
+                    :mode="cheDoCuon ? 'virtual' : 'standard'"
+                    row-rendering-mode="virtual" />
+                <DxPaging :page-size="cheDoCuon ? 20 : 10" />
                 <DxPager
-                    :visible="true"
+                    :visible="!cheDoCuon"
                     :show-page-size-selector="true"
                     :allowed-page-sizes="[10, 20, 50]"
                     :show-info="true"
@@ -109,7 +111,10 @@
                             height: 44px;
                             object-fit: contain;
                             border-radius: 8px;
-                            background: #f0f4f9;
+                            background: var(
+                                --md-sys-color-surface-container,
+                                #f0f4f9
+                            );
                         " />
                 </template>
 
@@ -194,6 +199,7 @@ import {
     xoaSanPham,
     layDanhSachDanhMuc,
 } from "../../api/apiProduct";
+import { DxSwitch } from "devextreme-vue/switch";
 
 export default {
     name: "QuanLySanPham",
@@ -216,12 +222,13 @@ export default {
         DxHeaderFilter,
         DxFilterRow,
         DxButton,
+        DxSwitch,
     },
     data() {
         return {
             danhMucList: [],
             dataSource: null,
-            cheDoCuon: "infinite",
+            cheDoCuon: true,
         };
     },
     created() {

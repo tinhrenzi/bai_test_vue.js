@@ -466,3 +466,56 @@ body,
 :root[data-theme="dark"] .theme-toggle.dx-button.dx-state-hover {
   background-color: var(--md-sys-color-surface-container) !important;
 }
+
+/* Đồng bộ Dark Mode cho DataGrid Admin (Chữ, Header, Pager, Toolbar) */
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row > td,
+:root[data-theme="dark"] .dx-datagrid-headers .dx-row > td,
+:root[data-theme="dark"] .dx-datagrid-headers .dx-header-filter,
+:root[data-theme="dark"] .dx-datagrid-filter-row td,
+:root[data-theme="dark"] .dx-datagrid .dx-row-alt > td {
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-pager,
+:root[data-theme="dark"] .dx-pager .dx-pages .dx-page,
+:root[data-theme="dark"] .dx-pager .dx-pages .dx-selection,
+:root[data-theme="dark"] .dx-pager .dx-page-sizes .dx-page-size,
+:root[data-theme="dark"] .dx-pager .dx-info,
+:root[data-theme="dark"] .dx-pager .dx-navigate-button {
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-pager .dx-pages .dx-selection {
+  background-color: var(--md-sys-color-primary) !important;
+  color: var(--md-sys-color-on-primary) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-header-panel,
+:root[data-theme="dark"] .dx-datagrid-header-panel .dx-toolbar {
+  background-color: var(--md-sys-color-surface) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-header-panel .dx-button .dx-icon,
+:root[data-theme="dark"] .dx-datagrid-header-panel .dx-button .dx-button-text {
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-popup-title,
+:root[data-theme="dark"] .dx-field-item-label-text {
+  color: var(--md-sys-color-text-main) !important;
+}
+
+/* Đồng bộ Dark Mode cho biểu đồ thống kê Admin (DxChart, DxPieChart) */
+:root[data-theme="dark"] .dx-chart text,
+:root[data-theme="dark"] .dx-piechart text,
+:root[data-theme="dark"] .dxc-labels text,
+:root[data-theme="dark"] .dxc-legend text,
+:root[data-theme="dark"] .dxc-axes text {
+  fill: var(--md-sys-color-text-main) !important;
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-chart .dxc-grid-lines path,
+:root[data-theme="dark"] .dx-chart .dxc-axes path {
+  stroke: var(--md-sys-color-outline-variant) !important;
+}
