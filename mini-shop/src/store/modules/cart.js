@@ -56,10 +56,6 @@ export default {
                     quantity: soLuongHopLe,
                 });
             }
-            localStorage.setItem(
-                "mini_shop_cart",
-                JSON.stringify(state.danhSach),
-            );
         },
 
         CAP_NHAT_SO_LUONG(state, { id, soLuong }) {
@@ -74,38 +70,43 @@ export default {
             } else {
                 sp.quantity = Math.min(soLuong, sp.stock);
             }
-
-            localStorage.setItem(
-                "mini_shop_cart",
-                JSON.stringify(state.danhSach),
-            );
         },
 
         XOA_SAN_PHAM(state, id) {
             state.danhSach = state.danhSach.filter((item) => item.id !== id);
-            localStorage.setItem(
-                "mini_shop_cart",
-                JSON.stringify(state.danhSach),
-            );
         },
 
         XOA_TAT_CA_SAN_PHAM(state) {
             state.danhSach = [];
-            localStorage.removeItem("mini_shop_cart");
         },
     },
     actions: {
         themVaoGio({ commit }, payload) {
             commit("THEM_VAO_GIO", payload);
+
+            localStorage.setItem(
+                "mini_shop_cart",
+                JSON.stringify(state.danhSach),
+            );
         },
         capNhatSoLuong({ commit }, payload) {
             commit("CAP_NHAT_SO_LUONG", payload);
+
+            localStorage.setItem(
+                "mini_shop_cart",
+                JSON.stringify(state.danhSach),
+            );
         },
         xoaSanPham({ commit }, id) {
             commit("XOA_SAN_PHAM", id);
+            localStorage.setItem(
+                "mini_shop_cart",
+                JSON.stringify(state.danhSach),
+            );
         },
         xoaTatCa({ commit }) {
             commit("XOA_TAT_CA_SAN_PHAM");
+            localStorage.removeItem("mini_shop_cart");
         },
     },
 };

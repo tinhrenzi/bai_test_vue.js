@@ -24,17 +24,10 @@ export default {
             state.refreshToken = refreshToken;
             state.user = user;
             state.loi = null;
-
-            localStorage.setItem("token", token);
-            if (refreshToken) {
-                localStorage.setItem("refreshToken", refreshToken);
-            }
-            localStorage.setItem("user", JSON.stringify(user));
         },
 
         SET_NGUOI_DUNG(state, user) {
             state.user = user;
-            localStorage.setItem("user", JSON.stringify(user));
         },
 
         DANG_XUAT(state) {
@@ -42,10 +35,6 @@ export default {
             state.refreshToken = null;
             state.user = null;
             state.loi = null;
-
-            localStorage.removeItem("token");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("user");
         },
     },
 
@@ -75,6 +64,11 @@ export default {
                     refreshToken,
                     user,
                 });
+                localStorage.setItem("token", token);
+                if (refreshToken) {
+                    localStorage.setItem("refreshToken", refreshToken);
+                }
+                localStorage.setItem("user", JSON.stringify(user));
                 commit("SET_DANG_TAI", false);
                 return user;
             }
@@ -160,6 +154,10 @@ export default {
         },
         dangXuat({ commit }) {
             commit("DANG_XUAT");
+
+            localStorage.removeItem("token");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("user");
         },
     },
     getters: {
