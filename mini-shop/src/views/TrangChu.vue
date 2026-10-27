@@ -144,67 +144,105 @@
             :width="'min(460px, 92vw)'"
             :max-width="'92vw'"
             :height="'auto'">
-            <div
-                style="
-                    display: flex;
-                    flex-direction: column;
-                    gap: 12px;
-                    padding: 10px;
-                ">
-                <div>
-                    <label class="form-label">Tên sản phẩm:</label>
-                    <DxTextBox
-                        v-model:value="sanPhamMoi.title"
-                        placeholder="Nhập tên..." />
-                </div>
-                <div>
-                    <label class="form-label">Danh mục:</label>
-                    <select
-                        class="form-select m3-select"
-                        v-model="sanPhamMoi.category">
-                        <option value="">-- Chọn danh mục --</option>
-                        <option
-                            v-for="dm in danhSachDanhMuc"
-                            :key="dm.slug || dm"
-                            :value="dm.slug || dm">
-                            {{ dm.name || dm }}
-                        </option>
-                    </select>
-                </div>
-                <div>
-                    <label class="form-label">Giá ($):</label>
-                    <DxNumberBox v-model:value="sanPhamMoi.price" :min="0" />
-                </div>
-                <div>
-                    <label class="form-label">Tồn kho:</label>
-                    <DxNumberBox v-model:value="sanPhamMoi.stock" :min="0" />
-                </div>
-
+            <DxValidationGroup ref="themSanPhamGroup">
                 <div
                     style="
                         display: flex;
-                        justify-content: flex-end;
-                        gap: 8px;
-                        margin-top: 10px;
+                        flex-direction: column;
+                        gap: 12px;
+                        padding: 10px;
                     ">
-                    <DxButton
-                        class="m3-btn-pill"
-                        text="Hủy"
-                        styling-mode="outlined"
-                        @click="hienPopupThem = false" />
-                    <DxButton
-                        class="m3-btn-pill"
-                        text="Lưu"
-                        type="default"
-                        styling-mode="contained"
-                        @click="xacNhanThem" />
+                    <!-- Tên sản phẩm -->
+                    <div class="mb-2">
+                        <DxTextBox
+                            label="Tên sản phẩm (*)"
+                            v-model:value="sanPhamMoi.title"
+                            validationMessageMode="always">
+                            <DxValidator>
+                                <DxRequiredRule
+                                    message="Tên sản phẩm không được để trống!" />
+                            </DxValidator>
+                        </DxTextBox>
+                    </div>
+
+                    <!-- Danh mục -->
+                    <div style="margin-left: 1px;">
+                        <DxSelectBox
+                            label="Danh mục (*)"
+                            v-model:value="sanPhamMoi.category"
+                            :data-source="danhSachDanhMuc"
+                            value-expr="slug"
+                            display-expr="name"
+                            validationMessageMode="always">
+                            <DxValidator>
+                                <DxRequiredRule
+                                    message="Vui lòng chọn danh mục!" />
+                            </DxValidator>
+                        </DxSelectBox>
+                    </div>
+
+                    <!-- Giá sản phẩm -->
+                    <div>
+                        <DxNumberBox
+                            label="Giá($)"
+                            v-model:value="sanPhamMoi.price"
+                            :min="0"
+                            format="$#,##0.00"
+                            validationMessageMode="always">
+                            <DxValidator>
+                                <DxRequiredRule
+                                    message="Giá không được để trống!" />
+                                <DxRangeRule
+                                    :min="0.1"
+                                    message="Giá sản phẩm phải lớn hơn 0!" />
+                            </DxValidator>
+                        </DxNumberBox>
+                    </div>
+
+                    <!-- Tồn kho -->
+                    <div>
+                        <DxNumberBox
+                            label="Tồn kho:"
+                            v-model:value="sanPhamMoi.stock"
+                            :min="0"
+                            validationMessageMode="always">
+                            <DxValidator>
+                                <DxRequiredRule
+                                    message="Tồn kho không được để trống!" />
+                                <DxRangeRule
+                                    :min="0"
+                                    message="Tồn kho phải từ 0 trở lên!" />
+                            </DxValidator>
+                        </DxNumberBox>
+                    </div>
+
+                    <div
+                        style="
+                            display: flex;
+                            justify-content: flex-end;
+                            gap: 8px;
+                            margin-top: 10px;
+                        ">
+                        <DxButton
+                            class="m3-btn-pill"
+                            text="Hủy"
+                            styling-mode="outlined"
+                            @click="hienPopupThem = false" />
+                        <DxButton
+                            class="m3-btn-pill"
+                            text="Lưu"
+                            type="default"
+                            styling-mode="contained"
+                            @click="xacNhanThem" />
+                    </div>
                 </div>
-            </div>
+            </DxValidationGroup>
         </DxPopup>
     </div>
 </template>
 
 <script>
+import { DxValidationGroup } from "devextreme-vue/validation-group";
 import { DxButton } from "devextreme-vue/button";
 import { DxTextBox } from "devextreme-vue/text-box";
 import { DxPopup } from "devextreme-vue/popup";
@@ -215,14 +253,21 @@ import AppNavbar from "../components/AppNavbar.vue";
 import ProductCard from "../components/ProductCard.vue";
 import ProductSkeleton from "../components/ProductSkeleton.vue";
 import AppPagination from "../components/AppPagination.vue";
+import { DxSelectBox, DxValidator } from "devextreme-vue";
+import { DxRangeRule, DxRequiredRule } from "devextreme-vue/cjs/data-grid";
 
 export default {
     name: "TrangChu",
     components: {
+        DxRequiredRule,
+        DxValidationGroup,
         DxButton,
         DxTextBox,
         DxPopup,
         DxNumberBox,
+        DxValidator,
+        DxRangeRule,
+        DxSelectBox,
         AppNavbar,
         ProductCard,
         ProductSkeleton,
@@ -290,7 +335,7 @@ export default {
         async taiDanhMuc() {
             try {
                 const data = await this.$store.dispatch(
-                    "products/ taiDanhSachDanhMuc",
+                    "products/taiDanhSachDanhMuc",
                 );
                 this.danhSachDanhMuc = data || [];
             } catch (err) {
@@ -399,14 +444,18 @@ export default {
 
         moPopupThem() {
             this.sanPhamMoi = { title: "", price: 0, category: "", stock: 0 };
+            this.$refs.themSanPhamGroup?.instance?.reset();
             this.hienPopupThem = true;
         },
 
         async xacNhanThem() {
-            if (!this.sanPhamMoi.title.trim()) {
-                notify("Vui lòng nhập tên sản phẩm!", "error", 1500);
+            const group = this.$refs.themSanPhamGroup?.instance;
+            const ketQua = group ? group.validate() : { isValid: true };
+
+            if (!ketQua.isValid) {
                 return;
             }
+
             try {
                 await this.$store.dispatch("products/themSanPham", {
                     ...this.sanPhamMoi,

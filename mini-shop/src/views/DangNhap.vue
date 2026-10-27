@@ -6,26 +6,33 @@
                 <h2 class="m3-login-title">Đăng nhập</h2>
                 <p class="m3-login-subtitle">Hệ thống quản lý Mini Shop</p>
             </div>
-
-            <form @submit.prevent="xuLyDangNhap" class="m3-login-form">
+            <DxValidationGroup ref="formValidation">
                 <div class="m3-form-group">
-                    <label class="form-label">Tên đăng nhập</label>
                     <DxTextBox
+                        label="Tên đăng nhập (*)"
                         class="m3-input"
                         v-model:value="username"
-                        placeholder="Nhập username (vd: emilys)"
                         mode="text"
-                        :showClearButton="true" />
+                        :showClearButton="true">
+                        <DxValidator ref="validate">
+                            <DxRequiredRule
+                                message="Không được bỏ trống tên đăng nhập!" />
+                        </DxValidator>
+                    </DxTextBox>
                 </div>
 
                 <div class="m3-form-group">
-                    <label class="form-label">Mật khẩu</label>
                     <DxTextBox
+                        label="Mật khẩu (*)"
                         class="m3-input"
                         v-model:value="password"
-                        placeholder="Nhập mật khẩu (vd: emilyspass)"
                         mode="password"
-                        :showClearButton="true" />
+                        :showClearButton="true">
+                        <DxValidator ref="validate">
+                            <DxRequiredRule
+                                message="Không được bỏ trống mật khẩu!" />
+                        </DxValidator>
+                    </DxTextBox>
                 </div>
 
                 <div class="m3-form-group">
@@ -108,7 +115,7 @@
                         Đăng ký ngay
                     </router-link>
                 </div>
-            </form>
+            </DxValidationGroup>
         </div>
     </div>
 </template>
@@ -118,6 +125,8 @@ import { DxTextBox } from "devextreme-vue/text-box";
 import { DxButton } from "devextreme-vue/button";
 import notify from "devextreme/ui/notify";
 import ThemeToggle from "../components/ThemeToggle.vue";
+import { DxValidationGroup } from "devextreme-vue/validation-group";
+import { DxRequiredRule, DxValidator } from "devextreme-vue/validator";
 
 export default {
     name: "DangNhap",
@@ -125,6 +134,9 @@ export default {
         DxTextBox,
         DxButton,
         ThemeToggle,
+        DxValidationGroup,
+        DxValidator,
+        DxRequiredRule,
     },
     data() {
         return {
@@ -159,13 +171,9 @@ export default {
             this.password = "123456";
         },
         async xuLyDangNhap() {
-            if (!this.username.trim() || !this.password.trim()) {
-                notify(
-                    "Vui lòng điền đầy đủ tài khoản và mật khẩu!",
-                    "warning",
-                    1500,
-                );
-                return;
+            const ketQua = this.$refs.formValidation?.instance?.validate();
+            if (!ketQua || !ketQua.isValid) {
+                return; // Dừng lại nếu chưa điền đầy đủ
             }
 
             try {
