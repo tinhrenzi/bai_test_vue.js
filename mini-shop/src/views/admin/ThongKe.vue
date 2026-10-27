@@ -141,8 +141,6 @@ import { DxButton } from "devextreme-vue/button";
 import notify from "devextreme/ui/notify";
 import ThemeToggle from "../../components/ThemeToggle.vue";
 
-import { layDanhSachSanPham } from "../../api/apiProduct";
-
 export default {
     name: "ThongKe",
     components: {
@@ -176,11 +174,9 @@ export default {
         async taiDuLieuThongKe() {
             this.dangTai = true;
             try {
-                const resp = await layDanhSachSanPham({
-                    limit: 0,
-                    select: "category,stock",
-                });
-                const sanPhams = resp.data.products || [];
+                const sanPhams = await this.$store.dispatch(
+                    "products/taiDuLieuThongKe",
+                );
 
                 const thayDoi = this.$store.state.products.thayDoiCucBo || {};
                 const added = thayDoi.added || [];

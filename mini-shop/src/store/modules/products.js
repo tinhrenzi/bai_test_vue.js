@@ -6,6 +6,7 @@ import {
     themSanPham,
     suaSanPham,
     xoaSanPham,
+    layDanhSachDanhMuc,
 } from "../../api/apiProduct";
 
 const STORAGE_KEY_LOCAL_CHANGES = "mini_shop_product_changes";
@@ -333,6 +334,19 @@ export default {
             }
         },
 
+        async taiDanhSachDanhMuc() {
+            const resp = await layDanhSachDanhMuc();
+            return resp.data || [];
+        },
+
+        async taiDuLieuThongKe() {
+            const resp = await layDanhSachSanPham({
+                limit: 0,
+                select: "category,stock",
+            });
+            return resp.data.products || [];
+        },
+
         async themSanPham({ commit }, duLieu) {
             let respData = {};
             try {
@@ -372,8 +386,7 @@ export default {
                 if (typeof id === "number" && id <= 1000) {
                     await xoaSanPham(id);
                 }
-            } catch (e) {
-            }
+            } catch (e) {}
             commit("XOA_SAN_PHAM", id);
             return id;
         },

@@ -216,8 +216,6 @@ import ProductCard from "../components/ProductCard.vue";
 import ProductSkeleton from "../components/ProductSkeleton.vue";
 import AppPagination from "../components/AppPagination.vue";
 
-import { layDanhSachDanhMuc } from "../api/apiProduct";
-
 export default {
     name: "TrangChu",
     components: {
@@ -291,8 +289,10 @@ export default {
     methods: {
         async taiDanhMuc() {
             try {
-                const resp = await layDanhSachDanhMuc();
-                this.danhSachDanhMuc = resp.data || [];
+                const data = await this.$store.dispatch(
+                    "products/ taiDanhSachDanhMuc",
+                );
+                this.danhSachDanhMuc = data || [];
             } catch (err) {
                 console.warn("Lỗi tải danh sách danh mục:", err);
             }

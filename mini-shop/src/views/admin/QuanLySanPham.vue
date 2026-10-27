@@ -192,13 +192,6 @@ import { Workbook } from "exceljs";
 import saveAs from "file-saver";
 import ThemeToggle from "../../components/ThemeToggle.vue";
 
-import {
-    layDanhSachSanPham,
-    themSanPham,
-    suaSanPham,
-    xoaSanPham,
-    layDanhSachDanhMuc,
-} from "../../api/apiProduct";
 import { DxSwitch } from "devextreme-vue/switch";
 
 export default {
@@ -281,8 +274,8 @@ export default {
         },
         async taiDanhMuc() {
             try {
-                const resp = await layDanhSachDanhMuc();
-                this.danhMucList = (resp.data || []).map((dm) =>
+                const data = await this.$store.dispatch("products/taiDanhSachDanhMuc");
+                this.danhMucList = (data || []).map((dm) =>
                     typeof dm === "string"
                         ? { slug: dm, name: dm }
                         : {
