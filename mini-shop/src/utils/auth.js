@@ -31,8 +31,14 @@ export function layDanhSachUser() {
             return [...TAI_KHOAN_MAU];
         }
         const parsed = JSON.parse(data);
-        if (!Array.isArray(parsed) || !parsed.some((u) => u.username === "admin")) {
-            const ketHop = [...TAI_KHOAN_MAU, ...(Array.isArray(parsed) ? parsed : [])];
+        if (
+            !Array.isArray(parsed) ||
+            !parsed.some((u) => u.username === "admin")
+        ) {
+            const ketHop = [
+                ...TAI_KHOAN_MAU,
+                ...(Array.isArray(parsed) ? parsed : []),
+            ];
             localStorage.setItem(KEY_USERS, JSON.stringify(ketHop));
             return ketHop;
         }

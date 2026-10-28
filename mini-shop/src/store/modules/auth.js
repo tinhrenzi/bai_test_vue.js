@@ -96,6 +96,10 @@ export default {
                             : "customer",
                 };
                 commit("DANG_NHAP_THANH_CONG", { token, refreshToken, user });
+                localStorage.setItem("token", token);
+                if (refreshToken)
+                    localStorage.setItem("refreshToken", refreshToken);
+                localStorage.setItem("user", JSON.stringify(user));
                 return user;
             } catch (error) {
                 const thongBaoLoi =

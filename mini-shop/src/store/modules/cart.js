@@ -9,7 +9,6 @@ function khoiPhucGioHang() {
         return [];
     }
 }
-
 export default {
     namespaced: true,
     state: () => ({
@@ -81,7 +80,7 @@ export default {
         },
     },
     actions: {
-        themVaoGio({ commit }, payload) {
+        themVaoGio({ state, commit }, payload) {
             commit("THEM_VAO_GIO", payload);
 
             localStorage.setItem(
@@ -89,7 +88,7 @@ export default {
                 JSON.stringify(state.danhSach),
             );
         },
-        capNhatSoLuong({ commit }, payload) {
+        capNhatSoLuong({ state, commit }, payload) {
             commit("CAP_NHAT_SO_LUONG", payload);
 
             localStorage.setItem(
@@ -97,7 +96,7 @@ export default {
                 JSON.stringify(state.danhSach),
             );
         },
-        xoaSanPham({ commit }, id) {
+        xoaSanPham({ state, commit }, id) {
             commit("XOA_SAN_PHAM", id);
             localStorage.setItem(
                 "mini_shop_cart",

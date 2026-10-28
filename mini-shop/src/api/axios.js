@@ -1,7 +1,7 @@
 import axios from "axios";
 import notify from "devextreme/ui/notify";
-import { ApiError } from "./apiError";
 import router from "../router";
+import { ApiError, HTTP_STATUS_MESSAGES } from "./apiError";
 
 const baseURL = import.meta.env.VITE_API_BASE_URL || "https://dummyjson.com";
 
@@ -24,10 +24,26 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-    (response) => response,
+    (response) => {
+        const status = response.status;
+        const url = response.config.url;
+        const defaultMsg =
+            HTTP_STATUS_MESSAGES[status] || "Thao tác thành công!";
+        console.log(
+            `%c[API SUCCESS ${status}] %c${url}`,
+            "color: #0f9d58; font-weight: bold; background: #e6f4ea; padding: 2px 6px; border-radius: 4px;",
+            "color: #1a73e8; font-weight: bold;",
+            `\n👉 Thông báo: ${defaultMsg}`,
+            `\n👉 Dữ liệu trả về:`,
+            response.data,
+        );
+        return response;
+    },
+
     async (error) => {
         const originalRequest = error.config;
-
+        const status = error.response ? error.response.status : 0;
+        const url = originalRequest?.url || "Unknown URL";
         if (
             originalRequest &&
             originalRequest.method?.toLowerCase() === "get" &&
@@ -135,18 +151,22 @@ api.interceptors.response.use(
             }
         }
 
-        const status = error.response
-            ? error.response.status
-            : error.status || 0;
-        const message =
-            error.response?.data?.message ||
-            error.message ||
-            "Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại kết nối mạng!";
+        const rawMessage = error.response?.data?.message || error.message || "";
 
+        // Tận dụng ApiError để tự động chuyển câu sang tiếng Việt:
         const normalizedError =
             error instanceof ApiError
                 ? error
-                : new ApiError(status, message, error);
+                : new ApiError(status, rawMessage, error);
+
+        console.error(
+            `%c[API ERROR ${normalizedError.status}] %c${url}`,
+            "color: #d93025; font-weight: bold; background: #fce8e6; padding: 2px 6px; border-radius: 4px;",
+            "color: #d93025; font-weight: bold;",
+            `\n🚨 Nguyên nhân: ${normalizedError.message}`,
+            `\n🚨 Chi tiết lỗi:`,
+            error.response?.data || error,
+        );
 
         if (status !== 401) {
             notify(normalizedError.message, "error", 3000);

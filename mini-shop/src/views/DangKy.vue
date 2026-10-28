@@ -81,11 +81,13 @@
                             class="m3-input"
                             v-model:value="form.confirmPassword"
                             mode="password">
-                            <DxRequiredRule
-                                message="Vui lòng nhập lại mật khẩu!" />
-                            <DxCompareRule
-                                :comparison-target="soSanhMatKhau"
-                                message="Mật khẩu không khớp!" />
+                            <DxValidator ref="validate">
+                                <DxRequiredRule
+                                    message="Vui lòng nhập lại mật khẩu!" />
+                                <DxCompareRule
+                                    :comparison-target="soSanhMatKhau"
+                                    message="Mật khẩu không khớp!" />
+                            </DxValidator>
                         </DxTextBox>
                     </div>
 
@@ -149,9 +151,10 @@ export default {
         DxValidationGroup,
         DxTextBox,
         DxButton,
-        DxValidator,
         DxRequiredRule,
         DxEmailRule,
+        DxCompareRule,
+        DxStringLengthRule,
     },
     data() {
         return {
@@ -190,7 +193,7 @@ export default {
                 notify("Đăng ký tài khoản thành công!", "success", 1500);
                 this.$router.push("/login");
             } catch (err) {
-                this.loi = err.message || "Đăng ký thất bại, vui lòng thử lại!";
+                console.log("🚀 ~ err:", err);
             }
         },
     },

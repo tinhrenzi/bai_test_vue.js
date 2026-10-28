@@ -27,7 +27,8 @@
                         class="m3-input"
                         v-model:value="password"
                         mode="password"
-                        :showClearButton="true">
+                        :showClearButton="true"
+                        @enter-key="xuLyDangNhap">
                         <DxValidator ref="validate">
                             <DxRequiredRule
                                 message="Không được bỏ trống mật khẩu!" />
@@ -105,7 +106,7 @@
                     type="default"
                     styling-mode="contained"
                     :disabled="dangTai"
-                    :use-submit-behavior="true" />
+                    @click="xuLyDangNhap()" />
 
                 <div class="text-center mt-2">
                     <span class="small text-muted">Chưa có tài khoản? </span>
@@ -127,6 +128,7 @@ import notify from "devextreme/ui/notify";
 import ThemeToggle from "../components/ThemeToggle.vue";
 import { DxValidationGroup } from "devextreme-vue/validation-group";
 import { DxRequiredRule, DxValidator } from "devextreme-vue/validator";
+import { DxPopover } from "devextreme-vue";
 
 export default {
     name: "DangNhap",
@@ -182,9 +184,18 @@ export default {
                     password: this.password,
                     expiresInMins: this.hetHan1Phut ? 1 : 30,
                 });
+                if (!user) {
+                    notify(
+                        "Đăng nhập thất bại. Yêu cầu chưa được thực hiện!",
+                        "success",
+                        1500,
+                    );
+                    return;
+                }
 
                 notify("Đăng nhập thành công!", "success", 1500);
                 const redirect = this.$route.query.redirect;
+                console.log("", redirect);
                 if (redirect) {
                     this.$router.push(redirect);
                 } else if (user && user.role === "admin") {
@@ -193,7 +204,7 @@ export default {
                     this.$router.push("/");
                 }
             } catch (err) {
-                notify(err.message || "Đăng nhập thất bại!", "error", 2000);
+                console.log("🚀 ~ err:", err);
             }
         },
     },

@@ -138,7 +138,6 @@ export default {
             state.danhSach.unshift(product);
             state.tongSo += 1;
             state.thayDoiCucBo.added.unshift(product);
-            luuThayDoiCucBo(state.thayDoiCucBo);
         },
 
         CAP_NHAT_SAN_PHAM(state, { id, duLieu }) {
@@ -152,7 +151,6 @@ export default {
                 ...(state.thayDoiCucBo.updated[id] || {}),
                 ...duLieu,
             };
-            luuThayDoiCucBo(state.thayDoiCucBo);
 
             if (state.cacheChiTiet[id]) {
                 state.cacheChiTiet[id] = {
@@ -168,8 +166,6 @@ export default {
             );
             state.tongSo = Math.max(0, state.tongSo - 1);
             state.thayDoiCucBo.deleted.push(id);
-            luuThayDoiCucBo(state.thayDoiCucBo);
-
             delete state.cacheChiTiet[id];
         },
     },
@@ -364,6 +360,7 @@ export default {
                 rating: 5,
             };
             commit("THEM_SAN_PHAM", sanPhamMoi);
+            luuThayDoiCucBo(state.thayDoiCucBo);
             return sanPhamMoi;
         },
 
@@ -378,6 +375,7 @@ export default {
                 sanPhamCapNhat = duLieu;
             }
             commit("CAP_NHAT_SAN_PHAM", { id, duLieu: sanPhamCapNhat });
+            luuThayDoiCucBo(state.thayDoiCucBo);
             return sanPhamCapNhat;
         },
 
@@ -388,6 +386,7 @@ export default {
                 }
             } catch (e) {}
             commit("XOA_SAN_PHAM", id);
+            luuThayDoiCucBo(state.thayDoiCucBo);
             return id;
         },
     },

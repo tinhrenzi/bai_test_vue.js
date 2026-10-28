@@ -108,7 +108,7 @@ import DxMenu from "devextreme-vue/menu";
 import { DxTextBox } from "devextreme-vue/text-box";
 import { DxButton } from "devextreme-vue/button";
 import notify from "devextreme/ui/notify";
-import { debounce } from "../utils/debounce";
+import { debounce } from "../utils/debounce.js";
 import ThemeToggle from "./ThemeToggle.vue";
 
 export default {
