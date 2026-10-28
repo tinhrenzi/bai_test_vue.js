@@ -101,13 +101,48 @@
                 </div>
 
                 <DxButton
+                    id="btn-dang-nhap"
                     class="m3-btn-pill w-100 mt-3"
                     text="Đăng nhập"
                     type="default"
                     styling-mode="contained"
                     :disabled="dangTai"
                     @click="xuLyDangNhap()" />
-
+                <DxPopover
+                    target="#btn-dang-nhap"
+                    v-model:visible="hienPopover"
+                    :show-title="true"
+                    title="Thông báo hệ thống"
+                    position="top"
+                    :width="320"
+                    :shading="true"
+                    shading-color="rgba(0, 0, 0, 0.6)"
+                    :close-on-outside-click="false">
+                    <div class="p-3 text-center">
+                        <div class="mb-2">
+                            <i
+                                class="dx-icon-check text-success"
+                                style="font-size: 38px"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-1">
+                            Đăng nhập thành công!
+                        </h6>
+                        <p class="text-muted small mb-3">
+                            Xin chào
+                            <strong>{{
+                                thongTinUser?.firstName ||
+                                thongTinUser?.username
+                            }}</strong>
+                        </p>
+                        <button
+                            type="button"
+                            class="btn btn-primary btn-sm m3-btn-pill w-100"
+                            @click="chuyenTrang">
+                            Vào trang ngay
+                            <i class="dx-icon-chevronnext ms-1"></i>
+                        </button>
+                    </div>
+                </DxPopover>
                 <div class="text-center mt-2">
                     <span class="small text-muted">Chưa có tài khoản? </span>
                     <router-link
@@ -124,15 +159,15 @@
 <script>
 import { DxTextBox } from "devextreme-vue/text-box";
 import { DxButton } from "devextreme-vue/button";
-import notify from "devextreme/ui/notify";
 import ThemeToggle from "../components/ThemeToggle.vue";
 import { DxValidationGroup } from "devextreme-vue/validation-group";
 import { DxRequiredRule, DxValidator } from "devextreme-vue/validator";
-import { DxPopover } from "devextreme-vue";
+import { DxPopover } from "devextreme-vue/popover";
 
 export default {
     name: "DangNhap",
     components: {
+        DxPopover,
         DxTextBox,
         DxButton,
         ThemeToggle,
@@ -145,6 +180,8 @@ export default {
             username: "",
             password: "",
             hetHan1Phut: false,
+            hienPopover: false,
+            thongTinUser: null,
         };
     },
     computed: {
@@ -175,7 +212,8 @@ export default {
         async xuLyDangNhap() {
             const ketQua = this.$refs.formValidation?.instance?.validate();
             if (!ketQua || !ketQua.isValid) {
-                return; // Dừng lại nếu chưa điền đầy đủ
+                this.hienPopover = false;
+                return;
             }
 
             try {
@@ -184,27 +222,27 @@ export default {
                     password: this.password,
                     expiresInMins: this.hetHan1Phut ? 1 : 30,
                 });
-                if (!user) {
-                    notify(
-                        "Đăng nhập thất bại. Yêu cầu chưa được thực hiện!",
-                        "success",
-                        1500,
-                    );
-                    return;
-                }
 
-                notify("Đăng nhập thành công!", "success", 1500);
-                const redirect = this.$route.query.redirect;
-                console.log("", redirect);
-                if (redirect) {
-                    this.$router.push(redirect);
-                } else if (user && user.role === "admin") {
-                    this.$router.push("/admin/products");
-                } else {
-                    this.$router.push("/");
-                }
+                this.thongTinUser = user;
+                // Hiển thị popover với nền mờ tối khi đăng nhập thành công
+                this.hienPopover = true;
             } catch (err) {
+                this.hienPopover = false;
                 console.log("🚀 ~ err:", err);
+            }
+        },
+        chuyenTrang() {
+            this.hienPopover = false;
+            const redirect = this.$route.query.redirect;
+            if (redirect) {
+                this.$router.push(redirect);
+            } else if (
+                this.thongTinUser &&
+                this.thongTinUser.role === "admin"
+            ) {
+                this.$router.push("/admin/products");
+            } else {
+                this.$router.push("/");
             }
         },
     },
