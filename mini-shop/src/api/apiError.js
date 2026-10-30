@@ -9,8 +9,6 @@ export const HTTP_STATUS_MESSAGES = {
     502: "Lỗi kết nối cổng (502): Không nhận được phản hồi từ cổng dịch vụ.",
     503: "Dịch vụ gián đoạn (503): Máy chủ đang quá tải hoặc bảo trì.",
 };
-
-// src/api/apiError.js
 export class ApiError extends Error {
     constructor(status, rawMessage = "", originalError = null) {
         let thongBaoTiengViet = "";
@@ -35,8 +33,6 @@ export class ApiError extends Error {
         this.message = thongBaoTiengViet;
         this.originalError = originalError;
     }
-
-    // 👉 Hàm này giúp khi console.log(err) nó sẽ in thẳng câu tiếng Việt ra màn hình:
     toString() {
         return `${this.name} ${this.message}`;
     }

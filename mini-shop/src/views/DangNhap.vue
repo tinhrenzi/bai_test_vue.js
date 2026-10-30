@@ -13,6 +13,7 @@
                         class="m3-input"
                         v-model:value="username"
                         mode="text"
+                        :disabled="khoaTamThoi"
                         :showClearButton="true">
                         <DxValidator ref="validate">
                             <DxRequiredRule
@@ -23,10 +24,12 @@
 
                 <div class="m3-form-group">
                     <DxTextBox
+                        ref="passwordBox"
                         label="Mật khẩu (*)"
                         class="m3-input"
                         v-model:value="password"
                         mode="password"
+                        :disabled="khoaTamThoi"
                         :showClearButton="true"
                         @enter-key="xuLyDangNhap">
                         <DxValidator ref="validate">
@@ -53,7 +56,14 @@
                 </div>
 
                 <div
-                    v-if="loiDangNhap"
+                    v-if="thongBaoKhoa"
+                    class="alert alert-warning py-2 px-3 small d-flex align-items-center gap-2">
+                    <i class="dx-icon-warning text-warning fs-5"></i>
+                    <span>{{ thongBaoKhoa }}</span>
+                </div>
+
+                <div
+                    v-else-if="loiDangNhap"
                     class="alert alert-danger py-2 px-3 small">
                     {{ loiDangNhap }}
                 </div>
@@ -68,6 +78,7 @@
                         <button
                             type="button"
                             class="btn btn-link btn-sm p-0 text-decoration-none"
+                            :disabled="khoaTamThoi"
                             @click="dienMauEmilys">
                             Điền
                         </button>
@@ -81,6 +92,7 @@
                         <button
                             type="button"
                             class="btn btn-link btn-sm p-0 text-decoration-none"
+                            :disabled="khoaTamThoi"
                             @click="dienMauMichael">
                             Điền
                         </button>
@@ -94,6 +106,7 @@
                         <button
                             type="button"
                             class="btn btn-link btn-sm p-0 text-decoration-none"
+                            :disabled="khoaTamThoi"
                             @click="dienMauAdmin">
                             Điền
                         </button>
@@ -103,10 +116,14 @@
                 <DxButton
                     id="btn-dang-nhap"
                     class="m3-btn-pill w-100 mt-3"
-                    text="Đăng nhập"
+                    :text="
+                        khoaTamThoi
+                            ? `Tạm khóa (${thoiGianDemNguoc}s)`
+                            : 'Đăng nhập'
+                    "
                     type="default"
                     styling-mode="contained"
-                    :disabled="dangTai"
+                    :disabled="dangTai || khoaTamThoi"
                     @click="xuLyDangNhap()" />
                 <DxPopover
                     target="#btn-dang-nhap"
@@ -182,6 +199,11 @@ export default {
             hetHan1Phut: false,
             hienPopover: false,
             thongTinUser: null,
+            soLanSai: 0,
+            khoaTamThoi: false,
+            thoiGianDemNguoc: 0,
+            timerDemNguoc: null,
+            thongBaoKhoa: "",
         };
     },
     computed: {
@@ -192,24 +214,61 @@ export default {
             return this.$store.state.auth.loi;
         },
     },
+    beforeUnmount() {
+        if (this.timerDemNguoc) {
+            clearInterval(this.timerDemNguoc);
+            this.timerDemNguoc = null;
+        }
+    },
     methods: {
         dienMauEmilys() {
+            if (this.khoaTamThoi) return;
             this.username = "emilys";
             this.password = "emilyspass";
         },
         dienMauMichael() {
+            if (this.khoaTamThoi) return;
             this.username = "michaelw";
             this.password = "michaelwpass";
         },
         dienMauAdmin() {
+            if (this.khoaTamThoi) return;
             this.username = "admin";
             this.password = "admin";
         },
         dienMauKhachHang() {
+            if (this.khoaTamThoi) return;
             this.username = "khachhang";
             this.password = "123456";
         },
+        kichHoatKhoaTamThoi(soGiay = 30) {
+            this.khoaTamThoi = true;
+            this.thoiGianDemNguoc = soGiay;
+            this.thongBaoKhoa = `Bạn đã nhập sai 5 lần, vui lòng chờ ${this.thoiGianDemNguoc} giây hoặc liên hệ Admin`;
+
+            if (this.timerDemNguoc) {
+                clearInterval(this.timerDemNguoc);
+            }
+
+            this.timerDemNguoc = setInterval(() => {
+                this.thoiGianDemNguoc--;
+                if (this.thoiGianDemNguoc > 0) {
+                    this.thongBaoKhoa = `Bạn đã nhập sai 5 lần, vui lòng chờ ${this.thoiGianDemNguoc} giây hoặc liên hệ Admin`;
+                } else {
+                    clearInterval(this.timerDemNguoc);
+                    this.timerDemNguoc = null;
+                    this.khoaTamThoi = false;
+                    this.soLanSai = 0;
+                    this.thongBaoKhoa = "";
+                    this.$nextTick(() => {
+                        this.$refs.passwordBox?.instance?.focus();
+                    });
+                }
+            }, 1000);
+        },
         async xuLyDangNhap() {
+            if (this.khoaTamThoi) return;
+
             const ketQua = this.$refs.formValidation?.instance?.validate();
             if (!ketQua || !ketQua.isValid) {
                 this.hienPopover = false;
@@ -223,12 +282,60 @@ export default {
                     expiresInMins: this.hetHan1Phut ? 1 : 30,
                 });
 
+                // Đăng nhập thành công: reset biến đếm số lần sai và thông báo khóa
+                this.soLanSai = 0;
+                this.thongBaoKhoa = "";
                 this.thongTinUser = user;
                 // Hiển thị popover với nền mờ tối khi đăng nhập thành công
                 this.hienPopover = true;
             } catch (err) {
+                // Đảm bảo đóng Popover để không hiện nhầm thông báo thành công
                 this.hienPopover = false;
-                console.log("🚀 ~ err:", err);
+                console.log("🚀 ~ Lỗi đăng nhập:", err);
+
+                // Lỗi mạng khi đang bấm đăng nhập
+                const isLoiMang =
+                    err.status === 0 ||
+                    !navigator.onLine ||
+                    (err.message &&
+                        (err.message.toLowerCase().includes("mất kết nối") ||
+                            err.message.toLowerCase().includes("lỗi kết nối") ||
+                            err.message
+                                .toLowerCase()
+                                .includes("network error") ||
+                            err.message
+                                .toLowerCase()
+                                .includes("failed to fetch")));
+
+                if (isLoiMang) {
+                    // Giữ nguyên toàn bộ tài khoản và mật khẩu trên form,
+                    // Hiện thông báo "Lỗi kết nối, vui lòng thử lại" để người dùng chỉ việc bấm lại nút mà không bị mất dữ liệu vừa gõ
+                    this.$store.commit(
+                        "auth/SET_LOI",
+                        "Lỗi kết nối, vui lòng thử lại",
+                    );
+                    return;
+                }
+
+                //  Nhập sai mật khẩu
+                // Giữ nguyên tên đăng nhập, tự động xóa trắng ô mật khẩu và focus con trỏ chuột lại vào ô mật khẩu
+                this.password = "";
+                this.$nextTick(() => {
+                    this.$refs.passwordBox?.instance?.focus();
+                });
+
+                // Đăng nhập sai quá 3 - 5 lần
+                // Đếm số lần trong biến soLanSai++
+                this.soLanSai++;
+                if (this.soLanSai >= 5) {
+                    // Nếu sai quá nhiều ➔ Hiện thông báo cảnh báo và tạm thời disable nút Đăng nhập
+                    this.kichHoatKhoaTamThoi(30);
+                } else if (this.soLanSai >= 3) {
+                    this.$store.commit(
+                        "auth/SET_LOI",
+                        `Tên đăng nhập hoặc mật khẩu không chính xác! (Bạn đã nhập sai ${this.soLanSai}/5 lần)`,
+                    );
+                }
             }
         },
         chuyenTrang() {
