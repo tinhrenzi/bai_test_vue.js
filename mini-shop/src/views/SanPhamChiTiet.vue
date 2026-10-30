@@ -210,25 +210,29 @@ export default {
                 console.error("Lỗi tải chi tiết sản phẩm:", err);
             }
         },
-        themVaoGio(muaNgay = false) {
-            if (!this.sanPham || this.sanPham.stock <= 0) {
-                notify("Sản phẩm đã hết hàng!", "warning", 1500);
-                return;
-            }
+        async themVaoGio(muaNgay = false) {
+            if (!this.sanPham) return;
+            try {
+                const res = await this.$store.dispatch("cart/themVaoGio", {
+                    sanPham: this.sanPham,
+                    soLuong: this.soLuong,
+                });
 
-            this.$store.dispatch("cart/themVaoGio", {
-                sanPham: this.sanPham,
-                soLuong: this.soLuong,
-            });
+                if (res && res.canhBao) {
+                    notify(res.canhBao, "warning", 2000);
+                } else {
+                    notify(
+                        `Đã thêm ${this.soLuong} "${this.sanPham.title}" vào giỏ hàng!`,
+                        "success",
+                        1500,
+                    );
+                }
 
-            notify(
-                `Đã thêm ${this.soLuong} "${this.sanPham.title}" vào giỏ hàng!`,
-                "success",
-                1500,
-            );
-
-            if (muaNgay) {
-                this.$router.push("/cart");
+                if (muaNgay) {
+                    this.$router.push("/cart");
+                }
+            } catch (err) {
+                notify(err.message || "Không thể thêm sản phẩm vào giỏ!", "warning", 2000);
             }
         },
     },

@@ -493,16 +493,20 @@ export default {
             }
         },
 
-        themVaoGio(item) {
-            if (item.stock <= 0) {
-                notify("Sản phẩm đã hết hàng!", "warning", 1500);
-                return;
+        async themVaoGio(item) {
+            try {
+                const res = await this.$store.dispatch("cart/themVaoGio", {
+                    sanPham: item,
+                    soLuong: 1,
+                });
+                if (res && res.canhBao) {
+                    notify(res.canhBao, "warning", 2000);
+                } else {
+                    notify(`Đã thêm "${item.title}" vào giỏ hàng!`, "success", 1500);
+                }
+            } catch (err) {
+                notify(err.message || "Không thể thêm sản phẩm vào giỏ!", "warning", 2000);
             }
-            this.$store.dispatch("cart/themVaoGio", {
-                sanPham: item,
-                soLuong: 1,
-            });
-            notify(`Đã thêm "${item.title}" vào giỏ hàng!`, "success", 1500);
         },
     },
 };
