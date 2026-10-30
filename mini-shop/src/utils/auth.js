@@ -79,6 +79,16 @@ export function dangKyUser(form = {}) {
         throw new Error("Tên đăng nhập này đã được sử dụng!");
     }
 
+    const emailTonTai = danhSach.some(
+        (u) =>
+            u.email &&
+            u.email.toLowerCase() === form.email.trim().toLowerCase(),
+    );
+
+    if (emailTonTai) {
+        throw new Error("Email này đã được đăng ký tài khoản!");
+    }
+
     const userMoi = {
         id: Date.now(),
         username: form.username.trim(),
