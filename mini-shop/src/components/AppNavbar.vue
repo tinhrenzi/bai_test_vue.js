@@ -23,21 +23,6 @@
                         @value-changed="xuLyNhapTuKhoa"
                         @enterKey="xuLyTimKiem" />
 
-                    <router-link
-                        to="/cart"
-                        class="btn btn-outline-primary m3-btn-pill position-relative d-inline-flex align-items-center px-3"
-                        style="height: 36px"
-                        title="Xem giỏ hàng">
-                        <i class="dx-icon-cart me-1"></i>
-                        <span class="d-none d-sm-inline">Giỏ</span>
-                        <span
-                            v-if="cartCount > 0"
-                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                            style="font-size: 11px">
-                            {{ cartCount }}
-                        </span>
-                    </router-link>
-
                     <DxButton
                         v-if="isAdmin"
                         class="m3-btn-pill"
