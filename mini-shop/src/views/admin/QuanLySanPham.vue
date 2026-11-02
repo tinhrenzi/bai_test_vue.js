@@ -335,4 +335,14 @@ export default {
     font-size: 13px;
     color: var(--md-sys-color-text-muted, #74777f);
 }
+
+.m3-table-card {
+    background-color: var(--md-sys-color-surface);
+    border-color: var(--md-sys-color-outline-variant);
+}
+
+.table-page {
+    background-color: var(--md-sys-color-surface);
+    color: var(--md-sys-color-text-main);
+}
 </style>

@@ -403,7 +403,9 @@ body,
 .dx-overlay-content,
 .dx-datagrid,
 .dx-datagrid-headers,
+.dx-datagrid > .dx-datagrid-headers,
 .dx-datagrid-rowsview,
+.dx-datagrid > .dx-datagrid-rowsview,
 .dx-list,
 .dx-dropdowneditor-overlay .dx-list,
 .dx-texteditor,
@@ -467,32 +469,182 @@ body,
   background-color: var(--md-sys-color-surface-container) !important;
 }
 
-/* Đồng bộ Dark Mode cho DataGrid Admin (Chữ, Header, Pager, Toolbar) */
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row > td,
-:root[data-theme="dark"] .dx-datagrid-headers .dx-row > td,
-:root[data-theme="dark"] .dx-datagrid-headers .dx-header-filter,
-:root[data-theme="dark"] .dx-datagrid-filter-row td,
+/* ==========================================================================
+   Đồng bộ Dark Mode cho Quản lý Sản phẩm (DataGrid & Controls Admin)
+   ========================================================================== */
+
+/* Khung chính DataGrid và RowsView */
+:root[data-theme="dark"] .m3-table-card,
+:root[data-theme="dark"] .dx-datagrid,
+:root[data-theme="dark"] .dx-datagrid-rowsview,
+:root[data-theme="dark"] .dx-datagrid > .dx-datagrid-rowsview,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-datagrid-table,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-datagrid-content,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-scrollable-content,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-scrollable-container,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-scrollable-wrapper {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+}
+
+/* Các hàng dữ liệu (Hàng thường & Hàng xen kẽ) */
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row:not(.dx-row-alt) > td,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row:not(.dx-row-alt) > td {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-color: var(--md-sys-color-outline-variant) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-row-alt > td,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row-alt > td,
 :root[data-theme="dark"] .dx-datagrid .dx-row-alt > td {
+  background-color: var(--md-sys-color-surface-container) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-color: var(--md-sys-color-outline-variant) !important;
+}
+
+/* Hover trên hàng */
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row:hover > td,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-state-hover > td,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row-alt:hover > td,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row-alt.dx-state-hover > td {
+  background-color: var(--md-sys-color-surface-container-high) !important;
   color: var(--md-sys-color-text-main) !important;
 }
 
-:root[data-theme="dark"] .dx-pager,
-:root[data-theme="dark"] .dx-pager .dx-pages .dx-page,
-:root[data-theme="dark"] .dx-pager .dx-pages .dx-selection,
-:root[data-theme="dark"] .dx-pager .dx-page-sizes .dx-page-size,
-:root[data-theme="dark"] .dx-pager .dx-info,
-:root[data-theme="dark"] .dx-pager .dx-navigate-button {
+/* Hàng đang chọn (Selection / Focused) */
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-selection > td,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-row-focused > td,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-selection.dx-row > td {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 18%, var(--md-sys-color-surface)) !important;
   color: var(--md-sys-color-text-main) !important;
 }
 
-:root[data-theme="dark"] .dx-pager .dx-pages .dx-selection {
-  background-color: var(--md-sys-color-primary) !important;
-  color: var(--md-sys-color-on-primary) !important;
+/* Cột cố định (Fixed columns) */
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-col-fixed {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-color: var(--md-sys-color-outline-variant) !important;
 }
 
+/* Dòng placeholder khi cuộn ảo (Virtual Scrolling) */
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-virtual-row > td::before {
+  background-image: none !important;
+  background-color: var(--md-sys-color-surface) !important;
+}
+
+/* Dòng thông báo khi không có sản phẩm */
+:root[data-theme="dark"] .dx-datagrid-nodata {
+  color: var(--md-sys-color-text-muted) !important;
+  background: transparent !important;
+}
+
+/* Tiêu đề bảng (Header Row & Filters) */
+:root[data-theme="dark"] .dx-datagrid-headers,
+:root[data-theme="dark"] .dx-datagrid > .dx-datagrid-headers,
+:root[data-theme="dark"] .dx-datagrid-headers .dx-datagrid-table,
+:root[data-theme="dark"] .dx-datagrid-headers .dx-header-row > td {
+  background-color: var(--md-sys-color-surface-container) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-color: var(--md-sys-color-outline-variant) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-headers .dx-datagrid-text-content {
+  color: var(--md-sys-color-text-main) !important;
+  font-weight: 600 !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-headers .dx-header-filter,
+:root[data-theme="dark"] .dx-datagrid-headers .dx-sort-up,
+:root[data-theme="dark"] .dx-datagrid-headers .dx-sort-down {
+  color: var(--md-sys-color-text-muted) !important;
+}
+
+/* Hàng bộ lọc (Filter Row) */
+:root[data-theme="dark"] .dx-datagrid-filter-row,
+:root[data-theme="dark"] .dx-datagrid-filter-row > td {
+  background-color: var(--md-sys-color-surface-container) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-color: var(--md-sys-color-outline-variant) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-filter-row .dx-texteditor,
+:root[data-theme="dark"] .dx-datagrid-filter-row .dx-texteditor-input-container {
+  background-color: var(--md-sys-color-surface) !important;
+  border-color: var(--md-sys-color-outline-variant) !important;
+  border-radius: 6px !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-filter-row .dx-texteditor-input {
+  background-color: transparent !important;
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-filter-row .dx-menu-item-content .dx-icon {
+  color: var(--md-sys-color-text-muted) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-filter-row .dx-menu-horizontal .dx-overlay-content {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  box-shadow: var(--md-sys-elevation-1) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-filter-row .dx-menu-horizontal .dx-overlay-content .dx-menu-item {
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-filter-row .dx-menu-horizontal .dx-overlay-content .dx-menu-item.dx-state-hover {
+  background-color: var(--md-sys-color-surface-container) !important;
+}
+
+/* Đường viền bảng */
+:root[data-theme="dark"] .dx-datagrid-borders > .dx-datagrid-headers,
+:root[data-theme="dark"] .dx-datagrid-borders > .dx-datagrid-rowsview,
+:root[data-theme="dark"] .dx-datagrid-borders > .dx-datagrid-total-footer,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content .dx-datagrid-table .dx-row > td {
+  border-color: var(--md-sys-color-outline-variant) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-total-footer,
+:root[data-theme="dark"] .dx-datagrid > .dx-datagrid-total-footer {
+  background-color: var(--md-sys-color-surface-container) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-top: 1px solid var(--md-sys-color-outline-variant) !important;
+}
+
+/* Thao tác (Sửa, Xóa) trong bảng */
+:root[data-theme="dark"] .dx-datagrid .dx-command-edit .dx-link {
+  color: var(--md-sys-color-primary) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid .dx-command-edit .dx-link.dx-link-delete {
+  color: var(--md-sys-color-danger) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid .dx-command-edit .dx-link:hover {
+  text-decoration: underline !important;
+  filter: brightness(1.2);
+}
+
+/* Toolbar & Header Panel của DataGrid */
 :root[data-theme="dark"] .dx-datagrid-header-panel,
 :root[data-theme="dark"] .dx-datagrid-header-panel .dx-toolbar {
   background-color: var(--md-sys-color-surface) !important;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-header-panel .dx-button {
+  background-color: var(--md-sys-color-surface-container) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  border-radius: var(--md-sys-shape-corner-full) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-header-panel .dx-button:hover {
+  background-color: var(--md-sys-color-surface-container-high) !important;
 }
 
 :root[data-theme="dark"] .dx-datagrid-header-panel .dx-button .dx-icon,
@@ -500,9 +652,158 @@ body,
   color: var(--md-sys-color-text-main) !important;
 }
 
-:root[data-theme="dark"] .dx-popup-title,
-:root[data-theme="dark"] .dx-field-item-label-text {
+/* Phân trang (Pager) */
+:root[data-theme="dark"] .dx-pager {
+  background-color: var(--md-sys-color-surface) !important;
+  border-top: 1px solid var(--md-sys-color-outline-variant) !important;
   color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-pager .dx-pages .dx-page,
+:root[data-theme="dark"] .dx-pager .dx-page-sizes .dx-page-size {
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-pager .dx-pages .dx-page:hover,
+:root[data-theme="dark"] .dx-pager .dx-page-sizes .dx-page-size:hover {
+  background-color: var(--md-sys-color-surface-container-high) !important;
+}
+
+:root[data-theme="dark"] .dx-pager .dx-pages .dx-selection,
+:root[data-theme="dark"] .dx-pager .dx-page-sizes .dx-selection {
+  background-color: var(--md-sys-color-primary) !important;
+  color: var(--md-sys-color-on-primary) !important;
+  font-weight: 600 !important;
+}
+
+:root[data-theme="dark"] .dx-pager .dx-info,
+:root[data-theme="dark"] .dx-pager .dx-pages .dx-navigate-button {
+  color: var(--md-sys-color-text-muted) !important;
+}
+
+/* Popup Form Thêm / Sửa sản phẩm */
+:root[data-theme="dark"] .dx-popup-wrapper > .dx-overlay-content,
+:root[data-theme="dark"] .dx-popup-normal,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-rowsview .dx-datagrid-edit-form {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  box-shadow: var(--md-sys-elevation-1) !important;
+}
+
+:root[data-theme="dark"] .dx-popup-title {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant) !important;
+}
+
+:root[data-theme="dark"] .dx-popup-title .dx-closebutton .dx-icon {
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-popup-content {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-popup-bottom {
+  background-color: var(--md-sys-color-surface-container) !important;
+  border-top: 1px solid var(--md-sys-color-outline-variant) !important;
+}
+
+:root[data-theme="dark"] .dx-popup-content .dx-texteditor,
+:root[data-theme="dark"] .dx-popup-content .dx-selectbox {
+  background-color: var(--md-sys-color-surface-container) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  border-radius: 8px !important;
+}
+
+:root[data-theme="dark"] .dx-popup-content .dx-texteditor.dx-state-focused,
+:root[data-theme="dark"] .dx-popup-content .dx-selectbox.dx-state-focused {
+  border-color: var(--md-sys-color-primary) !important;
+}
+
+:root[data-theme="dark"] .dx-popup-content .dx-texteditor-input {
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-field-item-label-text {
+  color: var(--md-sys-color-text-muted) !important;
+}
+
+/* Dropdown Menu (Select / Lookup / Header Filter / Export) */
+:root[data-theme="dark"] .dx-dropdowneditor-overlay .dx-overlay-content,
+:root[data-theme="dark"] .dx-lookup-popup-wrapper .dx-overlay-content,
+:root[data-theme="dark"] .dx-header-filter-menu .dx-overlay-content,
+:root[data-theme="dark"] .dx-header-filter-menu .dx-popup-content,
+:root[data-theme="dark"] .dx-datagrid-export-menu .dx-overlay-content {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  box-shadow: var(--md-sys-elevation-1) !important;
+}
+
+:root[data-theme="dark"] .dx-dropdowneditor-overlay .dx-list,
+:root[data-theme="dark"] .dx-header-filter-menu .dx-list {
+  background-color: var(--md-sys-color-surface) !important;
+}
+
+:root[data-theme="dark"] .dx-dropdowneditor-overlay .dx-list-item,
+:root[data-theme="dark"] .dx-header-filter-menu .dx-list-item,
+:root[data-theme="dark"] .dx-datagrid-export-menu .dx-menu-item {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-dropdowneditor-overlay .dx-list-item.dx-state-hover,
+:root[data-theme="dark"] .dx-header-filter-menu .dx-list-item.dx-state-hover,
+:root[data-theme="dark"] .dx-datagrid-export-menu .dx-menu-item.dx-state-hover {
+  background-color: var(--md-sys-color-surface-container) !important;
+}
+
+:root[data-theme="dark"] .dx-dropdowneditor-overlay .dx-list-item.dx-state-selected,
+:root[data-theme="dark"] .dx-dropdowneditor-overlay .dx-list-item.dx-state-focused {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 18%, var(--md-sys-color-surface)) !important;
+  color: var(--md-sys-color-primary) !important;
+}
+
+/* Loading & Scrollbar */
+:root[data-theme="dark"] .dx-loadpanel-content,
+:root[data-theme="dark"] .dx-datagrid-bottom-load-panel {
+  background-color: var(--md-sys-color-surface-container) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-color: var(--md-sys-color-outline-variant) !important;
+}
+
+/* Switch Chế độ cuộn & Các nút phụ trang Admin */
+:root[data-theme="dark"] .dx-switch-container {
+  background-color: var(--md-sys-color-surface-container-high) !important;
+  border-color: var(--md-sys-color-outline) !important;
+}
+
+:root[data-theme="dark"] .dx-switch.dx-switch-on-value .dx-switch-container {
+  background-color: var(--md-sys-color-primary) !important;
+}
+
+:root[data-theme="dark"] .dx-switch-handle {
+  background-color: var(--md-sys-color-on-primary) !important;
+}
+
+:root[data-theme="dark"] .btn-outline-secondary {
+  color: var(--md-sys-color-text-main) !important;
+  border-color: var(--md-sys-color-outline) !important;
+}
+
+:root[data-theme="dark"] .btn-outline-secondary:hover {
+  background-color: var(--md-sys-color-surface-container) !important;
+  border-color: var(--md-sys-color-outline) !important;
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .badge.bg-danger-subtle {
+  background-color: rgba(179, 38, 30, 0.2) !important;
+  color: var(--md-sys-color-danger) !important;
+  border-color: rgba(179, 38, 30, 0.4) !important;
 }
 
 /* Đồng bộ Dark Mode cho biểu đồ thống kê Admin (DxChart, DxPieChart) */

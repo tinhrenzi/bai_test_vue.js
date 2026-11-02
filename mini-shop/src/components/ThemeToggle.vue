@@ -29,14 +29,40 @@ export default {
     },
     data() {
         return {
-            theme: document.documentElement.dataset.theme || "light",
+            theme:
+                document.documentElement.dataset.theme ||
+                localStorage.getItem("mini-shop-theme") ||
+                "light",
         };
+    },
+    mounted() {
+        const themeHienTai =
+            document.documentElement.dataset.theme ||
+            localStorage.getItem("mini-shop-theme") ||
+            "light";
+        this.theme = themeHienTai;
+        document.documentElement.dataset.theme = themeHienTai;
+
+        this.langNgheDoiTheme = (e) => {
+            if (e.detail) {
+                this.theme = e.detail;
+            }
+        };
+        window.addEventListener("theme-change", this.langNgheDoiTheme);
+    },
+    beforeUnmount() {
+        if (this.langNgheDoiTheme) {
+            window.removeEventListener("theme-change", this.langNgheDoiTheme);
+        }
     },
     methods: {
         chuyenTheme() {
             this.theme = this.theme === "dark" ? "light" : "dark";
             document.documentElement.dataset.theme = this.theme;
             localStorage.setItem("mini-shop-theme", this.theme);
+            window.dispatchEvent(
+                new CustomEvent("theme-change", { detail: this.theme }),
+            );
         },
     },
 };
