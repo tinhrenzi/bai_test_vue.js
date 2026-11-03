@@ -343,7 +343,7 @@ export default {
             return resp.data.products || [];
         },
 
-        async themSanPham({ commit }, duLieu) {
+        async themSanPham({ commit, state }, duLieu) {
             let respData = {};
             try {
                 const resp = await themSanPham(duLieu);
@@ -364,7 +364,7 @@ export default {
             return sanPhamMoi;
         },
 
-        async suaSanPham({ commit }, { id, duLieu }) {
+        async suaSanPham({ commit, state }, { id, duLieu }) {
             let sanPhamCapNhat = duLieu;
             try {
                 if (typeof id === "number" && id <= 1000) {
@@ -379,7 +379,7 @@ export default {
             return sanPhamCapNhat;
         },
 
-        async xoaSanPham({ commit }, id) {
+        async xoaSanPham({ commit, state }, id) {
             try {
                 if (typeof id === "number" && id <= 1000) {
                     await xoaSanPham(id);

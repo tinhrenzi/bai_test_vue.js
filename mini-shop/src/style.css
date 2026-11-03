@@ -67,6 +67,7 @@ body,
 
 /* Customer-facing surfaces and Bootstrap utilities follow the active palette. */
 .bg-white,
+.bg-light,
 .m3-login-card,
 .m3-detail-card,
 .m3-qty-control,
@@ -804,6 +805,21 @@ body,
   background-color: rgba(179, 38, 30, 0.2) !important;
   color: var(--md-sys-color-danger) !important;
   border-color: rgba(179, 38, 30, 0.4) !important;
+}
+
+:root[data-theme="dark"] .bg-light {
+  background-color: var(--md-sys-color-surface-container) !important;
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .bg-primary-subtle {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 18%, var(--md-sys-color-surface)) !important;
+  color: var(--md-sys-color-primary) !important;
+}
+
+:root[data-theme="dark"] .bg-success-subtle {
+  background-color: color-mix(in srgb, var(--md-sys-color-success) 18%, var(--md-sys-color-surface)) !important;
+  color: var(--md-sys-color-success) !important;
 }
 
 /* Đồng bộ Dark Mode cho biểu đồ thống kê Admin (DxChart, DxPieChart) */

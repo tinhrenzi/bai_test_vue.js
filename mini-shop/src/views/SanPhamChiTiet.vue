@@ -130,8 +130,9 @@
                                     type="button"
                                     class="m3-qty-btn"
                                     :disabled="soLuong <= 1"
+                                    title="Giảm số lượng"
                                     @click="soLuong--">
-                                    
+                                    −
                                 </button>
                                 <span class="m3-qty-val">{{ soLuong }}</span>
                                 <button
