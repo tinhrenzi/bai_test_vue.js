@@ -57,12 +57,7 @@ export default {
     },
     methods: {
         chuyenTheme() {
-            this.theme = this.theme === "dark" ? "light" : "dark";
-            document.documentElement.dataset.theme = this.theme;
-            localStorage.setItem("mini-shop-theme", this.theme);
-            window.dispatchEvent(
-                new CustomEvent("theme-change", { detail: this.theme }),
-            );
+            this.$store.dispatch("chuyenTheme");
         },
     },
 };
