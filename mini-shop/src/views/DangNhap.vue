@@ -291,7 +291,9 @@ export default {
             } catch (err) {
                 // Đảm bảo đóng Popover để không hiện nhầm thông báo thành công
                 this.hienPopover = false;
-                console.log("🚀 ~ Lỗi đăng nhập:", err);
+                if (import.meta.env.DEV) {
+                    console.error("Lỗi đăng nhập:", err);
+                }
 
                 // Lỗi mạng khi đang bấm đăng nhập
                 const isLoiMang =

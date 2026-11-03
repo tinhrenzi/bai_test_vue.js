@@ -470,7 +470,9 @@ export default {
             } catch (err) {
                 // Đảm bảo đóng Popover để không báo nhầm thành công
                 this.hienPopoverThanhCong = false;
-                console.log("🚀 ~ Lỗi thanh toán giỏ hàng:", err);
+                if (import.meta.env.DEV) {
+                    console.error("Lỗi thanh toán giỏ hàng:", err);
+                }
 
                 const thongBao = (err.message || "").toLowerCase();
 

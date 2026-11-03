@@ -29,14 +29,16 @@ api.interceptors.response.use(
         const url = response.config.url;
         const defaultMsg =
             HTTP_STATUS_MESSAGES[status] || "Thao tác thành công!";
-        console.log(
-            `%c[API SUCCESS ${status}] %c${url}`,
-            "color: #0f9d58; font-weight: bold; background: #e6f4ea; padding: 2px 6px; border-radius: 4px;",
-            "color: #1a73e8; font-weight: bold;",
-            `\n👉 Thông báo: ${defaultMsg}`,
-            `\n👉 Dữ liệu trả về:`,
-            response.data,
-        );
+        if (import.meta.env.DEV) {
+            console.log(
+                `%c[API SUCCESS ${status}] %c${url}`,
+                "color: #0f9d58; font-weight: bold; background: #e6f4ea; padding: 2px 6px; border-radius: 4px;",
+                "color: #1a73e8; font-weight: bold;",
+                `\n👉 Thông báo: ${defaultMsg}`,
+                `\n👉 Dữ liệu trả về:`,
+                response.data,
+            );
+        }
         return response;
     },
 

@@ -331,8 +331,13 @@ export default {
         },
 
         async taiDanhSachDanhMuc() {
-            const resp = await layDanhSachDanhMuc();
-            return resp.data || [];
+            try {
+                const resp = await layDanhSachDanhMuc();
+                return resp.data || [];
+            } catch (error) {
+                console.warn("Lỗi khi tải danh mục:", error);
+                return [];
+            }
         },
 
         async taiDuLieuThongKe() {
@@ -384,7 +389,12 @@ export default {
                 if (typeof id === "number" && id <= 1000) {
                     await xoaSanPham(id);
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.warn(
+                    "[xoaSanPham] API xóa thất bại, chỉ xóa local:",
+                    e.message,
+                );
+            }
             commit("XOA_SAN_PHAM", id);
             luuThayDoiCucBo(state.thayDoiCucBo);
             return id;

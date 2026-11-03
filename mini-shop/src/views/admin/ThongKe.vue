@@ -64,11 +64,11 @@
                             name="Tồn kho"
                             type="bar"
                             color="#0b57d0">
-                            <DxChartLabel :visible="true" />
+                            <DxLabel :visible="true" />
                         </DxSeries>
                         <DxLegend :visible="false" />
                         <DxArgumentAxis>
-                            <DxAxisLabel
+                            <DxLabel
                                 :rotation-angle="45"
                                 :overlapping-behavior="'rotate'" />
                         </DxArgumentAxis>
@@ -125,9 +125,8 @@ import {
     DxLegend,
     DxTooltip as DxChartTooltip,
     DxArgumentAxis,
-    DxLabel as DxChartLabel,
+    DxLabel,
 } from "devextreme-vue/chart";
-import { DxLabel as DxAxisLabel } from "devextreme-vue/chart";
 import {
     DxPieChart,
     DxSeries as DxPieSeries,
@@ -150,8 +149,7 @@ export default {
         DxLegend,
         DxChartTooltip,
         DxArgumentAxis,
-        DxChartLabel,
-        DxAxisLabel,
+        DxLabel,
         DxPieChart,
         DxPieSeries,
         DxPieLabel,

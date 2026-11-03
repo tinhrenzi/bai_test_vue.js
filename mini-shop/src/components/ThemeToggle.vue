@@ -27,26 +27,17 @@ export default {
     components: {
         DxButton,
     },
-    data() {
-        return {
-            theme:
-                document.documentElement.dataset.theme ||
-                localStorage.getItem("mini-shop-theme") ||
-                "light",
-        };
+    computed: {
+        theme() {
+            return this.$store.state.theme;
+        },
     },
     mounted() {
-        const themeHienTai =
-            document.documentElement.dataset.theme ||
-            localStorage.getItem("mini-shop-theme") ||
-            "light";
-        this.theme = themeHienTai;
-        document.documentElement.dataset.theme = themeHienTai;
+        // Đồng bộ DOM với state Vuex khi component mount
+        document.documentElement.dataset.theme = this.$store.state.theme;
 
         this.langNgheDoiTheme = (e) => {
-            if (e.detail) {
-                this.theme = e.detail;
-            }
+            // Vuex state tự cập nhật qua mutation, không cần xử lý thêm
         };
         window.addEventListener("theme-change", this.langNgheDoiTheme);
     },
