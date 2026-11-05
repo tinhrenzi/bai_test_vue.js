@@ -127,7 +127,7 @@
                         :product="item"
                         :is-admin="laAdmin"
                         @add-to-cart="themVaoGio"
-                        @edit="xuLySua(item.id, $event)"
+                        @edit="moPopupSua(item)"
                         @delete="xuLyXoa(item.id)" />
                 </div>
 
@@ -238,6 +238,108 @@
                 </div>
             </DxValidationGroup>
         </DxPopup>
+
+        <!-- Popup Sửa thông tin sản phẩm (Sửa nhanh của Admin) -->
+        <DxPopup
+            v-model:visible="hienPopupSua"
+            title="Sửa thông tin sản phẩm"
+            :width="'min(460px, 92vw)'"
+            :max-width="'92vw'"
+            :height="'auto'">
+            <DxValidationGroup ref="suaSanPhamGroup">
+                <div
+                    style="
+                        display: flex;
+                        flex-direction: column;
+                        gap: 12px;
+                        padding: 10px;
+                    ">
+                    <!-- Tên sản phẩm -->
+                    <div class="mb-2">
+                        <DxTextBox
+                            label="Tên sản phẩm (*)"
+                            v-model:value="sanPhamSua.title"
+                            validationMessageMode="always">
+                            <DxValidator>
+                                <DxRequiredRule
+                                    message="Tên sản phẩm không được để trống!" />
+                            </DxValidator>
+                        </DxTextBox>
+                    </div>
+
+                    <!-- Danh mục -->
+                    <div style="margin-left: 1px;">
+                        <DxSelectBox
+                            label="Danh mục (*)"
+                            v-model:value="sanPhamSua.category"
+                            :data-source="danhSachDanhMuc"
+                            value-expr="slug"
+                            display-expr="name"
+                            validationMessageMode="always">
+                            <DxValidator>
+                                <DxRequiredRule
+                                    message="Vui lòng chọn danh mục!" />
+                            </DxValidator>
+                        </DxSelectBox>
+                    </div>
+
+                    <!-- Giá sản phẩm -->
+                    <div>
+                        <DxNumberBox
+                            label="Giá($)"
+                            v-model:value="sanPhamSua.price"
+                            :min="0"
+                            format="$#,##0.00"
+                            validationMessageMode="always">
+                            <DxValidator>
+                                <DxRequiredRule
+                                    message="Giá không được để trống!" />
+                                <DxRangeRule
+                                    :min="0.1"
+                                    message="Giá sản phẩm phải lớn hơn 0!" />
+                            </DxValidator>
+                        </DxNumberBox>
+                    </div>
+
+                    <!-- Tồn kho -->
+                    <div>
+                        <DxNumberBox
+                            label="Tồn kho:"
+                            v-model:value="sanPhamSua.stock"
+                            :min="0"
+                            validationMessageMode="always">
+                            <DxValidator>
+                                <DxRequiredRule
+                                    message="Tồn kho không được để trống!" />
+                                <DxRangeRule
+                                    :min="0"
+                                    message="Tồn kho phải từ 0 trở lên!" />
+                            </DxValidator>
+                        </DxNumberBox>
+                    </div>
+
+                    <div
+                        style="
+                            display: flex;
+                            justify-content: flex-end;
+                            gap: 8px;
+                            margin-top: 10px;
+                        ">
+                        <DxButton
+                            class="m3-btn-pill"
+                            text="Hủy"
+                            styling-mode="outlined"
+                            @click="hienPopupSua = false" />
+                        <DxButton
+                            class="m3-btn-pill"
+                            text="Lưu cập nhật"
+                            type="default"
+                            styling-mode="contained"
+                            @click="xacNhanSua" />
+                    </div>
+                </div>
+            </DxValidationGroup>
+        </DxPopup>
     </div>
 </template>
 
@@ -284,6 +386,14 @@ export default {
             danhSachDanhMuc: [],
             hienPopupThem: false,
             sanPhamMoi: {
+                title: "",
+                price: 0,
+                category: "",
+                stock: 0,
+            },
+            hienPopupSua: false,
+            sanPhamSua: {
+                id: null,
                 title: "",
                 price: 0,
                 category: "",
@@ -480,16 +590,54 @@ export default {
             }
         },
 
+        moPopupSua(product) {
+            this.sanPhamSua = {
+                id: product.id,
+                title: product.title || "",
+                price: Number(product.price) || 0,
+                category: product.category || "",
+                stock: Number(product.stock) || 0,
+            };
+            this.$refs.suaSanPhamGroup?.instance?.reset();
+            this.hienPopupSua = true;
+        },
+
+        async xacNhanSua() {
+            const group = this.$refs.suaSanPhamGroup?.instance;
+            const ketQua = group ? group.validate() : { isValid: true };
+
+            if (!ketQua.isValid) {
+                return;
+            }
+
+            try {
+                await this.$store.dispatch("products/suaSanPham", {
+                    id: this.sanPhamSua.id,
+                    duLieu: {
+                        title: this.sanPhamSua.title,
+                        price: this.sanPhamSua.price,
+                        category: this.sanPhamSua.category,
+                        stock: this.sanPhamSua.stock,
+                    },
+                });
+                this.hienPopupSua = false;
+                notify("Cập nhật sản phẩm thành công!", "success", 2500);
+                this.taiDuLieu();
+            } catch (e) {
+                notify(e.message || "Cập nhật thất bại!", "error", 3000);
+            }
+        },
+
         async xuLySua(id, duLieuMoi) {
             try {
                 await this.$store.dispatch("products/suaSanPham", {
                     id,
                     duLieu: duLieuMoi,
                 });
-                notify("Cập nhật sản phẩm thành công!", "success", 1500);
+                notify("Cập nhật sản phẩm thành công!", "success", 2500);
                 this.taiDuLieu();
             } catch (e) {
-                notify(e.message || "Cập nhật thất bại!", "error", 2000);
+                notify(e.message || "Cập nhật thất bại!", "error", 3000);
             }
         },
 
