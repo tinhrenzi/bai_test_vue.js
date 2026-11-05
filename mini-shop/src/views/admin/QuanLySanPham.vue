@@ -160,6 +160,13 @@
                     data-type="number"
                     :width="110"
                     :allow-editing="false" />
+
+                <DxColumn
+                    type="buttons"
+                    caption="Thao tác"
+                    :width="110"
+                    :fixed="true"
+                    fixed-position="right" />
             </DxDataGrid>
         </div>
     </div>
@@ -175,6 +182,7 @@ import {
     DxEditing,
     DxPopup,
     DxForm,
+    DxItem,
     DxLookup,
     DxRequiredRule,
     DxRangeRule,
@@ -183,7 +191,6 @@ import {
     DxHeaderFilter,
     DxFilterRow,
 } from "devextreme-vue/data-grid";
-import { DxItem } from "devextreme-vue/form";
 import { DxButton } from "devextreme-vue/button";
 import CustomStore from "devextreme/data/custom_store";
 import notify from "devextreme/ui/notify";
@@ -245,6 +252,21 @@ export default {
                         );
                     } catch (error) {
                         return { data: [], totalCount: 0 };
+                    }
+                },
+                byKey: async (key) => {
+                    try {
+                        return await this.$store.dispatch(
+                            "products/taiChiTietSanPham",
+                            key,
+                        );
+                    } catch (error) {
+                        const itemCucBo =
+                            this.$store.state.products.danhSach.find(
+                                (p) => String(p.id) === String(key),
+                            );
+                        if (itemCucBo) return itemCucBo;
+                        throw error;
                     }
                 },
                 insert: async (values) => {
