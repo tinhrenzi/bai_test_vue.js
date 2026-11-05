@@ -254,7 +254,7 @@ import ProductCard from "../components/ProductCard.vue";
 import ProductSkeleton from "../components/ProductSkeleton.vue";
 import AppPagination from "../components/AppPagination.vue";
 import { DxSelectBox, DxValidator } from "devextreme-vue";
-import { DxRangeRule, DxRequiredRule } from "devextreme-vue/cjs/data-grid";
+import { DxRangeRule, DxRequiredRule } from "devextreme-vue/validator";
 
 export default {
     name: "TrangChu",
