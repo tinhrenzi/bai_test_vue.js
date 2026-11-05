@@ -438,12 +438,62 @@ body,
 .dx-state-hover {
   background-color: var(--md-sys-color-surface-container) !important;
 }
-.dx-overlay-wrapper .dx-overlay-content,
+.dx-overlay-wrapper:not(.dx-toast-wrapper) .dx-overlay-content,
 .dx-popup-wrapper .dx-overlay-content,
 .dx-dropdowneditor-overlay .dx-overlay-content,
 .dx-context-menu .dx-submenu {
   background-color: var(--md-sys-color-surface) !important;
   color: var(--md-sys-color-text-main) !important;
+}
+
+/* ==========================================================================
+   DevExtreme Toast / Notify (Thông báo nổi)
+   ========================================================================== */
+.dx-toast-wrapper {
+  z-index: 10000 !important;
+}
+
+.dx-toast-wrapper .dx-toast-content {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16) !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  padding: 12px 24px !important;
+  min-width: 260px !important;
+  text-align: center !important;
+}
+
+.dx-toast-wrapper.dx-toast-success .dx-toast-content,
+.dx-toast-success .dx-toast-content {
+  background-color: #0f9d58 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.dx-toast-wrapper.dx-toast-error .dx-toast-content,
+.dx-toast-error .dx-toast-content {
+  background-color: #d93025 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.dx-toast-wrapper.dx-toast-warning .dx-toast-content,
+.dx-toast-warning .dx-toast-content {
+  background-color: #f29900 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.dx-toast-wrapper.dx-toast-info .dx-toast-content,
+.dx-toast-info .dx-toast-content {
+  background-color: #1a73e8 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.dx-toast-content .dx-toast-message {
+  color: #ffffff !important;
+  font-size: 14px !important;
 }
 :root[data-theme="dark"] .dx-icon,
 :root[data-theme="dark"] .dx-menu-item-text,

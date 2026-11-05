@@ -248,27 +248,54 @@ export default {
                     }
                 },
                 insert: async (values) => {
-                    const data = await this.$store.dispatch(
-                        "products/themSanPham",
-                        values,
-                    );
-                    notify("Thêm sản phẩm thành công!", "success", 1500);
-                    return data;
+                    try {
+                        const data = await this.$store.dispatch(
+                            "products/themSanPham",
+                            values,
+                        );
+                        notify("Thêm sản phẩm thành công!", "success", 2500);
+                        return data;
+                    } catch (error) {
+                        notify(
+                            error.message || "Thêm sản phẩm thất bại!",
+                            "error",
+                            3000,
+                        );
+                        throw error;
+                    }
                 },
                 update: async (key, values) => {
-                    const data = await this.$store.dispatch(
-                        "products/suaSanPham",
-                        {
-                            id: key,
-                            duLieu: values,
-                        },
-                    );
-                    notify("Cập nhật sản phẩm thành công!", "success", 1500);
-                    return data;
+                    try {
+                        const data = await this.$store.dispatch(
+                            "products/suaSanPham",
+                            {
+                                id: key,
+                                duLieu: values,
+                            },
+                        );
+                        notify("Cập nhật sản phẩm thành công!", "success", 2500);
+                        return data;
+                    } catch (error) {
+                        notify(
+                            error.message || "Cập nhật sản phẩm thất bại!",
+                            "error",
+                            3000,
+                        );
+                        throw error;
+                    }
                 },
                 remove: async (key) => {
-                    await this.$store.dispatch("products/xoaSanPham", key);
-                    notify("Đã xóa sản phẩm thành công!", "success", 1500);
+                    try {
+                        await this.$store.dispatch("products/xoaSanPham", key);
+                        notify("Đã xóa sản phẩm thành công!", "success", 2500);
+                    } catch (error) {
+                        notify(
+                            error.message || "Xóa sản phẩm thất bại!",
+                            "error",
+                            3000,
+                        );
+                        throw error;
+                    }
                 },
             });
         },

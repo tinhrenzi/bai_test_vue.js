@@ -461,10 +461,10 @@ export default {
                     ...this.sanPhamMoi,
                 });
                 this.hienPopupThem = false;
-                notify("Thêm sản phẩm thành công!", "success", 1500);
+                notify("Thêm sản phẩm thành công!", "success", 2500);
                 this.taiDuLieu();
             } catch (e) {
-                notify(e.message || "Thêm sản phẩm thất bại!", "error", 2000);
+                notify(e.message || "Thêm sản phẩm thất bại!", "error", 3000);
             }
         },
 
