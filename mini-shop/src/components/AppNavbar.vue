@@ -3,10 +3,7 @@
         <ThemeToggle />
         <DxToolbar class="m3-app-bar">
             <DxItem location="before">
-                <DxMenu @item-click="xuLyChonMenu">
-                    <DxItem icon="home" text="Mini Shop" />
-                    <DxItem icon="cart" text="Giỏ hàng" />
-                </DxMenu>
+                <DxMenu :items="menuItems" @item-click="xuLyChonMenu" />
             </DxItem>
 
             <DxItem location="after">
@@ -126,6 +123,23 @@ export default {
         cartCount() {
             return this.$store.getters["cart/count"] || 0;
         },
+        menuItems() {
+            return [
+                {
+                    id: "home",
+                    text: "Mini Shop",
+                    icon: "home",
+                },
+                {
+                    id: "cart",
+                    text:
+                        this.cartCount > 0
+                            ? `Giỏ hàng (${this.cartCount})`
+                            : "Giỏ hàng",
+                    icon: "cart",
+                },
+            ];
+        },
         isLoggedIn() {
             return this.$store.getters["auth/daDangNhap"];
         },
@@ -149,15 +163,20 @@ export default {
             this.$emit("search", this.keyword);
         },
         xuLyChonMenu(e) {
+            const item = e?.itemData;
+            if (!item) return;
+
             if (
-                e.itemData &&
-                (e.itemData.icon === "home" || e.itemData.text === "Mini Shop")
+                item.id === "home" ||
+                item.icon === "home" ||
+                item.text === "Mini Shop"
             ) {
                 this.$router.push("/");
-            }
-            if (
-                e.itemData &&
-                (e.itemData.icon === "cart" || e.itemData.text === "Giỏ hàng")
+            } else if (
+                item.id === "cart" ||
+                item.icon === "cart" ||
+                (typeof item.text === "string" &&
+                    item.text.startsWith("Giỏ hàng"))
             ) {
                 this.$router.push("/cart");
             }

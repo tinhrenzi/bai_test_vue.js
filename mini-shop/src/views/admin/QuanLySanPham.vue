@@ -17,7 +17,30 @@
                     </p>
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                    <DxSwitch v-model:value="cheDoCuon" />
+                    <div
+                        class="d-flex align-items-center gap-2 px-3 py-1 m3-btn-pill m3-switch-pill"
+                        role="button"
+                        tabindex="0"
+                        :title="
+                            cheDoCuon
+                                ? 'Đang bật: Cuộn vô hạn (Click để chuyển sang Phân trang)'
+                                : 'Đang bật: Phân trang (Click để chuyển sang Cuộn vô hạn)'
+                        "
+                        @click="cheDoCuon = !cheDoCuon"
+                        @keydown.space.prevent="cheDoCuon = !cheDoCuon">
+                        <span
+                            class="small fw-semibold m3-switch-label user-select-none">
+                            <i
+                                :class="
+                                    cheDoCuon
+                                        ? 'dx-icon-verticalalignbottom'
+                                        : 'dx-icon-bookmark'
+                                "
+                                class="me-1"></i>
+                            {{ cheDoCuon ? "Cuộn vô hạn" : "Phân trang" }}
+                        </span>
+                        <DxSwitch :value="cheDoCuon" @click.stop />
+                    </div>
                     <router-link
                         to="/admin/dashboard"
                         class="btn btn-outline-primary m3-btn-pill btn-sm">
@@ -43,6 +66,7 @@
                 :data-source="dataSource"
                 :remote-operations="{ paging: true }"
                 :show-borders="false"
+                :row-alternation-enabled="true"
                 :allow-column-resizing="true"
                 :column-auto-width="true"
                 key-expr="id"
@@ -103,19 +127,12 @@
                     :allow-filtering="false"
                     cell-template="anhTemplate" />
                 <template #anhTemplate="{ data }">
-                    <img
-                        :src="data.value || 'https://via.placeholder.com/60'"
-                        alt=""
-                        style="
-                            width: 44px;
-                            height: 44px;
-                            object-fit: contain;
-                            border-radius: 8px;
-                            background: var(
-                                --md-sys-color-surface-container,
-                                #f0f4f9
-                            );
-                        " />
+                    <div class="m3-admin-thumb-wrapper">
+                        <img
+                            :src="data.value || 'https://via.placeholder.com/60'"
+                            alt=""
+                            class="m3-admin-thumb" />
+                    </div>
                 </template>
 
                 <DxColumn data-field="title" caption="Tên sản phẩm">
@@ -393,5 +410,40 @@ export default {
 .table-page {
     background-color: var(--md-sys-color-surface);
     color: var(--md-sys-color-text-main);
+}
+
+.m3-switch-pill {
+    background-color: var(--md-sys-color-surface-container, #f0f4f9);
+    border: 1px solid var(--md-sys-color-outline-variant, #e0e2ec);
+    color: var(--md-sys-color-text-main, #1f1f1f);
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.m3-switch-pill:hover {
+    background-color: var(--md-sys-color-surface-container-high, #e9eef6);
+}
+
+.m3-switch-label {
+    white-space: nowrap;
+}
+
+.m3-admin-thumb-wrapper {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    border: 1px solid var(--md-sys-color-outline-variant, #e0e2ec);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    overflow: hidden;
+}
+
+.m3-admin-thumb {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
 }
 </style>

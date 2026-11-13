@@ -1,4 +1,5 @@
 import api from "../../api/axios";
+import { Sua, Xoa } from "../../utils/CRUD";
 
 function khoiPhucGioHang() {
     try {
@@ -46,13 +47,18 @@ export default {
     mutations: {
         THEM_VAO_GIO(state, { sanPham, soLuong = 1 }) {
             const spHienTai = state.danhSach.find(
-                (item) => item.id === sanPham.id,
+                (item) => String(item.id) === String(sanPham.id),
             );
             const tonKhoToiDa = sanPham.stock || 999;
 
             if (spHienTai) {
-                const soLuongMoi = spHienTai.quantity + soLuong;
-                spHienTai.quantity = Math.min(soLuongMoi, tonKhoToiDa);
+                const soLuongMoi = Math.min(
+                    spHienTai.quantity + soLuong,
+                    tonKhoToiDa,
+                );
+                state.danhSach = Sua(state.danhSach, sanPham.id, {
+                    quantity: soLuongMoi,
+                });
             } else {
                 const soLuongHopLe = Math.min(soLuong, tonKhoToiDa);
                 state.danhSach.push({
@@ -67,21 +73,24 @@ export default {
         },
 
         CAP_NHAT_SO_LUONG(state, { id, soLuong }) {
-            const sp = state.danhSach.find((item) => item.id === id);
+            const sp = state.danhSach.find(
+                (item) => String(item.id) === String(id),
+            );
 
             if (!sp) return;
 
             if (soLuong <= 0) {
-                state.danhSach = state.danhSach.filter(
-                    (item) => item.id !== id,
-                );
+                state.danhSach = Xoa(state.danhSach, id);
             } else {
-                sp.quantity = Math.min(soLuong, sp.stock);
+                const soLuongMoi = Math.min(soLuong, sp.stock);
+                state.danhSach = Sua(state.danhSach, id, {
+                    quantity: soLuongMoi,
+                });
             }
         },
 
         XOA_SAN_PHAM(state, id) {
-            state.danhSach = state.danhSach.filter((item) => item.id !== id);
+            state.danhSach = Xoa(state.danhSach, id);
         },
 
         XOA_TAT_CA_SAN_PHAM(state) {
@@ -100,7 +109,7 @@ export default {
             }
 
             const spHienTai = state.danhSach.find(
-                (item) => item.id === sanPham.id,
+                (item) => String(item.id) === String(sanPham.id),
             );
             const soLuongHienTai = spHienTai ? spHienTai.quantity : 0;
             const tonKhoToiDa = sanPham.stock;
@@ -127,7 +136,9 @@ export default {
 
         capNhatSoLuong({ state, commit }, payload) {
             const { id, soLuong } = payload || {};
-            const sp = state.danhSach.find((item) => item.id === id);
+            const sp = state.danhSach.find(
+                (item) => String(item.id) === String(id),
+            );
 
             if (!sp) {
                 throw new Error("Sản phẩm không có trong giỏ hàng!");

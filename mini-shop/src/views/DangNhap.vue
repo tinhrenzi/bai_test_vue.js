@@ -111,6 +111,20 @@
                             Điền
                         </button>
                     </div>
+                    <div
+                        class="d-flex justify-content-between align-items-center w-100 border-top pt-2">
+                        <span class="small text-muted">
+                            Khách (Nội bộ): <strong>khachhang</strong> /
+                            <strong>123456</strong></span
+                        >
+                        <button
+                            type="button"
+                            class="btn btn-link btn-sm p-0 text-decoration-none"
+                            :disabled="khoaTamThoi"
+                            @click="dienMauKhachHang">
+                            Điền
+                        </button>
+                    </div>
                 </div>
 
                 <DxButton

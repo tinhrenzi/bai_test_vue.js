@@ -8,6 +8,7 @@ import {
     xoaSanPham,
     layDanhSachDanhMuc,
 } from "../../api/apiProduct";
+import { Them, Sua, Xoa, TimKiem } from "../../utils/CRUD";
 
 const STORAGE_KEY_LOCAL_CHANGES = "mini_shop_product_changes";
 
@@ -28,25 +29,24 @@ function locSanPhamTuThem(danhSachThem = [], boLoc = {}, thayDoiCucBo = {}) {
     const { tuKhoa = "", danhMuc = "" } = boLoc;
     const { daSua = {}, daXoa = [] } = thayDoiCucBo;
     const tapHopIdDaXoa = new Set(daXoa.map((id) => String(id)));
-    const tuKhoaChuanHoa = tuKhoa.trim().toLowerCase();
 
-    return danhSachThem
+    let ketQua = danhSachThem
         .filter((sanPham) => {
             const idChuoi = String(sanPham.id);
             if (tapHopIdDaXoa.has(idChuoi)) return false;
             if (danhMuc && sanPham.category !== danhMuc) return false;
-            if (
-                tuKhoaChuanHoa &&
-                !sanPham.title.toLowerCase().includes(tuKhoaChuanHoa)
-            ) {
-                return false;
-            }
             return true;
         })
         .map((sanPham) => {
             const idChuoi = String(sanPham.id);
             return daSua[idChuoi] ? { ...sanPham, ...daSua[idChuoi] } : sanPham;
         });
+
+    if (tuKhoa && tuKhoa.trim()) {
+        ketQua = TimKiem(ketQua, tuKhoa, ["title", "category"]);
+    }
+
+    return ketQua;
 }
 
 function capNhatDanhSachTuApi(danhSachApi = [], thayDoiCucBo = {}) {
@@ -135,22 +135,16 @@ export default {
         },
 
         THEM_SAN_PHAM(state, product) {
-            state.danhSach.unshift(product);
+            state.danhSach = Them(state.danhSach, product);
             state.tongSo += 1;
-            state.thayDoiCucBo.added.unshift(product);
+        },
+
+        THEM_VAO_THAY_DOI_CUC_BO(state, sanPham) {
+            state.thayDoiCucBo.added = Them(state.thayDoiCucBo.added, sanPham);
         },
 
         CAP_NHAT_SAN_PHAM(state, { id, duLieu }) {
-            const idx = state.danhSach.findIndex(
-                (p) => String(p.id) === String(id),
-            );
-            if (idx !== -1) {
-                state.danhSach[idx] = { ...state.danhSach[idx], ...duLieu };
-            }
-            state.thayDoiCucBo.updated[id] = {
-                ...(state.thayDoiCucBo.updated[id] || {}),
-                ...duLieu,
-            };
+            state.danhSach = Sua(state.danhSach, id, duLieu);
 
             if (state.cacheChiTiet[id]) {
                 state.cacheChiTiet[id] = {
@@ -160,13 +154,21 @@ export default {
             }
         },
 
+        CAP_NHAT_THAY_DOI_CUC_BO(state, { id, duLieu }) {
+            state.thayDoiCucBo.updated[id] = {
+                ...(state.thayDoiCucBo.updated[id] || {}),
+                ...duLieu,
+            };
+        },
+
         XOA_SAN_PHAM(state, id) {
-            state.danhSach = state.danhSach.filter(
-                (p) => String(p.id) !== String(id),
-            );
+            state.danhSach = Xoa(state.danhSach, id);
             state.tongSo = Math.max(0, state.tongSo - 1);
-            state.thayDoiCucBo.deleted.push(id);
             delete state.cacheChiTiet[id];
+        },
+
+        XOA_KHOI_THAY_DOI_CUC_BO(state, id) {
+            state.thayDoiCucBo.deleted.push(id);
         },
     },
 
@@ -284,7 +286,18 @@ export default {
 
         async taiChiTietSanPham({ state, commit }, id) {
             const idChuoi = String(id);
-            const { added: danhSachThem, updated: daSua } = state.thayDoiCucBo;
+            const {
+                added: danhSachThem,
+                updated: daSua,
+                deleted: daXoa = [],
+            } = state.thayDoiCucBo;
+
+            if (daXoa.some((xId) => String(xId) === idChuoi)) {
+                const message = "Sản phẩm không tồn tại hoặc đã bị xóa.";
+                commit("SET_LOI", message);
+                commit("SET_CHI_TIET", null);
+                throw new Error(message);
+            }
 
             const sanPhamTuThem = danhSachThem.find(
                 (p) => String(p.id) === idChuoi,
@@ -364,6 +377,7 @@ export default {
                     duLieu.thumbnail || "https://via.placeholder.com/200",
                 rating: 5,
             };
+            commit("THEM_VAO_THAY_DOI_CUC_BO", sanPhamMoi);
             commit("THEM_SAN_PHAM", sanPhamMoi);
             luuThayDoiCucBo(state.thayDoiCucBo);
             return sanPhamMoi;
@@ -379,6 +393,7 @@ export default {
             } catch (e) {
                 sanPhamCapNhat = duLieu;
             }
+            commit("CAP_NHAT_THAY_DOI_CUC_BO", { id, duLieu: sanPhamCapNhat });
             commit("CAP_NHAT_SAN_PHAM", { id, duLieu: sanPhamCapNhat });
             luuThayDoiCucBo(state.thayDoiCucBo);
             return sanPhamCapNhat;
@@ -395,6 +410,7 @@ export default {
                     e.message,
                 );
             }
+            commit("XOA_KHOI_THAY_DOI_CUC_BO", id);
             commit("XOA_SAN_PHAM", id);
             luuThayDoiCucBo(state.thayDoiCucBo);
             return id;

@@ -628,19 +628,6 @@ export default {
             }
         },
 
-        async xuLySua(id, duLieuMoi) {
-            try {
-                await this.$store.dispatch("products/suaSanPham", {
-                    id,
-                    duLieu: duLieuMoi,
-                });
-                notify("Cập nhật sản phẩm thành công!", "success", 2500);
-                this.taiDuLieu();
-            } catch (e) {
-                notify(e.message || "Cập nhật thất bại!", "error", 3000);
-            }
-        },
-
         async themVaoGio(item) {
             try {
                 const res = await this.$store.dispatch("cart/themVaoGio", {

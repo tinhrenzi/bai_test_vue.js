@@ -78,20 +78,31 @@ body,
   border-color: var(--md-sys-color-outline-variant) !important;
 }
 
-.text-dark { color: var(--md-sys-color-text-main) !important; }
-.text-muted { color: var(--md-sys-color-text-muted) !important; }
-.text-primary { color: var(--md-sys-color-primary) !important; }
+.text-dark {
+  color: var(--md-sys-color-text-main) !important;
+}
+
+.text-muted {
+  color: var(--md-sys-color-text-muted) !important;
+}
+
+.text-primary {
+  color: var(--md-sys-color-primary) !important;
+}
+
 .form-control, .form-select {
   color: var(--md-sys-color-text-main);
   background-color: var(--md-sys-color-surface);
   border-color: var(--md-sys-color-outline);
 }
+
 .form-control:focus, .form-select:focus {
   color: var(--md-sys-color-text-main);
   background-color: var(--md-sys-color-surface);
   border-color: var(--md-sys-color-primary);
   box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--md-sys-color-primary) 22%, transparent);
 }
+
 .theme-toggle,
 .theme-toggle.dx-button {
   position: fixed;
@@ -109,12 +120,14 @@ body,
   box-shadow: var(--md-sys-elevation-1) !important;
   cursor: pointer;
 }
+
 .btn-primary,
 .dx-button-mode-contained.dx-button-default {
   background-color: var(--md-sys-color-primary) !important;
   border-color: var(--md-sys-color-primary) !important;
   color: var(--md-sys-color-on-primary) !important;
 }
+
 .btn-outline-primary,
 .dx-button-mode-outlined.dx-button-default {
   border-color: var(--md-sys-color-primary) !important;
@@ -390,6 +403,7 @@ body,
   color: var(--md-sys-color-text-main);
   font-family: inherit;
 }
+
 .dx-button,
 .dx-button .dx-button-content,
 .dx-toolbar-label,
@@ -399,14 +413,15 @@ body,
 .dx-menu-item {
   color: var(--md-sys-color-text-main);
 }
+
 .dx-toolbar,
 .dx-popup-content,
 .dx-overlay-content,
 .dx-datagrid,
 .dx-datagrid-headers,
-.dx-datagrid > .dx-datagrid-headers,
+.dx-datagrid>.dx-datagrid-headers,
 .dx-datagrid-rowsview,
-.dx-datagrid > .dx-datagrid-rowsview,
+.dx-datagrid>.dx-datagrid-rowsview,
 .dx-list,
 .dx-dropdowneditor-overlay .dx-list,
 .dx-texteditor,
@@ -415,12 +430,13 @@ body,
   background-color: var(--md-sys-color-surface);
   color: var(--md-sys-color-text-main);
 }
+
 .dx-datagrid-headers,
 .dx-datagrid-rowsview,
-.dx-datagrid-borders > .dx-datagrid-headers,
-.dx-datagrid-borders > .dx-datagrid-rowsview,
-.dx-datagrid .dx-row > td,
-.dx-datagrid .dx-row > tr > td,
+.dx-datagrid-borders>.dx-datagrid-headers,
+.dx-datagrid-borders>.dx-datagrid-rowsview,
+.dx-datagrid .dx-row>td,
+.dx-datagrid .dx-row>tr>td,
 .dx-toolbar,
 .dx-popup-title,
 .dx-texteditor,
@@ -431,13 +447,15 @@ body,
 .dx-dropdowneditor-button {
   border-color: var(--md-sys-color-outline-variant) !important;
 }
+
 .dx-datagrid-headers,
-.dx-datagrid .dx-row-alt > td,
+.dx-datagrid .dx-row-alt>td,
 .dx-menu-item:hover,
 .dx-list-item:hover,
 .dx-state-hover {
   background-color: var(--md-sys-color-surface-container) !important;
 }
+
 .dx-overlay-wrapper:not(.dx-toast-wrapper) .dx-overlay-content,
 .dx-popup-wrapper .dx-overlay-content,
 .dx-dropdowneditor-overlay .dx-overlay-content,
@@ -463,29 +481,29 @@ body,
   text-align: center !important;
 }
 
-.dx-toast-wrapper.dx-toast-success .dx-toast-content,
-.dx-toast-success .dx-toast-content {
+.dx-toast-content.dx-toast-success,
+.dx-toast-wrapper .dx-toast-content.dx-toast-success {
   background-color: #0f9d58 !important;
   color: #ffffff !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
-.dx-toast-wrapper.dx-toast-error .dx-toast-content,
-.dx-toast-error .dx-toast-content {
+.dx-toast-content.dx-toast-error,
+.dx-toast-wrapper .dx-toast-content.dx-toast-error {
   background-color: #d93025 !important;
   color: #ffffff !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
-.dx-toast-wrapper.dx-toast-warning .dx-toast-content,
-.dx-toast-warning .dx-toast-content {
+.dx-toast-content.dx-toast-warning,
+.dx-toast-wrapper .dx-toast-content.dx-toast-warning {
   background-color: #f29900 !important;
   color: #ffffff !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
 }
 
-.dx-toast-wrapper.dx-toast-info .dx-toast-content,
-.dx-toast-info .dx-toast-content {
+.dx-toast-content.dx-toast-info,
+.dx-toast-wrapper .dx-toast-content.dx-toast-info {
   background-color: #1a73e8 !important;
   color: #ffffff !important;
   border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -495,6 +513,7 @@ body,
   color: #ffffff !important;
   font-size: 14px !important;
 }
+
 :root[data-theme="dark"] .dx-icon,
 :root[data-theme="dark"] .dx-menu-item-text,
 :root[data-theme="dark"] .dx-placeholder,
@@ -502,6 +521,7 @@ body,
 :root[data-theme="dark"] .dx-datagrid-text-content {
   color: var(--md-sys-color-text-main) !important;
 }
+
 :root[data-theme="dark"] .dx-state-focused.dx-texteditor,
 :root[data-theme="dark"] .dx-texteditor.dx-editor-outlined {
   background-color: var(--md-sys-color-surface-container) !important;
@@ -528,9 +548,7 @@ body,
 :root[data-theme="dark"] .m3-table-card,
 :root[data-theme="dark"] .dx-datagrid,
 :root[data-theme="dark"] .dx-datagrid-rowsview,
-:root[data-theme="dark"] .dx-datagrid > .dx-datagrid-rowsview,
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-datagrid-table,
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-datagrid-content,
+:root[data-theme="dark"] .dx-datagrid>.dx-datagrid-rowsview,
 :root[data-theme="dark"] .dx-datagrid-rowsview .dx-scrollable-content,
 :root[data-theme="dark"] .dx-datagrid-rowsview .dx-scrollable-container,
 :root[data-theme="dark"] .dx-datagrid-rowsview .dx-scrollable-wrapper {
@@ -538,48 +556,107 @@ body,
   color: var(--md-sys-color-text-main) !important;
 }
 
-/* Các hàng dữ liệu (Hàng thường & Hàng xen kẽ) */
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row:not(.dx-row-alt) > td,
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row:not(.dx-row-alt) > td {
-  background-color: var(--md-sys-color-surface) !important;
-  color: var(--md-sys-color-text-main) !important;
-  border-color: var(--md-sys-color-outline-variant) !important;
+/* Các table và fixed overlay bắt buộc phải trong suốt để nhìn thấy dữ liệu */
+.dx-datagrid .dx-datagrid-table,
+.dx-datagrid-rowsview .dx-datagrid-table,
+.dx-datagrid-headers .dx-datagrid-table,
+.dx-datagrid .dx-datagrid-content-fixed,
+.dx-datagrid-rowsview .dx-datagrid-content-fixed,
+.dx-datagrid-headers .dx-datagrid-content-fixed,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-table,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-datagrid-table,
+:root[data-theme="dark"] .dx-datagrid-headers .dx-datagrid-table,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed,
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-datagrid-content-fixed,
+:root[data-theme="dark"] .dx-datagrid-headers .dx-datagrid-content-fixed {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-row-alt > td,
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row-alt > td,
-:root[data-theme="dark"] .dx-datagrid .dx-row-alt > td {
+/* Các hàng dữ liệu (Hàng thường & Hàng xen kẽ) */
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row:not(.dx-row-alt)>td:not(.dx-pointer-events-none),
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row:not(.dx-row-alt)>td:not(.dx-pointer-events-none) {
+  background-color: var(--md-sys-color-surface) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-row-alt>td:not(.dx-pointer-events-none),
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row-alt>td:not(.dx-pointer-events-none),
+:root[data-theme="dark"] .dx-datagrid .dx-row-alt>td:not(.dx-pointer-events-none) {
   background-color: var(--md-sys-color-surface-container) !important;
   color: var(--md-sys-color-text-main) !important;
-  border-color: var(--md-sys-color-outline-variant) !important;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant) !important;
 }
 
 /* Hover trên hàng */
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row:hover > td,
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-state-hover > td,
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row-alt:hover > td,
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row-alt.dx-state-hover > td {
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row:hover>td:not(.dx-pointer-events-none),
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-state-hover>td:not(.dx-pointer-events-none),
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row-alt:hover>td:not(.dx-pointer-events-none),
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-row-alt.dx-state-hover>td:not(.dx-pointer-events-none) {
   background-color: var(--md-sys-color-surface-container-high) !important;
   color: var(--md-sys-color-text-main) !important;
 }
 
 /* Hàng đang chọn (Selection / Focused) */
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-selection > td,
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-row-focused > td,
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-selection.dx-row > td {
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-selection>td:not(.dx-pointer-events-none),
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-data-row.dx-row-focused>td:not(.dx-pointer-events-none),
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-selection.dx-row>td:not(.dx-pointer-events-none) {
   background-color: color-mix(in srgb, var(--md-sys-color-primary) 18%, var(--md-sys-color-surface)) !important;
   color: var(--md-sys-color-text-main) !important;
 }
 
-/* Cột cố định (Fixed columns) */
-:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-col-fixed {
+/* Cột cố định (Fixed columns) đồng bộ hoàn toàn với hàng thường, hàng xen kẽ, hover, selection */
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-data-row:not(.dx-row-alt) .dx-col-fixed,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-row:not(.dx-row-alt) .dx-col-fixed {
   background-color: var(--md-sys-color-surface) !important;
   color: var(--md-sys-color-text-main) !important;
-  border-color: var(--md-sys-color-outline-variant) !important;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-data-row.dx-row-alt .dx-col-fixed,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-row-alt .dx-col-fixed {
+  background-color: var(--md-sys-color-surface-container) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-bottom: 1px solid var(--md-sys-color-outline-variant) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-data-row:hover .dx-col-fixed,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-data-row.dx-state-hover .dx-col-fixed,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-row-alt:hover .dx-col-fixed,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-row-alt.dx-state-hover .dx-col-fixed {
+  background-color: var(--md-sys-color-surface-container-high) !important;
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-data-row.dx-selection .dx-col-fixed,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-selection.dx-row .dx-col-fixed {
+  background-color: color-mix(in srgb, var(--md-sys-color-primary) 18%, var(--md-sys-color-surface)) !important;
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table .dx-header-row .dx-col-fixed {
+  background-color: var(--md-sys-color-surface-container-high) !important;
+  color: var(--md-sys-color-text-main) !important;
+  border-bottom: 2px solid var(--md-sys-color-outline-variant) !important;
+}
+
+/* Bảo vệ tuyệt đối overlay của cột cố định: các cell giả (dummy cells) không bao giờ bị tô nền che khuất dữ liệu bên dưới */
+.dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table td.dx-pointer-events-none,
+.dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table tr td.dx-pointer-events-none,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table td.dx-pointer-events-none,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content-fixed .dx-datagrid-table tr td.dx-pointer-events-none {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 /* Dòng placeholder khi cuộn ảo (Virtual Scrolling) */
-:root[data-theme="dark"] .dx-datagrid-rowsview .dx-virtual-row > td::before {
+:root[data-theme="dark"] .dx-datagrid-rowsview .dx-virtual-row>td::before {
   background-image: none !important;
   background-color: var(--md-sys-color-surface) !important;
 }
@@ -592,12 +669,12 @@ body,
 
 /* Tiêu đề bảng (Header Row & Filters) */
 :root[data-theme="dark"] .dx-datagrid-headers,
-:root[data-theme="dark"] .dx-datagrid > .dx-datagrid-headers,
-:root[data-theme="dark"] .dx-datagrid-headers .dx-datagrid-table,
-:root[data-theme="dark"] .dx-datagrid-headers .dx-header-row > td {
-  background-color: var(--md-sys-color-surface-container) !important;
+:root[data-theme="dark"] .dx-datagrid>.dx-datagrid-headers,
+:root[data-theme="dark"] .dx-datagrid-headers .dx-header-row>td:not(.dx-pointer-events-none) {
+  background-color: var(--md-sys-color-surface-container-high) !important;
   color: var(--md-sys-color-text-main) !important;
   border-color: var(--md-sys-color-outline-variant) !important;
+  border-bottom: 2px solid var(--md-sys-color-outline-variant) !important;
 }
 
 :root[data-theme="dark"] .dx-datagrid-headers .dx-datagrid-text-content {
@@ -613,7 +690,7 @@ body,
 
 /* Hàng bộ lọc (Filter Row) */
 :root[data-theme="dark"] .dx-datagrid-filter-row,
-:root[data-theme="dark"] .dx-datagrid-filter-row > td {
+:root[data-theme="dark"] .dx-datagrid-filter-row>td:not(.dx-pointer-events-none) {
   background-color: var(--md-sys-color-surface-container) !important;
   color: var(--md-sys-color-text-main) !important;
   border-color: var(--md-sys-color-outline-variant) !important;
@@ -651,15 +728,15 @@ body,
 }
 
 /* Đường viền bảng */
-:root[data-theme="dark"] .dx-datagrid-borders > .dx-datagrid-headers,
-:root[data-theme="dark"] .dx-datagrid-borders > .dx-datagrid-rowsview,
-:root[data-theme="dark"] .dx-datagrid-borders > .dx-datagrid-total-footer,
-:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content .dx-datagrid-table .dx-row > td {
+:root[data-theme="dark"] .dx-datagrid-borders>.dx-datagrid-headers,
+:root[data-theme="dark"] .dx-datagrid-borders>.dx-datagrid-rowsview,
+:root[data-theme="dark"] .dx-datagrid-borders>.dx-datagrid-total-footer,
+:root[data-theme="dark"] .dx-datagrid .dx-datagrid-content .dx-datagrid-table .dx-row>td {
   border-color: var(--md-sys-color-outline-variant) !important;
 }
 
 :root[data-theme="dark"] .dx-datagrid-total-footer,
-:root[data-theme="dark"] .dx-datagrid > .dx-datagrid-total-footer {
+:root[data-theme="dark"] .dx-datagrid>.dx-datagrid-total-footer {
   background-color: var(--md-sys-color-surface-container) !important;
   color: var(--md-sys-color-text-main) !important;
   border-top: 1px solid var(--md-sys-color-outline-variant) !important;
@@ -711,12 +788,17 @@ body,
 }
 
 :root[data-theme="dark"] .dx-pager .dx-pages .dx-page,
-:root[data-theme="dark"] .dx-pager .dx-page-sizes .dx-page-size {
+:root[data-theme="dark"] .dx-pager .dx-page-sizes .dx-page-size,
+:root[data-theme="dark"] .dx-pager .dx-pages .dx-navigate-button {
+  background-color: var(--md-sys-color-surface-container) !important;
   color: var(--md-sys-color-text-main) !important;
+  border: 1px solid var(--md-sys-color-outline-variant) !important;
+  border-radius: var(--md-sys-shape-corner-full) !important;
 }
 
 :root[data-theme="dark"] .dx-pager .dx-pages .dx-page:hover,
-:root[data-theme="dark"] .dx-pager .dx-page-sizes .dx-page-size:hover {
+:root[data-theme="dark"] .dx-pager .dx-page-sizes .dx-page-size:hover,
+:root[data-theme="dark"] .dx-pager .dx-pages .dx-navigate-button:hover {
   background-color: var(--md-sys-color-surface-container-high) !important;
 }
 
@@ -724,16 +806,16 @@ body,
 :root[data-theme="dark"] .dx-pager .dx-page-sizes .dx-selection {
   background-color: var(--md-sys-color-primary) !important;
   color: var(--md-sys-color-on-primary) !important;
+  border-color: var(--md-sys-color-primary) !important;
   font-weight: 600 !important;
 }
 
-:root[data-theme="dark"] .dx-pager .dx-info,
-:root[data-theme="dark"] .dx-pager .dx-pages .dx-navigate-button {
+:root[data-theme="dark"] .dx-pager .dx-info {
   color: var(--md-sys-color-text-muted) !important;
 }
 
 /* Popup Form Thêm / Sửa sản phẩm */
-:root[data-theme="dark"] .dx-popup-wrapper > .dx-overlay-content,
+:root[data-theme="dark"] .dx-popup-wrapper>.dx-overlay-content,
 :root[data-theme="dark"] .dx-popup-normal,
 :root[data-theme="dark"] .dx-datagrid .dx-datagrid-rowsview .dx-datagrid-edit-form {
   background-color: var(--md-sys-color-surface) !important;
@@ -826,17 +908,59 @@ body,
   border-color: var(--md-sys-color-outline-variant) !important;
 }
 
-/* Switch Chế độ cuộn & Các nút phụ trang Admin */
-:root[data-theme="dark"] .dx-switch-container {
-  background-color: var(--md-sys-color-surface-container-high) !important;
-  border-color: var(--md-sys-color-outline) !important;
+/* Switch Chế độ cuộn & Pill Switch Button */
+.m3-switch-pill {
+  background-color: var(--md-sys-color-surface-container);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  color: var(--md-sys-color-text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-:root[data-theme="dark"] .dx-switch.dx-switch-on-value .dx-switch-container {
+.m3-switch-pill:hover {
+  background-color: var(--md-sys-color-surface-container-high);
+}
+
+:root[data-theme="dark"] .m3-switch-pill {
+  background-color: var(--md-sys-color-surface-container) !important;
+  border-color: var(--md-sys-color-outline-variant) !important;
+  color: var(--md-sys-color-text-main) !important;
+}
+
+:root[data-theme="dark"] .m3-switch-pill:hover {
+  background-color: var(--md-sys-color-surface-container-high) !important;
+}
+
+:root[data-theme="dark"] .dx-switch,
+:root[data-theme="dark"] .dx-switch .dx-switch-wrapper {
+  background-color: transparent !important;
+}
+
+:root[data-theme="dark"] .dx-switch-container {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+:root[data-theme="dark"] .dx-switch-container::before {
+  background-color: var(--md-sys-color-surface-container-high) !important;
+  border: 1px solid var(--md-sys-color-outline) !important;
+}
+
+:root[data-theme="dark"] .dx-switch.dx-switch-on-value .dx-switch-container::before {
   background-color: var(--md-sys-color-primary) !important;
+  border-color: var(--md-sys-color-primary) !important;
 }
 
 :root[data-theme="dark"] .dx-switch-handle {
+  background-color: transparent !important;
+}
+
+:root[data-theme="dark"] .dx-switch-handle::before {
+  background-color: var(--md-sys-color-outline) !important;
+  box-shadow: none !important;
+}
+
+:root[data-theme="dark"] .dx-switch.dx-switch-on-value .dx-switch-handle::before {
   background-color: var(--md-sys-color-on-primary) !important;
 }
 
